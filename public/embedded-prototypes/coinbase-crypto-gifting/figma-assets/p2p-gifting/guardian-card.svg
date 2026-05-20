@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302 442" role="img" aria-labelledby="title desc">
+  <title id="title">The Guardian gift card artwork</title>
+  <desc id="desc">A colorful abstract guardian card for the gifting carousel.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#41d4ff"/>
+      <stop offset="0.45" stop-color="#0052ff"/>
+      <stop offset="1" stop-color="#071422"/>
+    </linearGradient>
+  </defs>
+  <rect width="302" height="442" rx="16" fill="url(#sky)"/>
+  <circle cx="72" cy="72" r="52" fill="#ffdf2e"/>
+  <path d="M0 328c58-64 114-93 168-86 48 6 91 37 134 91v109H0z" fill="#09111f"/>
+  <path d="M150 90l94 60-32 170H90L58 150z" fill="#f7f8ff"/>
+  <path d="M150 90l94 60-94 58-92-58z" fill="#ff335f"/>
+  <path d="M90 320l60-112 62 112z" fill="#ffd51e"/>
+  <path d="M72 163l78 45 80-45" fill="none" stroke="#071422" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="150" cy="207" r="31" fill="#0052ff"/>
+  <path d="M137 207h27m-10-12 12 12-12 12" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

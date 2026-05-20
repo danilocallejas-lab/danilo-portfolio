@@ -1,0 +1,36 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 240 176" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<path id="Vector" d="M184 16H56V160H184V16Z" fill="var(--fill-0, white)"/>
+<path id="Vector_2" d="M0 160H56L56 16H0L0 160Z" fill="var(--fill-0, #00D17F)"/>
+<path id="Vector_3" d="M184 160H240L240 16H184V160Z" fill="var(--fill-0, #FFD200)"/>
+<path id="Vector_4" d="M184 0H56V16H184V0Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_5" d="M184 160H56V176H184V160Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_6" d="M72 72C72 45.5 93.5 24 120 24C146.5 24 168 45.5 168 72H72Z" fill="var(--fill-0, #00D17F)"/>
+<path id="Vector_7" d="M168 104C168 130.5 146.5 152 120 152C93.5 152 72 130.5 72 104H168Z" fill="var(--fill-0, #FFD200)"/>
+<path id="Vector_8" d="M120 120C137.673 120 152 105.673 152 88C152 70.3269 137.673 56 120 56C102.327 56 88 70.3269 88 88C88 105.673 102.327 120 120 120Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_9" d="M92.3 104C97.8 113.6 108.2 120 120 120C131.8 120 142.2 113.6 147.7 104H92.3Z" fill="var(--fill-0, black)"/>
+<path id="Vector_10" d="M147.7 72C142.2 62.4 131.8 56 120 56C108.2 56 97.8 62.4 92.3 72H147.7Z" fill="var(--fill-0, black)"/>
+<path id="Vector_11" d="M120 96C124.418 96 128 92.4183 128 88C128 83.5817 124.418 80 120 80C115.582 80 112 83.5817 112 88C112 92.4183 115.582 96 120 96Z" fill="var(--fill-0, white)"/>
+<path id="Vector_12" d="M72 88H102.5" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_13" d="M137.9 88H168" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_14" d="M120 46.2V32" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_15" d="M120 144V130.1" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_16" d="M125.6 41.1L120 46.7L114.3 41.1" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_17" d="M96.9 82.3L102.6 87.9L96.9 93.6" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_18" d="M143 93.6L137.4 87.9L143 82.3" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_19" d="M114.3 134.5L120 128.9L125.6 134.5" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_20" d="M64 8H56V168H64V8Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_21" d="M184 8H176V168H184V8Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_22" d="M176 8H64V24H176V8Z" fill="var(--fill-0, white)"/>
+<path id="Vector_23" d="M176 152H64V168H176V152Z" fill="var(--fill-0, white)"/>
+<path id="Vector_24" d="M168 152C163.6 152 160 155.6 160 160C160 155.6 156.4 152 152 152C156.4 152 160 148.4 160 144C160 148.4 163.6 152 168 152Z" fill="var(--fill-0, #CED2DB)"/>
+<path id="Vector_25" d="M88 152C83.6 152 80 155.6 80 160C80 155.6 76.4 152 72 152C76.4 152 80 148.4 80 144C80 148.4 83.6 152 88 152Z" fill="var(--fill-0, #CED2DB)"/>
+<path id="Vector_26" d="M88 24C83.6 24 80 27.6 80 32C80 27.6 76.4 24 72 24C76.4 24 80 20.4 80 16C80 20.4 83.6 24 88 24Z" fill="var(--fill-0, #CED2DB)"/>
+<path id="Vector_27" d="M168 24C163.6 24 160 27.6 160 32C160 27.6 156.4 24 152 24C156.4 24 160 20.4 160 16C160 20.4 163.6 24 168 24Z" fill="var(--fill-0, #CED2DB)"/>
+<path id="Vector_28" d="M128 88C123.6 88 120 91.6 120 96C120 91.6 116.4 88 112 88C116.4 88 120 84.4 120 80C120 84.4 123.6 88 128 88Z" fill="var(--fill-0, #0052FF)"/>
+<path id="Vector_29" d="M56 24H8V152H56" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_30" d="M184 152H232V24H184" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_31" d="M56 120C38.3 120 24 105.7 24 88C24 70.3 38.3 56 56 56" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+<path id="Vector_32" d="M184 56C201.7 56 216 70.3 216 88C216 105.7 201.7 120 184 120" stroke="var(--stroke-0, black)" stroke-width="2" stroke-miterlimit="10"/>
+</g>
+</svg>

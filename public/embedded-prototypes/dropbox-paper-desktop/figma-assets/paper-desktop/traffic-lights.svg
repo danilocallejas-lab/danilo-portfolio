@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 52 11.9514" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="trafficLights">
+<path id="Oval 8" d="M6 0.25C9.17657 0.25 11.75 2.81438 11.75 5.97559C11.75 9.13683 9.1766 11.7012 6 11.7012C2.8234 11.7012 0.25 9.13683 0.25 5.97559C0.250049 2.81438 2.82343 0.25 6 0.25Z" fill="var(--fill-0, #FF6057)" stroke="var(--stroke-0, #EB2C23)" stroke-width="0.5"/>
+<path id="Oval 8 Copy" d="M26 0.25C29.1766 0.25 31.75 2.81438 31.75 5.97559C31.75 9.13683 29.1766 11.7012 26 11.7012C22.8234 11.7012 20.25 9.13683 20.25 5.97559C20.25 2.81438 22.8234 0.25 26 0.25Z" fill="var(--fill-0, #FFC02F)" stroke="var(--stroke-0, #D39414)" stroke-width="0.5"/>
+<path id="Oval 8 Copy 2" d="M46 0.25C49.1766 0.25 51.75 2.81438 51.75 5.97559C51.75 9.13683 49.1766 11.7012 46 11.7012C42.8234 11.7012 40.25 9.13683 40.25 5.97559C40.25 2.81438 42.8234 0.25 46 0.25Z" fill="var(--fill-0, #28CA42)" stroke="var(--stroke-0, #22A430)" stroke-width="0.5"/>
+</g>
+</svg>

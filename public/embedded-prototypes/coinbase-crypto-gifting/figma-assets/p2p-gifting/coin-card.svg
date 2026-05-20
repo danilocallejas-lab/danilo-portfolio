@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302 442" role="img" aria-labelledby="title desc">
+  <title id="title">Coin gift card artwork</title>
+  <desc id="desc">A Coinbase blue card with a polished coin mark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0052ff"/>
+      <stop offset="1" stop-color="#0732a2"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".52" stop-color="#eaf1ff"/>
+      <stop offset="1" stop-color="#b9ccff"/>
+    </linearGradient>
+  </defs>
+  <rect width="302" height="442" rx="16" fill="url(#bg)"/>
+  <circle cx="151" cy="207" r="105" fill="#fff" opacity=".12"/>
+  <circle cx="151" cy="207" r="82" fill="url(#coin)"/>
+  <circle cx="151" cy="207" r="58" fill="none" stroke="#0052ff" stroke-width="18"/>
+  <path d="M186 164c-17-18-40-27-67-20-38 10-61 49-50 88 10 38 48 61 87 52 13-3 24-9 34-18" fill="none" stroke="#0052ff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M44 354h214M78 382h146" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".28"/>
+  <rect width="302" height="442" rx="16" fill="none" stroke="#fff" stroke-opacity=".22"/>
+</svg>

@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[8706,["500","static/chunks/500-c99b8dfd3de17c86.js","706","static/chunks/706-0fd3ebc08133978e.js","123","static/chunks/app/states/%5Bslug%5D/page-5634a7f8560bac37.js"],"BetslipMigrationHomeFlow"]
+3:I[484,[],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"relative min-h-screen bg-[#050505]","children":["$","$L2",null,{"forcedLifecyclePhase":"action-required","initialStage":"full","interactive":false,"lifecycleMode":"fixed","quickPosition":"default"}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"chKeYO0fp88ALABUjmLZa"}
+5:null

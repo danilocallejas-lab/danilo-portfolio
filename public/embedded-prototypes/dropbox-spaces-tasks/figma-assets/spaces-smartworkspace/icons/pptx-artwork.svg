@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icons / Product / 16 / powerpoint">
+<path id="Rectangle" d="M0.999908 2L8.99991 1V15L0.999908 14V2Z" fill="var(--fill-0, #D24726)"/>
+<path id="P" d="M4.49991 9V11H2.99991V5H4.99991C6.37904 5 6.99991 5.72524 6.99991 7C6.99991 7.60251 6.80144 8.00279 6.40449 8.37657C6.01009 8.74756 5.66149 9 4.99991 9H4.49991ZM4.49991 6V8H4.71747C5.37395 8 5.7022 7.59275 5.7022 6.96234C5.7022 6.34588 5.37395 6 4.71747 6H4.49991Z" fill="var(--fill-0, white)"/>
+<g id="Group">
+<path id="Rectangle 2.2" d="M7.99991 2H13.9999C14.5522 2 14.9999 2.44772 14.9999 3V12C14.9999 12.5523 14.5522 13 13.9999 13H7.99991V2Z" fill="var(--fill-0, #D24726)"/>
+<rect id="Rectangle 3.2" x="8.99991" y="3" width="5" height="9" fill="var(--fill-0, white)"/>
+<rect id="Rectangle 4.18" width="4" height="1" transform="matrix(1 0 0 -1 8.99991 11)" fill="var(--fill-0, #D24726)"/>
+<path id="Subtract" d="M10.4999 7H12.4999C12.4999 8.10457 11.6045 9 10.4999 9C9.39534 9 8.49991 8.10457 8.49991 7C8.49991 5.89543 9.39534 5 10.4999 5V7Z" fill="var(--fill-0, #D24726)"/>
+<path id="Subtract_2" d="M11.4999 4.5C12.3283 4.5 12.9999 5.17157 12.9999 6H11.4999V4.5Z" fill="var(--fill-0, #D24726)"/>
+</g>
+</g>
+</svg>

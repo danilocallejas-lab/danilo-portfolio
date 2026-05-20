@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">Crypto gifting illustration</title>
+  <desc id="desc">Layered crypto gift cards inspired by the Coinbase P2P gifting Figma design.</desc>
+  <rect width="120" height="120" fill="none"/>
+  <g transform="translate(8 18)">
+    <rect x="8" y="23" width="47" height="63" fill="#00d395" stroke="#071422" stroke-width="3"/>
+    <circle cx="49" cy="54" r="24" fill="none" stroke="#071422" stroke-width="3"/>
+    <rect x="50" y="9" width="58" height="63" fill="#ffd51e" stroke="#071422" stroke-width="3"/>
+    <circle cx="72" cy="40" r="24" fill="none" stroke="#071422" stroke-width="3"/>
+    <rect x="42" y="13" width="47" height="76" fill="#f5f8ff" stroke="#0052ff" stroke-width="5"/>
+    <circle cx="65.5" cy="51" r="25" fill="#ffd51e"/>
+    <path d="M40 51h51" stroke="#071422" stroke-width="4"/>
+    <path d="M65.5 26v13m0 24v13m-8-44 8 8 8-8m-8 52-8-8 8-8" stroke="#071422" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="65.5" cy="51" r="8" fill="#0052ff"/>
+    <path d="M61 51h9m-3.5-4 4 4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M87 19h5m-2.5-2.5v5M88 78h5m-2.5-2.5v5" stroke="#dbe3ee" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

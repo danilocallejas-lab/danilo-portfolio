@@ -1,0 +1,2 @@
+:HL["/embedded-prototypes/draftkings-player-pages/_next/static/css/b2a6fdf52f12a8d1.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"states","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"stats-error-dark","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"F_X1hhK3Vq_oI38-T5139"}

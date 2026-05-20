@@ -1,0 +1,19 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 4">
+<g id="Rectangle" filter="url(#filter0_d_0_93)">
+<rect width="24" height="29" rx="2" fill="var(--fill-0, #F7F9FA)"/>
+</g>
+<path id="Rectangle 10" fill-rule="evenodd" clip-rule="evenodd" d="M12.2896 14.0036L18.2574 18.0609L12.2876 22.1206L6.31973 18.0633" fill="var(--fill-0, #CADEEE)"/>
+<path id="Rectangle 10_2" fill-rule="evenodd" clip-rule="evenodd" d="M12.2896 8.43775L18.2574 12.495L12.2876 16.5547L6.31973 12.4974" fill="var(--fill-0, #0D2481)"/>
+</g>
+<defs>
+<filter id="filter0_d_0_93" x="0" y="0" width="24" height="30" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.882353 0 0 0 0 0.890196 0 0 0 0 0.901961 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_93"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_93" result="shape"/>
+</filter>
+</defs>
+</svg>

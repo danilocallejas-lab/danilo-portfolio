@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="artwork">
+<path id="Rectangle" d="M0 1.5C0 0.671573 0.671573 0 1.5 0H12.5C13.3284 0 14 0.671573 14 1.5V12.5C14 13.3284 13.3284 14 12.5 14H1.5C0.671573 14 0 13.3284 0 12.5V1.5Z" fill="var(--fill-0, #0F9D58)"/>
+<g id="Cells">
+<path id="Rectangle 3" d="M6 2H5V12H6V2Z" fill="var(--fill-0, white)"/>
+<path id="Rectangle 2" d="M12 5H2V6H12V5Z" fill="var(--fill-0, white)"/>
+</g>
+</g>
+</svg>

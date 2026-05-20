@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[7121,[],""]
+3:I[4581,[],""]
+:HL["/embedded-prototypes/draftkings-player-pages/_next/static/css/b2a6fdf52f12a8d1.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/draftkings-player-pages/_next/static/css/b2a6fdf52f12a8d1.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"F_X1hhK3Vq_oI38-T5139"}
