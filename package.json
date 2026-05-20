@@ -1,0 +1,37 @@
+{
+  "name": "danilo-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev-prototypes.mjs",
+    "dev:portfolio": "next dev",
+    "dev:prototypes": "node scripts/dev-prototypes.mjs",
+    "build:embedded-prototypes": "node scripts/build-embedded-prototypes.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test:unit": "node --test src/lib/*.test.ts",
+    "audit:embedded-prototypes": "node scripts/audit-embedded-prototypes.mjs",
+    "audit:vercel-project-fat": "node scripts/audit-vercel-project-fat.mjs",
+    "audit:prototype-embeds": "node scripts/audit-prototype-embeds.mjs",
+    "audit:prototype-embeds:browser": "node scripts/audit-prototype-embeds.mjs --browser",
+    "audit:prototype-embeds:local": "NEXT_PUBLIC_PROTOTYPE_EMBED_MODE=local node scripts/audit-prototype-embeds.mjs --local --browser",
+    "test:prototype-embeds": "node tests/prototype-embed-smoke.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^12.38.0",
+    "next": "16.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
