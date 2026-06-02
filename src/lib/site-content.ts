@@ -456,7 +456,7 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "The most useful contribution was often framing the work in a way that helped different teams rally around the same visual story.",
         image: {
-          src: "/images/archive/apple-edu.jpg",
+          src: "/images/cargo/apple-edu/frame-2248.png",
           alt: "Apple EDU campaign work.",
           frameClassName:
             "aspect-[16/10] bg-[linear-gradient(180deg,#fdf1e8_0%,#fff9f4_100%)]",
@@ -470,7 +470,7 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "The challenge was balancing inspiration with usefulness so the work still felt grounded in product reality.",
         image: {
-          src: "/images/archive/apple-edu.jpg",
+          src: "/images/cargo/apple-edu/frame-2249.png",
           alt: "Apple EDU visual storytelling.",
           frameClassName:
             "aspect-[16/10] bg-[linear-gradient(180deg,#fff5ee_0%,#ffffff_100%)]",
@@ -528,7 +528,7 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Strong venture design is often about compressing uncertainty. The visual language helped do that work.",
         image: {
-          src: "/images/archive/bellwether-coffee.jpg",
+          src: "/images/cargo/bellwether-coffee/landing.jpg",
           alt: "Bellwether Coffee brand system.",
           frameClassName:
             "aspect-[16/10] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
@@ -542,11 +542,413 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "The site did not just explain the company. It staged the company.",
         image: {
-          src: "/images/archive/bellwether-coffee.jpg",
+          src: "/images/cargo/bellwether-coffee/product-site.png",
           alt: "Bellwether Coffee digital experience.",
           frameClassName:
             "aspect-[16/10] bg-[linear-gradient(180deg,#f7f1eb_0%,#ffffff_100%)]",
           imageClassName: "object-cover object-right",
+        },
+      },
+    ],
+  },
+  {
+    slug: "dropbox-paper",
+    title: "Dropbox Paper",
+    company: "Dropbox",
+    category: "Co-editing and collaboration",
+    year: "2018-2021",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A focused look at creation, coordination, and collaborative documents.",
+    teaser:
+      "Connecting writing, planning, templates, and team coordination inside Dropbox Paper.",
+    role: "Product Designer",
+    collaborators: ["Dropbox Paper team"],
+    thesis:
+      "Make Paper feel like a calmer collaboration space where people can move from a blank document into coordinated team work.",
+    overview:
+      "Dropbox Paper sat at the intersection of document creation and project coordination. This work focused on making the product feel more useful across writing, editing, templates, and repeatable team workflows.",
+    problem:
+      "Collaborative documents can become either too empty to guide teams or too rigid to feel like a workspace. Paper needed to support both expressive creation and practical coordination.",
+    constraints: [
+      "The product had to stay lightweight while making more workflow value visible.",
+      "Templates and editing surfaces needed to support many kinds of teams without becoming generic.",
+      "The experience had to feel connected to Dropbox without losing Paper's softer creation-first personality.",
+    ],
+    designStrategy:
+      "Use document surfaces as starting points for momentum: clearer editing states, more helpful templates, and tighter bridges between writing and organizing.",
+    outcomes: [
+      "Made Paper's collaboration value easier to understand from first use.",
+      "Helped frame templates as a practical path into repeatable team work.",
+      "Extended the product story beyond documents into coordinated workspaces.",
+    ],
+    reflection:
+      "Paper reinforced how much collaboration design depends on tone. A good workspace has to guide people without making the document feel overdetermined.",
+    wallTone: "sage",
+    cover: {
+      src: "/images/archive/dropbox-paper.jpg",
+      alt: "Dropbox Paper collaboration surface.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Writing and Editing",
+        summary:
+          "The editing surface kept creation central while making collaboration feel more visible and easier to act on.",
+        caption:
+          "The document needed to stay quiet, but not empty. The strongest patterns helped teams understand what to do next without interrupting the work.",
+        image: {
+          src: "/images/cargo/dropbox-paper/editor.jpg",
+          alt: "Dropbox Paper editor interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#edf3ef_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Templates",
+        summary:
+          "Templates gave teams a faster way into recurring workflows without turning Paper into a rigid project management tool.",
+        caption:
+          "The goal was to make a new document feel useful immediately, especially for repeated collaboration patterns.",
+        image: {
+          src: "/images/cargo/dropbox-paper/templates.png",
+          alt: "Dropbox Paper templates surface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f2f6f3_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Dark Mode",
+        summary:
+          "Dark mode extended Paper's product language into a more comfortable reading and writing context.",
+        caption:
+          "Even a visual mode shift had to preserve Paper's softness and legibility.",
+        image: {
+          src: "/images/cargo/dropbox-paper/dark-mode.png",
+          alt: "Dropbox Paper dark mode interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "paper-desktop-app",
+    title: "Paper Desktop App",
+    company: "Dropbox",
+    category: "Desktop product",
+    year: "2018-2021",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A compact product story about quicker access and calmer desktop workflows.",
+    teaser:
+      "A dedicated desktop surface for Dropbox Paper focused on access, flow, and lightweight retrieval.",
+    role: "Product Designer",
+    collaborators: ["Dropbox Paper team"],
+    thesis:
+      "Bring Paper closer to daily work by making documents faster to open, search, and return to from the desktop.",
+    overview:
+      "The Paper desktop app explored how a collaborative document product could live closer to operating system habits. The work focused on activation, quick access, search, and a less distracting way back into recent work.",
+    problem:
+      "Browser-based collaboration tools often make returning to work feel heavier than it should. Paper needed a desktop presence that made retrieval and resumption feel immediate.",
+    constraints: [
+      "The app had to feel native enough for desktop use while remaining recognizably Paper.",
+      "Activation needed to explain value quickly without adding onboarding weight.",
+      "Search and recents had to reduce friction without becoming a second file manager.",
+    ],
+    designStrategy:
+      "Treat the desktop app as a fast doorway back into work: lightweight activation, clear retrieval, and focused paths into recent documents.",
+    outcomes: [
+      "Explored a sharper desktop entry point for Paper.",
+      "Made document retrieval and return behavior a more central part of the product story.",
+      "Helped connect Paper workflows to daily operating system habits.",
+    ],
+    reflection:
+      "This work made the value of proximity clear. Sometimes the design problem is not the document itself, but how quickly someone can get back to it.",
+    wallTone: "sage",
+    cover: {
+      src: "/images/archive/paper-desktop-app.jpg",
+      alt: "Dropbox Paper desktop app interface.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Activation",
+        summary:
+          "The desktop app needed to make its value obvious as a faster path back into Paper.",
+        caption:
+          "The first run experience framed the app around speed and continuity rather than another place to manage files.",
+        image: {
+          src: "/images/cargo/paper-desktop/activation.jpg",
+          alt: "Paper desktop activation screens.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Flow",
+        summary:
+          "Recent work and lightweight navigation made it easier to resume documents without rebuilding context.",
+        caption:
+          "The product needed to disappear just enough to make returning to work feel frictionless.",
+        image: {
+          src: "/images/cargo/paper-desktop/flow.jpg",
+          alt: "Paper desktop workflow screens.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f3f7f4_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Search",
+        summary:
+          "Search gave the desktop app a more direct path to retrieval, especially when people remembered the work but not the folder.",
+        caption:
+          "The goal was to make finding a Paper doc feel closer to muscle memory.",
+        image: {
+          src: "/images/cargo/paper-desktop/search.jpg",
+          alt: "Paper desktop search screens.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "vision-platform",
+    title: "Vision Platform",
+    company: "Retail platform",
+    category: "Inventory intelligence",
+    year: "2018",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A systems story about sensors, video, and retail operations.",
+    teaser:
+      "A retail intelligence platform connecting tags, sensors, gateways, and video into actionable inventory context.",
+    role: "UI/UX and Design Systems",
+    collaborators: ["Sato Global"],
+    thesis:
+      "Make a complex physical retail system readable for operators who needed to understand inventory, movement, and exceptions quickly.",
+    overview:
+      "Vision Platform brought together retail tags, sensors, gateways, and camera feeds into a more unified operational view. The design challenge was turning technical infrastructure into clear, actionable software.",
+    problem:
+      "Retail operators were dealing with many signals at once, but the product needed to show what mattered, where it was happening, and what action to take next.",
+    constraints: [
+      "The interface had to make hardware-driven data feel reliable and understandable.",
+      "Operators needed dense information without losing scanability.",
+      "The system had to support both overview monitoring and focused investigation.",
+    ],
+    designStrategy:
+      "Use a restrained dashboard language that connected system status, visual context, and operational detail without overwhelming the primary task.",
+    outcomes: [
+      "Created a clearer interface foundation for retail intelligence workflows.",
+      "Connected physical system signals to more usable software states.",
+      "Helped make inventory exceptions and operational context easier to inspect.",
+    ],
+    reflection:
+      "Vision Platform sat squarely between hardware and software. The useful design move was making invisible systems feel inspectable.",
+    wallTone: "cobalt",
+    cover: {
+      src: "/images/cargo/vision-platform/cover.jpg",
+      alt: "Vision Platform retail intelligence dashboard.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#eef3ff_0%,#fdfefe_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "System Overview",
+        summary:
+          "The dashboard connected retail locations, hardware signals, and inventory states in one readable view.",
+        caption:
+          "The product needed to make complexity feel operational instead of technical.",
+        image: {
+          src: "/images/cargo/vision-platform/group-copy-5.jpg",
+          alt: "Vision Platform overview interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Inspection",
+        summary:
+          "Focused views helped operators move from system-level signals into the details behind an exception.",
+        caption:
+          "Good operational software keeps the path from alert to evidence short.",
+        image: {
+          src: "/images/cargo/vision-platform/group-copy-6.jpg",
+          alt: "Vision Platform inspection interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f2f5fd_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "food-labs",
+    title: "Food Labs",
+    company: "Hospitality",
+    category: "Event and experience design",
+    year: "2017",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "An editorial brand and digital experience for a culinary residency.",
+    teaser:
+      "A culinary residency concept translated into an editorial brand and digital experience.",
+    role: "Art Direction and Design",
+    collaborators: ["Howard Hughes Studio"],
+    thesis:
+      "Give a food residency enough editorial character to feel culturally specific while keeping the digital experience direct and useful.",
+    overview:
+      "Food Labs was a hospitality and culinary residency concept. The work translated a live experience into a brand and web presence that could carry chefs, programming, and event context.",
+    problem:
+      "Event brands need to feel alive before the event happens. The challenge was making the concept legible and compelling through a small set of digital and visual touchpoints.",
+    constraints: [
+      "The identity needed to support multiple chefs, events, and content types.",
+      "The site had to balance atmosphere with practical event information.",
+      "The experience needed to feel editorial without obscuring the schedule and offering.",
+    ],
+    designStrategy:
+      "Use a flexible editorial system that could foreground food, residency programming, and event storytelling without becoming overdesigned.",
+    outcomes: [
+      "Created a sharper digital frame for the residency concept.",
+      "Balanced practical event information with a more distinctive editorial tone.",
+      "Helped the experience feel like a programmed cultural moment rather than a generic food event.",
+    ],
+    reflection:
+      "Food Labs was a useful reminder that hospitality design is mostly anticipation. The digital work has to make the room feel real before anyone arrives.",
+    wallTone: "sunset",
+    cover: {
+      src: "/images/cargo/food-labs/header.jpg",
+      alt: "Food Labs editorial landing page.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#fdf2ec_0%,#fffaf6_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Residency Story",
+        summary:
+          "The site framed the concept around culinary programming, editorial pace, and the feeling of a temporary cultural space.",
+        caption:
+          "The work needed enough atmosphere to make the event feel desirable and enough clarity to make attendance easy.",
+        image: {
+          src: "/images/cargo/food-labs/residency.png",
+          alt: "Food Labs residency page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff1e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Editorial System",
+        summary:
+          "A simple visual language made room for photography, programming, and event details to carry the experience.",
+        caption:
+          "The strongest moments let the content do the work while the system handled rhythm and hierarchy.",
+        image: {
+          src: "/images/cargo/food-labs/image-1.jpg",
+          alt: "Food Labs editorial image and web layout.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff7f1_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "garden-bar",
+    title: "Garden Bar",
+    company: "Chase x Seaport District",
+    category: "Campaign and spatial storytelling",
+    year: "2017",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A place-led campaign built around New York history and neighborhood culture.",
+    teaser:
+      "A campaign experience celebrating New York history, place, and neighborhood culture through event design and storytelling.",
+    role: "Art Direction and Design",
+    collaborators: ["Howard Hughes Studio", "Chase", "Seaport District"],
+    thesis:
+      "Turn a seasonal bar and event program into a place-specific campaign that felt connected to Lower Manhattan rather than dropped into it.",
+    overview:
+      "Garden Bar was a campaign and spatial storytelling project for Chase and Seaport District. The work connected event design, local history, and a digital campaign language around a specific New York setting.",
+    problem:
+      "Place-based campaigns can feel generic when they borrow culture instead of building from it. This project needed to make the event feel rooted in the neighborhood.",
+    constraints: [
+      "The system had to support digital, environmental, and event-facing moments.",
+      "The work needed to feel premium and accessible at the same time.",
+      "Historical references had to enrich the experience without slowing down the campaign.",
+    ],
+    designStrategy:
+      "Use a clean campaign system with enough local texture to make the bar feel like part of the district's story.",
+    outcomes: [
+      "Created a visual and digital frame for a place-led event experience.",
+      "Connected brand participation to a clearer neighborhood narrative.",
+      "Made the campaign feel more specific to Seaport District and Lower Manhattan.",
+    ],
+    reflection:
+      "Garden Bar sits in the part of design where brand, place, and event behavior overlap. The strongest work gave the setting a voice.",
+    wallTone: "sand",
+    cover: {
+      src: "/images/cargo/garden-bar/cover.jpg",
+      alt: "Garden Bar campaign landing page.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#f7f0e8_0%,#fbf7f2_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Campaign Surface",
+        summary:
+          "The digital surface established the event as a seasonal destination with a clearer sense of place.",
+        caption:
+          "The campaign needed to make the venue feel specific before the visitor ever arrived.",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2254.jpg",
+          alt: "Garden Bar digital campaign surface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f7f0e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Place Story",
+        summary:
+          "Visual and narrative moments connected the experience to Lower Manhattan and the Seaport District.",
+        caption:
+          "The point was to make the brand experience feel hosted by the neighborhood, not merely sponsored there.",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2257.png",
+          alt: "Garden Bar place story layout.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fbf4ed_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Event Details",
+        summary:
+          "Supporting layouts gave practical event information a more polished campaign frame.",
+        caption:
+          "Details still needed hierarchy and rhythm, especially across event-specific touchpoints.",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2259.png",
+          alt: "Garden Bar event details layout.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f8f1ea_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
         },
       },
     ],
@@ -561,6 +963,7 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2018-2021",
     summary:
       "A collaboration experience built to connect creation and coordination inside the same workspace.",
+    href: "/work/dropbox-paper",
     image: "/images/archive/dropbox-paper.jpg",
   },
   {
@@ -570,6 +973,7 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2018-2021",
     summary:
       "A dedicated desktop surface focused on quicker access, calmer workflow, and fewer distractions.",
+    href: "/work/paper-desktop-app",
     image: "/images/archive/paper-desktop-app.jpg",
   },
   {
@@ -579,6 +983,8 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2018",
     summary:
       "A retail platform connecting tags, sensors, gateways, and video into a more actionable view of inventory and operations.",
+    href: "/work/vision-platform",
+    image: "/images/cargo/vision-platform/cover.jpg",
   },
   {
     title: "Food Labs",
@@ -587,6 +993,8 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2017",
     summary:
       "A culinary residency concept translated into a more editorial brand and digital experience.",
+    href: "/work/food-labs",
+    image: "/images/cargo/food-labs/header.jpg",
   },
   {
     title: "Garden Bar",
@@ -595,6 +1003,8 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2017",
     summary:
       "A campaign experience celebrating New York history, place, and neighborhood culture through event design and storytelling.",
+    href: "/work/garden-bar",
+    image: "/images/cargo/garden-bar/cover.jpg",
   },
 ];
 

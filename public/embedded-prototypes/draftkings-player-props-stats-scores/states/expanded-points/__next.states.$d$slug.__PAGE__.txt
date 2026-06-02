@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-2:I[797,["500","static/chunks/500-c99b8dfd3de17c86.js","797","static/chunks/797-232bcfecdc16f147.js","123","static/chunks/app/states/%5Bslug%5D/page-c4f8805a92e18104.js"],"PlayerPropsStateScene"]
+2:I[797,["500","static/chunks/500-c99b8dfd3de17c86.js","797","static/chunks/797-4b70f4fb2efe086d.js","123","static/chunks/app/states/%5Bslug%5D/page-c4f8805a92e18104.js"],"PlayerPropsStateScene"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"relative min-h-screen bg-[#050505]","children":["$","$L2",null,{"mode":"expanded-points"}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"NsAo4TrsTRKcvdlBF6xeI"}
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"relative min-h-screen bg-[#050505]","children":["$","$L2",null,{"mode":"expanded-points"}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"TXTGkWOlxWH1FnyFq30bA"}
 5:null

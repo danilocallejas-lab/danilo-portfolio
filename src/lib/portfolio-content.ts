@@ -6,9 +6,10 @@ export type PrototypeLifecycle =
   | "blocked";
 export type PrototypeStatus = PrototypeLifecycle;
 export type PrototypeFrameSurface =
-  | "opendoor-stone"
-  | "draftkings-charcoal"
-  | "coinbase-wash";
+  | "opendoor"
+  | "dropbox"
+  | "draftkings"
+  | "coinbase";
 
 export type FallbackComponentKey =
   | "OpendoorSellerDemo"
@@ -219,6 +220,13 @@ const retiredPrototypeDeployments: Partial<
 const PORTFOLIO_PRODUCTION_ORIGIN =
   "https://danilo-callejas-portfolio.vercel.app";
 
+const prototypeFrameSurfaceByCompany: Record<string, PrototypeFrameSurface> = {
+  Opendoor: "opendoor",
+  Dropbox: "dropbox",
+  DraftKings: "draftkings",
+  Coinbase: "coinbase",
+};
+
 const embeddedPrototypeUrls: Partial<Record<string, string>> = {
   "opendoor-seller-experience":
     "/embedded-prototypes/opendoor-seller-experience/hub/",
@@ -264,7 +272,7 @@ const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = 
     workspace:
       "/Users/redeemer/Desktop/danilo-prototypes/opendoor/home-insights",
     port: 4102,
-    path: "/hub",
+    path: "/hub?embed=1",
     startCommand: "npm run dev -- --webpack --port 4102",
   },
   "opendoor-agent-led-offers-tooling-platform": {
@@ -479,7 +487,10 @@ function normalizeProjectSection(section: LegacyProjectSection): ProjectSection 
       slug: section.section_id,
       embedUrl: prototypeEmbedUrl,
       openUrl: prototypeOpenUrl,
-      frameSurface: section.prototype_frame_surface ?? null,
+      frameSurface:
+        section.prototype_frame_surface ??
+        prototypeFrameSurfaceByCompany[section.company] ??
+        null,
       fallbackComponent: section.right_panel.fallback_component,
       lifecycle: prototypeLifecycle,
       status: prototypeLifecycle,
@@ -525,9 +536,8 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "opendoor-stone",
     notes:
-      "The former standalone seller prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
+      "Published as a same-origin portfolio embed from the current Seller Experience prototype workspace.",
     accent: "warm mineral, calm, residential",
     case_study_gallery: [
       {
@@ -574,7 +584,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "opendoor-stone",
     notes:
       "The former standalone Home Insights prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
     accent: "warm mineral, architectural, quiet",
@@ -605,7 +614,7 @@ const legacyPortfolioSections = [
     company: "Opendoor",
     product_line: "Agent operations",
     role: "Staff Product Designer",
-    title: "Agent Led Offers / Tooling Platform",
+    title: "Agent led offers",
     time_period: "2024-Present",
     summary:
       "Even with strong digital tools, sellers still want human guidance. I designed the agent-led offers workflow so pricing, assessment, options, and follow-through lived in one clearer system.",
@@ -672,7 +681,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "draftkings-charcoal",
     notes:
       "The former standalone Betslip Migration prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
     accent: "ember, stadium black, sharp",
@@ -1053,7 +1061,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "coinbase-wash",
     accent: "cool blue, utility, measured",
     case_study_gallery: [
       {
@@ -1100,7 +1107,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "coinbase-wash",
     accent: "mist blue, human, clear",
     case_study_gallery: [
       {

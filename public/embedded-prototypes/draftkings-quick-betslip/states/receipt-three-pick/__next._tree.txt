@@ -3,5 +3,5 @@
 :HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/media/9f56976a2af2c907-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/media/c66c3989b8a414b0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/media/fcca8430c54b1ee3-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/css/ba590b69f43ca317.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"states","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"receipt-three-pick","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"PQFQt1HW8G5NAyXcyhuYb"}
+:HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/css/f64538145570672d.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"states","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"receipt-three-pick","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"udHoiTOSkEv-QiHB1XnPe"}

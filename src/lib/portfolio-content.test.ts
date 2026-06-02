@@ -9,6 +9,7 @@ import {
   getPrototypeFrameStatus,
   getPrototypeFrameUrl,
   getRetiredPrototypeDeployment,
+  portfolio_sections,
 } from "./portfolio-content.ts";
 
 function withEnv(
@@ -160,4 +161,34 @@ test("retired standalone deployments are metadata only", () => {
     getRetiredPrototypeDeployment(project.prototype.slug)?.formerVercelProject,
     "draftkings-quick-betslip",
   );
+});
+
+test("prototype frame surfaces inherit from company", () => {
+  const expectedSurfaceByCompany = {
+    Opendoor: "opendoor",
+    Dropbox: "dropbox",
+    DraftKings: "draftkings",
+    Coinbase: "coinbase",
+  } as const;
+
+  for (const section of portfolio_sections) {
+    if (section.section_type !== "project") {
+      continue;
+    }
+
+    assert.equal(
+      section.prototype.frameSurface,
+      expectedSurfaceByCompany[
+        section.company as keyof typeof expectedSurfaceByCompany
+      ],
+      section.section_id,
+    );
+  }
+});
+
+test("DraftKings Global Switcher uses the DraftKings frame surface", () => {
+  const project = getProjectByPrototypeSlug("draftkings-global-switcher");
+
+  assert.ok(project);
+  assert.equal(project.prototype.frameSurface, "draftkings");
 });

@@ -5,7 +5,6 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
-  renameSync,
   rmSync,
   statSync,
   writeFileSync,
@@ -18,10 +17,11 @@ import {
   getEmbeddedPrototypeBasePath,
   getEmbeddedPrototypeUrlPath,
 } from "./embedded-prototype-manifest.mjs";
+import { getSlugFilter } from "./prototype-shared.mjs";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const embeddedRoot = join(repoRoot, "public", "embedded-prototypes");
-const retiredBuildRoot = "/Users/redeemer/Desktop/.danilo-embedded-build-retired";
+const embeddedNextDistDir = ".next-embedded";
 const textFilePattern =
   /\.(?:css|html|js|json|map|mjs|svg|txt|webmanifest|xml)$/i;
 
@@ -49,21 +49,6 @@ function copyDir(source, destination) {
   rmSync(destination, { recursive: true, force: true });
   mkdirSync(dirname(destination), { recursive: true });
   cpSync(source, destination, { recursive: true });
-}
-
-function moveAsideIfExists(path) {
-  if (!existsSync(path)) {
-    return null;
-  }
-
-  const retiredPath = join(
-    retiredBuildRoot,
-    `${path.split("/").filter(Boolean).pop()}-${Date.now()}`,
-  );
-  mkdirSync(dirname(retiredPath), { recursive: true });
-  renameSync(path, retiredPath);
-
-  return retiredPath;
 }
 
 function walkFiles(root) {
@@ -142,8 +127,10 @@ function removeDuplicateExportEntries(targetRoot) {
 }
 
 function buildNext(target, basePath) {
-  moveAsideIfExists(join(target.workspace, ".next"));
-  moveAsideIfExists(join(target.workspace, "out"));
+  rmSync(join(target.workspace, embeddedNextDistDir), {
+    recursive: true,
+    force: true,
+  });
   rmSync(join(target.workspace, "out"), { recursive: true, force: true });
   run(join(target.workspace, "node_modules", ".bin", "next"), [
     "build",
@@ -153,6 +140,7 @@ function buildNext(target, basePath) {
     env: {
       ...process.env,
       EMBEDDED_PROTOTYPE_BASE_PATH: basePath,
+      EMBEDDED_PROTOTYPE_DIST_DIR: embeddedNextDistDir,
       EMBEDDED_PROTOTYPE_EXPORT: "1",
       NEXT_PUBLIC_EMBEDDED_PROTOTYPE_PRESENTATION:
         target.presentation ?? "phone-only",
@@ -160,14 +148,27 @@ function buildNext(target, basePath) {
     },
   });
 
-  const nestedOut = join(target.workspace, "out", "embedded-prototypes", target.slug);
-  const outRoot = existsSync(nestedOut) ? nestedOut : join(target.workspace, "out");
+  const outRoot = join(target.workspace, "out");
+  const nestedOut = join(outRoot, "embedded-prototypes", target.slug);
+  const embeddedOutRoot = join(target.workspace, embeddedNextDistDir);
+  const nestedEmbeddedOut = join(
+    embeddedOutRoot,
+    "embedded-prototypes",
+    target.slug,
+  );
+  const exportRoot = existsSync(nestedOut)
+    ? nestedOut
+    : existsSync(outRoot)
+      ? outRoot
+      : existsSync(nestedEmbeddedOut)
+        ? nestedEmbeddedOut
+        : embeddedOutRoot;
 
-  if (!existsSync(outRoot)) {
+  if (!existsSync(exportRoot)) {
     throw new Error(`${target.label} did not produce a Next static export`);
   }
 
-  return outRoot;
+  return exportRoot;
 }
 
 function buildVite(target, basePath) {
@@ -222,34 +223,6 @@ function buildTarget(target) {
     default:
       throw new Error(`Unknown embedded prototype type: ${target.type}`);
   }
-}
-
-function getSlugFilter() {
-  const slugFlagIndex = process.argv.indexOf("--slug");
-
-  if (slugFlagIndex !== -1) {
-    const slug = process.argv[slugFlagIndex + 1];
-
-    if (!slug || slug.startsWith("--")) {
-      throw new Error("--slug requires a prototype slug");
-    }
-
-    return slug;
-  }
-
-  const slugEqualsArg = process.argv.find((arg) => arg.startsWith("--slug="));
-
-  if (slugEqualsArg) {
-    const slug = slugEqualsArg.slice("--slug=".length);
-
-    if (!slug) {
-      throw new Error("--slug requires a prototype slug");
-    }
-
-    return slug;
-  }
-
-  return null;
 }
 
 function main() {

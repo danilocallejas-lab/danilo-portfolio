@@ -29,6 +29,36 @@ function getArchiveAnchorId(project: Pick<ArchiveProject, "title">) {
     .replace(/^-|-$/g, "")}`;
 }
 
+function ProjectIndexNavRow({
+  href,
+  project,
+  titleClassName,
+}: {
+  href: string;
+  project: Pick<
+    FeaturedProject | ArchiveProject,
+    "title" | "company" | "category" | "year"
+  >;
+  titleClassName: string;
+}) {
+  return (
+    <a
+      href={href}
+      className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
+    >
+      <div className="space-y-1">
+        <p className={titleClassName}>{project.title}</p>
+        <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+          {project.company} / {project.category}
+        </p>
+      </div>
+      <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+        {project.year}
+      </p>
+    </a>
+  );
+}
+
 function ProjectPreview({
   project,
 }: {
@@ -101,23 +131,12 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
               <p className="editorial-eyebrow">Selected Work</p>
               <nav className="divide-y divide-[rgba(17,17,15,0.08)] border-y border-[rgba(17,17,15,0.08)]">
                 {projects.map((project) => (
-                  <a
+                  <ProjectIndexNavRow
                     key={project.slug}
                     href={`#${project.slug}`}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-display text-[1.34rem] leading-[0.95] tracking-[-0.04em] text-foreground transition-colors group-hover:text-[var(--link-hover)]">
-                        {project.title}
-                      </p>
-                      <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                        {project.company} / {project.category}
-                      </p>
-                    </div>
-                    <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      {project.year}
-                    </p>
-                  </a>
+                    project={project}
+                    titleClassName="font-display text-[1.34rem] leading-[0.95] tracking-[-0.04em] text-foreground transition-colors group-hover:text-[var(--link-hover)]"
+                  />
                 ))}
               </nav>
             </div>
@@ -126,23 +145,12 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
               <p className="editorial-eyebrow">Archive</p>
               <nav className="divide-y divide-[rgba(17,17,15,0.08)] border-y border-[rgba(17,17,15,0.08)]">
                 {archiveProjects.map((project) => (
-                  <a
+                  <ProjectIndexNavRow
                     key={project.title}
                     href={`#${getArchiveAnchorId(project)}`}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-display text-[1.2rem] leading-[0.95] tracking-[-0.035em] text-foreground transition-colors group-hover:text-[var(--link-hover)]">
-                        {project.title}
-                      </p>
-                      <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                        {project.company} / {project.category}
-                      </p>
-                    </div>
-                    <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      {project.year}
-                    </p>
-                  </a>
+                    project={project}
+                    titleClassName="font-display text-[1.2rem] leading-[0.95] tracking-[-0.035em] text-foreground transition-colors group-hover:text-[var(--link-hover)]"
+                  />
                 ))}
               </nav>
             </div>

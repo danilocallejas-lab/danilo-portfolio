@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { archiveProjects } from "@/lib/site-content";
 
 export const metadata: Metadata = {
@@ -8,42 +9,43 @@ export const metadata: Metadata = {
     "Additional work from Danilo Callejas's current portfolio, kept as a lighter side room off the main gallery.",
 };
 
+function ArchiveProjectAction({ href }: { href?: string }) {
+  const className =
+    "inline-flex items-center rounded-full bg-foreground px-4 py-2 text-[0.9rem] text-background transition-opacity hover:opacity-[0.82]";
+
+  if (!href) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[var(--surface-strong)] px-4 py-2 text-[0.9rem] text-foreground">
+        Archive reference
+      </span>
+    );
+  }
+
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href} className={className}>
+        Open case study
+      </Link>
+    );
+  }
+
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className={className}>
+      Open project
+    </a>
+  );
+}
+
 export default function ArchivePage() {
   return (
     <div className="page-shell">
-      <div className="page-content space-y-[var(--section-gap)]">
-        <section className="surface-panel p-[var(--panel-padding-lg)]">
-          <div className="@container/archive-intro grid gap-8 @5xl/archive-intro:grid-cols-[minmax(0,1fr)_22rem]">
-            <div className="space-y-4">
-              <p className="editorial-eyebrow">Archive</p>
-              <h1 className="type-h1 font-display text-foreground">
-                Extra rooms, lighter treatment.
-              </h1>
-              <p className="max-w-3xl text-[1.08rem] leading-8 text-[var(--muted)]">
-                The homepage now behaves like a guided gallery walk, so this page
-                stays intentionally simpler. These projects still matter, but they
-                do not need the same amount of staging to be useful.
-              </p>
-            </div>
-
-            <div className="rounded-[calc(var(--panel-radius)-0.125rem)] border border-[var(--archive-note-border)] bg-[var(--archive-note-surface)] p-[var(--panel-padding)] text-[var(--archive-note-foreground)] shadow-[var(--shadow-soft)]">
-              <p className="editorial-eyebrow text-[var(--archive-note-muted)]">
-                Side room note
-              </p>
-              <p className="mt-4 text-[0.98rem] leading-7 text-[var(--archive-note-foreground)]">
-                This page now stays self-contained. The main gallery favors the
-                most staged pieces, while this archive keeps the rest of the work
-                close at hand without routing back through the old site.
-              </p>
-            </div>
-          </div>
-        </section>
-
+      <div className="page-content">
+        <h1 className="sr-only">Archive</h1>
         <section className="auto-fit-grid">
           {archiveProjects.map((project) => (
             <article
               key={project.title}
-              className="surface-card group @container/archive-card p-[var(--panel-padding)]"
+              className="group @container/archive-card"
             >
               <div
                 className={`grid gap-5 ${
@@ -70,7 +72,7 @@ export default function ArchivePage() {
                   </div>
                 )}
 
-                <div className="space-y-4 p-1">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="editorial-eyebrow">
                       {project.company} / {project.category} / {project.year}
@@ -82,9 +84,7 @@ export default function ArchivePage() {
                   <p className="text-[1rem] leading-7 text-[var(--muted)]">
                     {project.summary}
                   </p>
-                  <span className="inline-flex items-center rounded-full border border-[var(--border)] px-4 py-2 text-[0.9rem] text-foreground">
-                    Archive reference
-                  </span>
+                  <ArchiveProjectAction href={project.href} />
                 </div>
               </div>
             </article>

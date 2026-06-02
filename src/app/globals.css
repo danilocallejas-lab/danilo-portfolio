@@ -38,16 +38,15 @@
     rgba(255, 255, 255, 0.95),
     rgba(248, 244, 238, 1)
   );
-  --prototype-frame-surface-default: var(--frame-surface-gradient);
-  --prototype-frame-surface-opendoor-stone:
-    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.32), transparent 34%),
-    linear-gradient(180deg, #ece7e1 0%, #e2ddd6 100%);
-  --prototype-frame-surface-draftkings-charcoal:
-    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.07), transparent 36%),
-    linear-gradient(180deg, #181716 0%, #111111 100%);
-  --prototype-frame-surface-coinbase-wash:
-    radial-gradient(circle at 50% 10%, rgba(87, 119, 255, 0.14), transparent 34%),
-    linear-gradient(180deg, #f3f7ff 0%, #e8f0ff 100%);
+  --prototype-frame-canvas-opendoor: #e6ddd3;
+  --prototype-frame-canvas-dropbox: #fefefe;
+  --prototype-frame-canvas-draftkings: #dedcdc;
+  --prototype-frame-canvas-coinbase: #ecf3ff;
+  --prototype-frame-surface-default: var(--prototype-frame-canvas-dropbox);
+  --prototype-frame-surface-opendoor: var(--prototype-frame-canvas-opendoor);
+  --prototype-frame-surface-dropbox: var(--prototype-frame-canvas-dropbox);
+  --prototype-frame-surface-draftkings: var(--prototype-frame-canvas-draftkings);
+  --prototype-frame-surface-coinbase: var(--prototype-frame-canvas-coinbase);
   --frame-spinner-surface: rgba(255, 255, 255, 0.7);
   --app-background-gradient: linear-gradient(
     180deg,
@@ -160,16 +159,31 @@ html[data-theme="dark"] {
     rgba(35, 31, 29, 0.98),
     rgba(26, 24, 23, 0.98)
   );
-  --prototype-frame-surface-default: var(--frame-surface-gradient);
-  --prototype-frame-surface-opendoor-stone:
-    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.12), transparent 34%),
-    linear-gradient(180deg, #cfc6bc 0%, #b9b0a6 100%);
-  --prototype-frame-surface-draftkings-charcoal:
-    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.06), transparent 36%),
-    linear-gradient(180deg, #161616 0%, #0d0d0d 100%);
-  --prototype-frame-surface-coinbase-wash:
-    radial-gradient(circle at 50% 10%, rgba(120, 145, 255, 0.2), transparent 34%),
-    linear-gradient(180deg, #d5e0ff 0%, #becdf7 100%);
+  --prototype-frame-surface-default: color-mix(
+    in srgb,
+    var(--prototype-frame-canvas-dropbox) 90%,
+    var(--background) 10%
+  );
+  --prototype-frame-surface-opendoor: color-mix(
+    in srgb,
+    var(--prototype-frame-canvas-opendoor) 90%,
+    var(--background) 10%
+  );
+  --prototype-frame-surface-dropbox: color-mix(
+    in srgb,
+    var(--prototype-frame-canvas-dropbox) 90%,
+    var(--background) 10%
+  );
+  --prototype-frame-surface-draftkings: color-mix(
+    in srgb,
+    var(--prototype-frame-canvas-draftkings) 90%,
+    var(--background) 10%
+  );
+  --prototype-frame-surface-coinbase: color-mix(
+    in srgb,
+    var(--prototype-frame-canvas-coinbase) 90%,
+    var(--background) 10%
+  );
   --frame-spinner-surface: rgba(31, 28, 27, 0.82);
   --app-background-gradient: linear-gradient(
     180deg,
@@ -303,6 +317,10 @@ html[data-theme="bright"] .type-h3 {
   font-size: var(--type-h1);
   line-height: 0.92;
   letter-spacing: -0.055em;
+}
+
+.intro-headline {
+  --type-h1: clamp(2.85rem, 1.9rem + 4.17vw, 5rem);
 }
 
 .type-h2 {
@@ -446,7 +464,7 @@ html[data-theme="bright"] .type-h3 {
 }
 
 html[data-theme="dark"] .company-row--opendoor {
-  --company-surface: #171311;
+  --company-surface: var(--intro-surface);
   --company-heading: #f5eee4;
   --company-copy: #d7c8b9;
   --company-meta: #b49f8b;
@@ -473,7 +491,8 @@ html[data-theme="dark"] .company-row--dropbox {
   --company-meta: #98a79e;
 }
 
-html[data-theme="bright"] .company-row--opendoor {
+html[data-theme="bright"] .company-row--opendoor,
+html[data-theme="bright"] .zine-company--opendoor {
   --company-surface: var(--bright-opendoor-surface);
   --company-heading: var(--bright-opendoor-heading);
   --company-copy: var(--bright-opendoor-copy);
@@ -486,7 +505,8 @@ html[data-theme="bright"] .company-row--opendoor {
   --company-label-letter-spacing: var(--bright-opendoor-label-letter-spacing);
 }
 
-html[data-theme="bright"] .company-row--draftkings {
+html[data-theme="bright"] .company-row--draftkings,
+html[data-theme="bright"] .zine-company--draftkings {
   --company-surface: var(--bright-draftkings-surface);
   --company-heading: var(--bright-draftkings-heading);
   --company-copy: var(--bright-draftkings-copy);
@@ -499,7 +519,8 @@ html[data-theme="bright"] .company-row--draftkings {
   --company-label-letter-spacing: var(--bright-draftkings-label-letter-spacing);
 }
 
-html[data-theme="bright"] .company-row--coinbase {
+html[data-theme="bright"] .company-row--coinbase,
+html[data-theme="bright"] .zine-company--coinbase {
   --company-surface: var(--bright-coinbase-surface);
   --company-heading: var(--bright-coinbase-heading);
   --company-copy: var(--bright-coinbase-copy);
@@ -512,7 +533,8 @@ html[data-theme="bright"] .company-row--coinbase {
   --company-label-letter-spacing: var(--bright-coinbase-label-letter-spacing);
 }
 
-html[data-theme="bright"] .company-row--dropbox {
+html[data-theme="bright"] .company-row--dropbox,
+html[data-theme="bright"] .zine-company--dropbox {
   --company-surface: var(--bright-dropbox-surface);
   --company-heading: var(--bright-dropbox-heading);
   --company-copy: var(--bright-dropbox-copy);
@@ -569,6 +591,19 @@ html[data-theme="bright"] .site-header-link:hover {
   transform: translateY(-1px);
 }
 
+.work-view-switcher-button {
+  color: var(--muted);
+}
+
+.work-view-switcher-button:hover {
+  color: var(--foreground);
+}
+
+.work-view-switcher-button[data-active="true"] {
+  background: var(--foreground);
+  color: var(--background);
+}
+
 .demo-frame-chrome {
   --demo-frame-chrome-foreground: var(--foreground);
   --demo-frame-chrome-meta: var(--muted);
@@ -586,58 +621,6 @@ html[data-theme="bright"] .zine-company .demo-frame-chrome-label,
 html[data-theme="bright"] .zine-company .demo-frame-chrome-link {
   font-weight: 700;
   letter-spacing: var(--company-label-letter-spacing);
-}
-
-html[data-theme="bright"] .zine-company--opendoor {
-  --company-surface: var(--bright-opendoor-surface);
-  --company-heading: var(--bright-opendoor-heading);
-  --company-copy: var(--bright-opendoor-copy);
-  --company-meta: var(--bright-opendoor-meta);
-  --company-display-font: var(--bright-opendoor-display-font);
-  --company-body-font: var(--bright-opendoor-body-font);
-  --company-label-font: var(--bright-opendoor-label-font);
-  --company-heading-letter-spacing: var(--bright-opendoor-heading-letter-spacing);
-  --company-heading-text-transform: var(--bright-opendoor-heading-text-transform);
-  --company-label-letter-spacing: var(--bright-opendoor-label-letter-spacing);
-}
-
-html[data-theme="bright"] .zine-company--draftkings {
-  --company-surface: var(--bright-draftkings-surface);
-  --company-heading: var(--bright-draftkings-heading);
-  --company-copy: var(--bright-draftkings-copy);
-  --company-meta: var(--bright-draftkings-meta);
-  --company-display-font: var(--bright-draftkings-display-font);
-  --company-body-font: var(--bright-draftkings-body-font);
-  --company-label-font: var(--bright-draftkings-label-font);
-  --company-heading-letter-spacing: var(--bright-draftkings-heading-letter-spacing);
-  --company-heading-text-transform: var(--bright-draftkings-heading-text-transform);
-  --company-label-letter-spacing: var(--bright-draftkings-label-letter-spacing);
-}
-
-html[data-theme="bright"] .zine-company--coinbase {
-  --company-surface: var(--bright-coinbase-surface);
-  --company-heading: var(--bright-coinbase-heading);
-  --company-copy: var(--bright-coinbase-copy);
-  --company-meta: var(--bright-coinbase-meta);
-  --company-display-font: var(--bright-coinbase-display-font);
-  --company-body-font: var(--bright-coinbase-body-font);
-  --company-label-font: var(--bright-coinbase-label-font);
-  --company-heading-letter-spacing: var(--bright-coinbase-heading-letter-spacing);
-  --company-heading-text-transform: var(--bright-coinbase-heading-text-transform);
-  --company-label-letter-spacing: var(--bright-coinbase-label-letter-spacing);
-}
-
-html[data-theme="bright"] .zine-company--dropbox {
-  --company-surface: var(--bright-dropbox-surface);
-  --company-heading: var(--bright-dropbox-heading);
-  --company-copy: var(--bright-dropbox-copy);
-  --company-meta: var(--bright-dropbox-meta);
-  --company-display-font: var(--bright-dropbox-display-font);
-  --company-body-font: var(--bright-dropbox-body-font);
-  --company-label-font: var(--bright-dropbox-label-font);
-  --company-heading-letter-spacing: var(--bright-dropbox-heading-letter-spacing);
-  --company-heading-text-transform: var(--bright-dropbox-heading-text-transform);
-  --company-label-letter-spacing: var(--bright-dropbox-label-letter-spacing);
 }
 
 @media (width >= 48rem) {

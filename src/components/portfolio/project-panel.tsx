@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { DemoFrame } from "@/components/portfolio/demo-frame";
+import { getEditorialCaseStudyHrefForCompany } from "@/lib/editorial-routing";
 import {
   getPrototypeAllowPreviewEmbed,
   getPrototypeFrameSourceType,
@@ -75,14 +77,16 @@ export function ProjectPanel({
   is_active: boolean;
   transition_key: string;
 }) {
-  const metadataItems = [project.role, project.time_period, project.product_line].filter(
-    Boolean,
-  );
+  const metadataItems = [
+    project.time_period,
+    project.product_line,
+  ].filter(Boolean);
   const projectCounterLabel = getProjectCounterLabel(project);
   const prototypeMetaLabel = getPrototypeMetaLabel(project, projectCounterLabel);
   const demoTone = demoToneByCompany[project.company];
   const prototypeFrameSource = getPrototypeFrameSourceType(project.prototype);
   const zineCompanyClassName = zineCompanyClassByCompany[project.company] ?? "";
+  const editorialCaseStudyHref = getEditorialCaseStudyHrefForCompany(project.company);
 
   return (
     <div
@@ -90,70 +94,91 @@ export function ProjectPanel({
       data-header-theme-section
     >
       <div className="page-content @container/project-panel">
-        <div className="grid w-full gap-[var(--section-gap)] @6xl/project-panel:grid-cols-[minmax(0,0.74fr)_minmax(0,1.16fr)]">
+        <div className="grid w-full gap-[var(--section-gap)] @6xl/project-panel:grid-cols-[minmax(18rem,0.58fr)_minmax(0,1fr)] @6xl/project-panel:items-start @6xl/project-panel:gap-[clamp(3rem,5vw,6rem)]">
           <motion.div
             variants={textVariants}
             initial={false}
             animate={is_active ? "active" : "inactive"}
-            className="flex flex-col justify-between gap-8 @6xl/project-panel:border-r @6xl/project-panel:border-[var(--rule)] @6xl/project-panel:pr-8"
+            className="space-y-8"
           >
+            <Link
+              href="/"
+              className="tap-target editorial-link inline-flex items-center text-[0.92rem] text-[var(--muted)]"
+            >
+              Back to work
+            </Link>
+
             <div className="space-y-6">
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <p className="editorial-eyebrow">{project.company}</p>
-                <div className="space-y-3">
-                  <h1 className="type-h1 font-display text-foreground">
-                    {project.title}
-                  </h1>
+                <h1 className="type-h1 font-display text-foreground">
+                  {project.title}
+                </h1>
+                {metadataItems.length ? (
                   <p className="text-[0.78rem] uppercase tracking-[0.18em] text-[var(--muted)]">
                     {metadataItems.join(" / ")}
                   </p>
-                </div>
-                <div className="space-y-3">
-                  <p className="max-w-[var(--copy-measure-wide)] text-[clamp(1.08rem,1rem+0.48vw,1.34rem)] leading-8 text-foreground">
-                    {project.summary}
-                  </p>
-                  <p className="max-w-[var(--copy-measure-wide)] text-[0.98rem] leading-7 text-[var(--muted)]">
-                    {project.problem}
-                  </p>
-                </div>
+                ) : null}
               </div>
 
+              <p className="max-w-[var(--copy-measure-wide)] text-[clamp(1.12rem,1rem+0.54vw,1.42rem)] leading-8 text-foreground">
+                {project.summary}
+              </p>
+            </div>
+
+            <div className="space-y-7">
               <div className="space-y-3">
-                <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                  Contribution
+                <p className="editorial-eyebrow">Problem</p>
+                <p className="max-w-[var(--copy-measure-wide)] text-[1rem] leading-7 text-[var(--muted)]">
+                  {project.problem}
                 </p>
+              </div>
+
+              {project.left_panel.why_it_mattered ? (
+                <div className="space-y-3">
+                  <p className="editorial-eyebrow">Why it mattered</p>
+                  <p className="max-w-[var(--copy-measure-wide)] text-[1rem] leading-7 text-[var(--muted)]">
+                    {project.left_panel.why_it_mattered}
+                  </p>
+                </div>
+              ) : null}
+
+              <div className="space-y-3">
+                <p className="editorial-eyebrow">Contribution</p>
                 <ul className="space-y-3">
                   {project.what_i_did.map((item) => (
-                    <li key={item} className="flex gap-3 text-[0.92rem] leading-6 text-[var(--muted)]">
+                    <li
+                      key={item}
+                      className="flex gap-3 text-[0.92rem] leading-6 text-[var(--muted)]"
+                    >
                       <span className="mt-[0.62rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/55" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
 
-            <div className="space-y-4">
-              <div className="auto-fit-grid">
-                {project.impact_metrics.map((metric) => (
-                  <div key={metric} className="border-t border-[var(--rule)] pt-4">
-                    <p className="text-[0.74rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Impact
-                    </p>
-                    <p className="mt-3 text-[0.92rem] leading-6 text-foreground">{metric}</p>
-                  </div>
-                ))}
+              <div className="space-y-3">
+                <p className="editorial-eyebrow">Impact</p>
+                <ul className="space-y-3">
+                  {project.impact_metrics.map((metric) => (
+                    <li
+                      key={metric}
+                      className="text-[0.92rem] leading-6 text-foreground"
+                    >
+                      {metric}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              {project.left_panel.why_it_mattered ? (
-                <div className="border-t border-[var(--rule)] pt-4">
-                  <p className="text-[0.74rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                    Why it mattered
-                  </p>
-                  <p className="mt-3 text-[0.92rem] leading-7 text-[var(--muted)]">
-                    {project.left_panel.why_it_mattered}
-                  </p>
-                </div>
+              {editorialCaseStudyHref ? (
+                <Link
+                  href={editorialCaseStudyHref}
+                  className="tap-target editorial-link inline-flex items-center text-[0.78rem] uppercase tracking-[0.16em] text-foreground"
+                >
+                  Broader case study
+                </Link>
               ) : null}
             </div>
           </motion.div>
@@ -162,56 +187,53 @@ export function ProjectPanel({
             variants={frameVariants}
             initial={false}
             animate={is_active ? "active" : "inactive"}
-            className="min-w-0 @6xl/project-panel:pl-2"
+            className="min-w-0 space-y-7"
           >
-            <div className="space-y-5">
-              <DemoFrame
-                title={`${project.company} ${project.title} prototype`}
-                source_type={prototypeFrameSource}
-                iframe_url={getPrototypeFrameUrl(project.prototype)}
-                poster_image={project.prototype.posterImage}
-                frame_surface={project.prototype.frameSurface}
-                prototype_status={getPrototypeFrameStatus(project.prototype)}
-                allow_preview_embed={getPrototypeAllowPreviewEmbed(project.prototype)}
-                meta_label={prototypeMetaLabel}
-                open_prototype_url={getPrototypeOpenUrl(project.prototype)}
-                loading_label={project.right_panel.loading_label}
-                priority="detail"
-                transition_key={transition_key}
-                tone={demoTone}
-                mount_strategy="eager"
-              />
+            <DemoFrame
+              title={`${project.company} ${project.title} prototype`}
+              source_type={prototypeFrameSource}
+              iframe_url={getPrototypeFrameUrl(project.prototype)}
+              poster_image={project.prototype.posterImage}
+              frame_surface={project.prototype.frameSurface}
+              prototype_status={getPrototypeFrameStatus(project.prototype)}
+              allow_preview_embed={getPrototypeAllowPreviewEmbed(project.prototype)}
+              meta_label={prototypeMetaLabel}
+              open_prototype_url={getPrototypeOpenUrl(project.prototype)}
+              loading_label={project.right_panel.loading_label}
+              priority="detail"
+              transition_key={transition_key}
+              tone={demoTone}
+              mount_strategy="eager"
+            />
 
-              {project.case_study_gallery?.length ? (
-                <section className="space-y-4">
-                  <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                    Selected frames
-                  </p>
-                  <div className="@container/detail-gallery grid gap-4 sm:gap-5 @4xl/detail-gallery:grid-cols-2">
-                    {project.case_study_gallery.map((image, index) => (
-                      <div
-                        key={image.src}
-                        className={
-                          project.case_study_gallery && project.case_study_gallery.length >= 3 && index === 0
-                            ? "@4xl/detail-gallery:col-span-2"
-                            : ""
-                        }
-                      >
-                        <div className="relative aspect-[16/10] overflow-hidden rounded-[var(--frame-radius)] border border-[var(--rule)] bg-[var(--surface-strong)] shadow-[var(--shadow-soft)]">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            fill
-                            sizes="(max-width: 1024px) 92vw, 56vw"
-                            className="object-cover"
-                          />
-                        </div>
+            {project.case_study_gallery?.length ? (
+              <section aria-label="Selected prototype frames">
+                <div className="@container/detail-gallery grid gap-4 @4xl/detail-gallery:grid-cols-2">
+                  {project.case_study_gallery.map((image, index) => (
+                    <figure
+                      key={image.src}
+                      className={
+                        project.case_study_gallery &&
+                        project.case_study_gallery.length >= 3 &&
+                        index === 0
+                          ? "@4xl/detail-gallery:col-span-2"
+                          : undefined
+                      }
+                    >
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-[var(--surface-strong)]">
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          fill
+                          sizes="(max-width: 1024px) 92vw, 52vw"
+                          className="object-cover"
+                        />
                       </div>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-            </div>
+                    </figure>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </motion.div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import {
   embeddedPrototypeTargets,
   retiredPrototypeHosts,
 } from "./embedded-prototype-manifest.mjs";
+import { getSlugFilter } from "./prototype-shared.mjs";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const embeddedRoot = join(repoRoot, "public", "embedded-prototypes");
@@ -65,34 +66,6 @@ function findBadReferences(root) {
   }
 
   return badReferences;
-}
-
-function getSlugFilter() {
-  const slugFlagIndex = process.argv.indexOf("--slug");
-
-  if (slugFlagIndex !== -1) {
-    const slug = process.argv[slugFlagIndex + 1];
-
-    if (!slug || slug.startsWith("--")) {
-      throw new Error("--slug requires a prototype slug");
-    }
-
-    return slug;
-  }
-
-  const slugEqualsArg = process.argv.find((arg) => arg.startsWith("--slug="));
-
-  if (slugEqualsArg) {
-    const slug = slugEqualsArg.slice("--slug=".length);
-
-    if (!slug) {
-      throw new Error("--slug requires a prototype slug");
-    }
-
-    return slug;
-  }
-
-  return null;
 }
 
 function main() {

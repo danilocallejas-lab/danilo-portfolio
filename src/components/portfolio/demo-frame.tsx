@@ -9,11 +9,8 @@ import type {
   PrototypeFrameSurface,
   PrototypeLifecycle,
 } from "@/lib/portfolio-content";
+import { cx } from "@/lib/classnames";
 import { shouldMountHostedPrototype } from "@/lib/prototype-embed-policy";
-
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export type DemoFrameProps = {
   title: string;
@@ -28,6 +25,8 @@ export type DemoFrameProps = {
   loading_label?: string;
   className?: string;
   priority?: "lane" | "detail";
+  frame_variant?: "default" | "borderless";
+  frame_radius?: "default" | "tight";
   transition_key?: string;
   interactive?: boolean;
   tone?: "opendoor" | "draftkings" | "coinbase" | "dropbox";
@@ -53,12 +52,14 @@ function getToneAccent(
 
 function getFrameSurfaceValue(surface?: PrototypeFrameSurface | null) {
   switch (surface) {
-    case "opendoor-stone":
-      return "var(--prototype-frame-surface-opendoor-stone)";
-    case "draftkings-charcoal":
-      return "var(--prototype-frame-surface-draftkings-charcoal)";
-    case "coinbase-wash":
-      return "var(--prototype-frame-surface-coinbase-wash)";
+    case "opendoor":
+      return "var(--prototype-frame-surface-opendoor)";
+    case "dropbox":
+      return "var(--prototype-frame-surface-dropbox)";
+    case "draftkings":
+      return "var(--prototype-frame-surface-draftkings)";
+    case "coinbase":
+      return "var(--prototype-frame-surface-coinbase)";
     default:
       return "var(--prototype-frame-surface-default)";
   }
@@ -305,6 +306,8 @@ export function DemoFrame({
   loading_label = "Loading prototype",
   className,
   priority = "lane",
+  frame_variant = "default",
+  frame_radius = "default",
   transition_key,
   interactive = true,
   tone,
@@ -326,9 +329,17 @@ export function DemoFrame({
   });
   const shouldMountIframe = shouldRenderIframe && hasMountedIframe;
   const shouldRenderPlaceholder = !shouldRenderIframe;
-  const frameClassName = isDetail
-    ? "prototype-frame-surface min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-[var(--frame-radius)] border border-[var(--rule)] shadow-[var(--shadow)]"
-    : "prototype-frame-surface aspect-[16/10] rounded-[calc(var(--frame-radius)-0.125rem)] border border-[var(--rule)] shadow-[var(--shadow-soft)]";
+  const previewRadiusClassName =
+    frame_radius === "tight"
+      ? "rounded-[clamp(0.75rem,0.65rem+0.35vw,1rem)]"
+      : "rounded-[calc(var(--frame-radius)-0.125rem)]";
+  const frameClassName = cx(
+    "prototype-frame-surface",
+    isDetail
+      ? "min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-lg shadow-[var(--shadow)]"
+      : cx("aspect-[16/10] shadow-[var(--shadow-soft)]", previewRadiusClassName),
+    frame_variant === "default" && "border border-[var(--rule)]",
+  );
   const frameStyle = {
     viewTransitionName: transition_key,
   } as CSSProperties;

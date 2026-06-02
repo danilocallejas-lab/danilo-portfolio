@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeaderContrastSync } from "@/components/header-contrast-sync";
+import { SiteHeaderControls } from "@/components/site-header-controls";
 import { socialLinks } from "@/lib/site-content";
 
 type HeaderLink = {
@@ -9,7 +10,6 @@ type HeaderLink = {
 };
 
 const defaultHeaderLinks: HeaderLink[] = [
-  { label: "CV", href: "/cv" },
   { label: "Archive", href: "/archive" },
 ];
 
@@ -49,6 +49,8 @@ export function GalleryHeader({
 
         {navItems.length || showSocialLinks ? (
           <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[0.92rem] font-medium tracking-[-0.02em]">
+            <SiteHeaderControls />
+
             {navItems.length ? (
               <nav className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1">
                 {navItems.map((link) => (

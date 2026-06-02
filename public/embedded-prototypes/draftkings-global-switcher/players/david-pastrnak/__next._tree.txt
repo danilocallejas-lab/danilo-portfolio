@@ -3,5 +3,5 @@
 :HL["/embedded-prototypes/draftkings-global-switcher/_next/static/media/9f56976a2af2c907-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-global-switcher/_next/static/media/c66c3989b8a414b0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-global-switcher/_next/static/media/fcca8430c54b1ee3-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/draftkings-global-switcher/_next/static/css/87f0c2f4b5e06a5f.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"players","param":null,"prefetchHints":0,"slots":{"children":{"name":"playerSlug","param":{"type":"d","key":"david-pastrnak","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"5EV8SX7lN9NUR20z_mi8b"}
+:HL["/embedded-prototypes/draftkings-global-switcher/_next/static/css/71263beba22564f6.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"players","param":null,"prefetchHints":0,"slots":{"children":{"name":"playerSlug","param":{"type":"d","key":"david-pastrnak","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"-nfgj1BdspqL3zf2k2cbn"}

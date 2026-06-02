@@ -1,21 +1,23 @@
 export const THEME_STORAGE_KEY = "theme-preference";
 export const THEME_CHANGE_EVENT = "portfolio-theme-change";
-export const BRIGHT_SHUFFLE_STEPS = 12;
+export const BRIGHT_SHUFFLE_STEPS = 5;
 export const BRIGHT_SHUFFLE_STEP_MS = 64;
 
-export type ThemeMode = "light" | "dark" | "bright";
+export type ThemeMode = "dark" | "bright";
 
 export function normalizeThemePreference(value: string | null): ThemeMode | null {
-  return value === "light" || value === "dark" || value === "bright" ? value : null;
+  return value === "dark" || value === "bright" ? value : null;
 }
 
 export function resolveTheme(preference: ThemeMode | null): ThemeMode {
   return preference ?? "dark";
 }
 
+type BrightValues = Record<string, string>;
+
 type BrightPalette = {
   name: string;
-  values: Record<string, string>;
+  values: BrightValues;
 };
 
 const brightThemeVariables = [
@@ -48,7 +50,6 @@ const brightThemeVariables = [
   "--archive-preview-gradient",
   "--archive-placeholder-gradient",
   "--frame-surface-gradient",
-  "--prototype-frame-surface-default",
   "--frame-spinner-surface",
   "--app-background-gradient",
   "--site-noise-overlay",
@@ -110,6 +111,63 @@ const brightThemeVariables = [
   "--bright-dropbox-label-letter-spacing",
 ];
 
+function archiveFrameTokens({
+  border,
+  foreground,
+  muted,
+  spinner,
+}: {
+  border: string;
+  foreground: string;
+  muted: string;
+  spinner: string;
+}): BrightValues {
+  return {
+    "--archive-note-border": border,
+    "--archive-note-foreground": foreground,
+    "--archive-note-muted": muted,
+    "--archive-preview-gradient": "var(--surface-card-background)",
+    "--archive-placeholder-gradient": "var(--surface-strong)",
+    "--frame-surface-gradient": "var(--surface-card-background)",
+    "--frame-spinner-surface": spinner,
+  };
+}
+
+const dropboxTypographyPresets = {
+  serifCondensed: {
+    "--bright-dropbox-display-font": "var(--font-zine-serif)",
+    "--bright-dropbox-body-font": "var(--font-zine-readable)",
+    "--bright-dropbox-label-font": "var(--font-zine-condensed)",
+    "--bright-dropbox-heading-letter-spacing": "-0.045em",
+    "--bright-dropbox-heading-text-transform": "none",
+    "--bright-dropbox-label-letter-spacing": "0.16em",
+  },
+  elegantCompressed: {
+    "--bright-dropbox-display-font": "var(--font-zine-elegant)",
+    "--bright-dropbox-body-font": "var(--font-zine-readable)",
+    "--bright-dropbox-label-font": "var(--font-zine-compressed)",
+    "--bright-dropbox-heading-letter-spacing": "-0.035em",
+    "--bright-dropbox-heading-text-transform": "none",
+    "--bright-dropbox-label-letter-spacing": "0.1em",
+  },
+  literaryCompressed: {
+    "--bright-dropbox-display-font": "var(--font-zine-literary)",
+    "--bright-dropbox-body-font": "var(--font-zine-readable)",
+    "--bright-dropbox-label-font": "var(--font-zine-compressed)",
+    "--bright-dropbox-heading-letter-spacing": "-0.04em",
+    "--bright-dropbox-heading-text-transform": "none",
+    "--bright-dropbox-label-letter-spacing": "0.1em",
+  },
+  inkTypewriter: {
+    "--bright-dropbox-display-font": "var(--font-zine-ink)",
+    "--bright-dropbox-body-font": "var(--font-zine-readable)",
+    "--bright-dropbox-label-font": "var(--font-zine-typewriter)",
+    "--bright-dropbox-heading-letter-spacing": "-0.05em",
+    "--bright-dropbox-heading-text-transform": "none",
+    "--bright-dropbox-label-letter-spacing": "0.08em",
+  },
+} satisfies Record<string, BrightValues>;
+
 const brightPalettes: BrightPalette[] = [
   {
     name: "citrus signal",
@@ -137,14 +195,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#11120a",
       "--gallery-divider": "rgba(17, 18, 10, 0.14)",
       "--archive-note-surface": "#11120a",
-      "--archive-note-border": "rgba(255, 255, 255, 0.22)",
-      "--archive-note-foreground": "rgba(255, 253, 240, 0.9)",
-      "--archive-note-muted": "rgba(255, 253, 240, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 253, 240, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.22)",
+        foreground: "rgba(255, 253, 240, 0.9)",
+        muted: "rgba(255, 253, 240, 0.68)",
+        spinner: "rgba(255, 253, 240, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -231,14 +287,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#07151c",
       "--gallery-divider": "rgba(7, 21, 28, 0.14)",
       "--archive-note-surface": "#07151c",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(243, 255, 249, 0.9)",
-      "--archive-note-muted": "rgba(243, 255, 249, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(243, 255, 249, 0.82)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(243, 255, 249, 0.9)",
+        muted: "rgba(243, 255, 249, 0.68)",
+        spinner: "rgba(243, 255, 249, 0.82)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -325,14 +379,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#210713",
       "--gallery-divider": "rgba(33, 7, 19, 0.14)",
       "--archive-note-surface": "#210713",
-      "--archive-note-border": "rgba(255, 255, 255, 0.22)",
-      "--archive-note-foreground": "rgba(255, 249, 251, 0.9)",
-      "--archive-note-muted": "rgba(255, 249, 251, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 249, 251, 0.82)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.22)",
+        foreground: "rgba(255, 249, 251, 0.9)",
+        muted: "rgba(255, 249, 251, 0.68)",
+        spinner: "rgba(255, 249, 251, 0.82)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -419,14 +471,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#101118",
       "--gallery-divider": "rgba(16, 17, 24, 0.14)",
       "--archive-note-surface": "#101118",
-      "--archive-note-border": "rgba(255, 255, 255, 0.22)",
-      "--archive-note-foreground": "rgba(255, 253, 244, 0.9)",
-      "--archive-note-muted": "rgba(255, 253, 244, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 253, 244, 0.82)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.22)",
+        foreground: "rgba(255, 253, 244, 0.9)",
+        muted: "rgba(255, 253, 244, 0.68)",
+        spinner: "rgba(255, 253, 244, 0.82)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -513,14 +563,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#160d18",
       "--gallery-divider": "rgba(22, 13, 24, 0.14)",
       "--archive-note-surface": "#160d18",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(255, 253, 248, 0.9)",
-      "--archive-note-muted": "rgba(255, 253, 248, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 253, 248, 0.82)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(255, 253, 248, 0.9)",
+        muted: "rgba(255, 253, 248, 0.68)",
+        spinner: "rgba(255, 253, 248, 0.82)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -573,12 +621,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#160d18",
       "--bright-dropbox-copy": "#183d33",
       "--bright-dropbox-meta": "#275d4e",
-      "--bright-dropbox-display-font": "var(--font-zine-serif)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-condensed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.045em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.16em",
+      ...dropboxTypographyPresets.serifCondensed,
     },
   },
   {
@@ -607,14 +650,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#0b170d",
       "--gallery-divider": "rgba(11, 23, 13, 0.14)",
       "--archive-note-surface": "#0b170d",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(253, 255, 242, 0.9)",
-      "--archive-note-muted": "rgba(253, 255, 242, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(253, 255, 242, 0.82)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(253, 255, 242, 0.9)",
+        muted: "rgba(253, 255, 242, 0.68)",
+        spinner: "rgba(253, 255, 242, 0.82)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -701,14 +742,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#f9fbff",
       "--gallery-divider": "rgba(249, 251, 255, 0.14)",
       "--archive-note-surface": "#07124f",
-      "--archive-note-border": "rgba(255, 255, 255, 0.22)",
-      "--archive-note-foreground": "rgba(249, 251, 255, 0.9)",
-      "--archive-note-muted": "rgba(249, 251, 255, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 255, 255, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.22)",
+        foreground: "rgba(249, 251, 255, 0.9)",
+        muted: "rgba(249, 251, 255, 0.68)",
+        spinner: "rgba(255, 255, 255, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -761,12 +800,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#07124f",
       "--bright-dropbox-copy": "#4b1734",
       "--bright-dropbox-meta": "#73264f",
-      "--bright-dropbox-display-font": "var(--font-zine-serif)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-condensed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.045em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.16em",
+      ...dropboxTypographyPresets.serifCondensed,
     },
   },
   {
@@ -795,14 +829,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#1b0f05",
       "--gallery-divider": "rgba(27, 15, 5, 0.14)",
       "--archive-note-surface": "#1b0f05",
-      "--archive-note-border": "rgba(255, 255, 255, 0.22)",
-      "--archive-note-foreground": "rgba(255, 250, 241, 0.9)",
-      "--archive-note-muted": "rgba(255, 250, 241, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 250, 241, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.22)",
+        foreground: "rgba(255, 250, 241, 0.9)",
+        muted: "rgba(255, 250, 241, 0.68)",
+        spinner: "rgba(255, 250, 241, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -889,14 +921,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#10191f",
       "--gallery-divider": "rgba(16, 25, 31, 0.14)",
       "--archive-note-surface": "#10191f",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(253, 255, 243, 0.9)",
-      "--archive-note-muted": "rgba(253, 255, 243, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(253, 255, 243, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(253, 255, 243, 0.9)",
+        muted: "rgba(253, 255, 243, 0.68)",
+        spinner: "rgba(253, 255, 243, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -983,14 +1013,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#120919",
       "--gallery-divider": "rgba(18, 9, 25, 0.14)",
       "--archive-note-surface": "#120919",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(255, 248, 253, 0.9)",
-      "--archive-note-muted": "rgba(255, 248, 253, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 248, 253, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(255, 248, 253, 0.9)",
+        muted: "rgba(255, 248, 253, 0.68)",
+        spinner: "rgba(255, 248, 253, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1043,12 +1071,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#120919",
       "--bright-dropbox-copy": "#473900",
       "--bright-dropbox-meta": "#6f5a00",
-      "--bright-dropbox-display-font": "var(--font-zine-elegant)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-compressed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.035em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.1em",
+      ...dropboxTypographyPresets.elegantCompressed,
     },
   },
   {
@@ -1077,14 +1100,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#17130e",
       "--gallery-divider": "rgba(23, 19, 14, 0.14)",
       "--archive-note-surface": "#17130e",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(255, 253, 247, 0.9)",
-      "--archive-note-muted": "rgba(255, 253, 247, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 253, 247, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(255, 253, 247, 0.9)",
+        muted: "rgba(255, 253, 247, 0.68)",
+        spinner: "rgba(255, 253, 247, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1137,12 +1158,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#17130e",
       "--bright-dropbox-copy": "#4b1a05",
       "--bright-dropbox-meta": "#6c280a",
-      "--bright-dropbox-display-font": "var(--font-zine-literary)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-compressed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.04em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.1em",
+      ...dropboxTypographyPresets.literaryCompressed,
     },
   },
   {
@@ -1171,14 +1187,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#071b16",
       "--gallery-divider": "rgba(7, 27, 22, 0.14)",
       "--archive-note-surface": "#071b16",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(246, 255, 251, 0.9)",
-      "--archive-note-muted": "rgba(246, 255, 251, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(246, 255, 251, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(246, 255, 251, 0.9)",
+        muted: "rgba(246, 255, 251, 0.68)",
+        spinner: "rgba(246, 255, 251, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1231,12 +1245,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#071b16",
       "--bright-dropbox-copy": "#4f1330",
       "--bright-dropbox-meta": "#7b214d",
-      "--bright-dropbox-display-font": "var(--font-zine-elegant)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-compressed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.035em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.1em",
+      ...dropboxTypographyPresets.elegantCompressed,
     },
   },
   {
@@ -1265,14 +1274,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#101727",
       "--gallery-divider": "rgba(16, 23, 39, 0.14)",
       "--archive-note-surface": "#101727",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(251, 252, 255, 0.9)",
-      "--archive-note-muted": "rgba(251, 252, 255, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(251, 252, 255, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(251, 252, 255, 0.9)",
+        muted: "rgba(251, 252, 255, 0.68)",
+        spinner: "rgba(251, 252, 255, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1325,12 +1332,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#101727",
       "--bright-dropbox-copy": "#4f120f",
       "--bright-dropbox-meta": "#7a1e18",
-      "--bright-dropbox-display-font": "var(--font-zine-literary)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-compressed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.04em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.1em",
+      ...dropboxTypographyPresets.literaryCompressed,
     },
   },
   {
@@ -1359,14 +1361,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#1f1400",
       "--gallery-divider": "rgba(31, 20, 0, 0.14)",
       "--archive-note-surface": "#1f1400",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(255, 250, 240, 0.9)",
-      "--archive-note-muted": "rgba(255, 250, 240, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 250, 240, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(255, 250, 240, 0.9)",
+        muted: "rgba(255, 250, 240, 0.68)",
+        spinner: "rgba(255, 250, 240, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1419,12 +1419,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#1f1400",
       "--bright-dropbox-copy": "#551321",
       "--bright-dropbox-meta": "#7d2034",
-      "--bright-dropbox-display-font": "var(--font-zine-elegant)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-compressed)",
-      "--bright-dropbox-heading-letter-spacing": "-0.035em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.1em",
+      ...dropboxTypographyPresets.elegantCompressed,
     },
   },
   {
@@ -1453,14 +1448,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#15091f",
       "--gallery-divider": "rgba(21, 9, 31, 0.14)",
       "--archive-note-surface": "#15091f",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(253, 255, 244, 0.9)",
-      "--archive-note-muted": "rgba(253, 255, 244, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(253, 255, 244, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(253, 255, 244, 0.9)",
+        muted: "rgba(253, 255, 244, 0.68)",
+        spinner: "rgba(253, 255, 244, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1513,12 +1506,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#15091f",
       "--bright-dropbox-copy": "#4e123f",
       "--bright-dropbox-meta": "#1511ff",
-      "--bright-dropbox-display-font": "var(--font-zine-ink)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-typewriter)",
-      "--bright-dropbox-heading-letter-spacing": "-0.05em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.08em",
+      ...dropboxTypographyPresets.inkTypewriter,
     },
   },
   {
@@ -1547,14 +1535,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#100f0d",
       "--gallery-divider": "rgba(16, 15, 13, 0.14)",
       "--archive-note-surface": "#100f0d",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(255, 253, 247, 0.9)",
-      "--archive-note-muted": "rgba(255, 253, 247, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(255, 253, 247, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(255, 253, 247, 0.9)",
+        muted: "rgba(255, 253, 247, 0.68)",
+        spinner: "rgba(255, 253, 247, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1607,12 +1593,7 @@ const brightPalettes: BrightPalette[] = [
       "--bright-dropbox-heading": "#fffdf7",
       "--bright-dropbox-copy": "rgba(255, 253, 247, 0.88)",
       "--bright-dropbox-meta": "#ffd400",
-      "--bright-dropbox-display-font": "var(--font-zine-ink)",
-      "--bright-dropbox-body-font": "var(--font-zine-readable)",
-      "--bright-dropbox-label-font": "var(--font-zine-typewriter)",
-      "--bright-dropbox-heading-letter-spacing": "-0.05em",
-      "--bright-dropbox-heading-text-transform": "none",
-      "--bright-dropbox-label-letter-spacing": "0.08em",
+      ...dropboxTypographyPresets.inkTypewriter,
     },
   },
   {
@@ -1641,14 +1622,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#00ff66",
       "--gallery-divider": "rgba(255, 246, 216, 0.14)",
       "--archive-note-surface": "#fff6d8",
-      "--archive-note-border": "rgba(26, 9, 43, 0.18)",
-      "--archive-note-foreground": "#1a092b",
-      "--archive-note-muted": "#62416f",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(51, 21, 75, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(26, 9, 43, 0.18)",
+        foreground: "#1a092b",
+        muted: "#62416f",
+        spinner: "rgba(51, 21, 75, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1735,14 +1714,12 @@ const brightPalettes: BrightPalette[] = [
       "--intro-heading": "#231118",
       "--gallery-divider": "rgba(35, 17, 24, 0.14)",
       "--archive-note-surface": "#231118",
-      "--archive-note-border": "rgba(255, 255, 255, 0.2)",
-      "--archive-note-foreground": "rgba(251, 254, 255, 0.9)",
-      "--archive-note-muted": "rgba(251, 254, 255, 0.68)",
-      "--archive-preview-gradient": "var(--surface-card-background)",
-      "--archive-placeholder-gradient": "var(--surface-strong)",
-      "--frame-surface-gradient": "var(--surface-card-background)",
-      "--prototype-frame-surface-default": "var(--frame-surface-gradient)",
-      "--frame-spinner-surface": "rgba(251, 254, 255, 0.84)",
+      ...archiveFrameTokens({
+        border: "rgba(255, 255, 255, 0.2)",
+        foreground: "rgba(251, 254, 255, 0.9)",
+        muted: "rgba(251, 254, 255, 0.68)",
+        spinner: "rgba(251, 254, 255, 0.84)",
+      }),
       "--app-background-gradient": "var(--background)",
       "--site-noise-overlay": "none",
       "--site-noise-opacity": "0",
@@ -1805,8 +1782,16 @@ const brightPalettes: BrightPalette[] = [
   },
 ];
 
-function getRandomBrightPalette() {
-  return brightPalettes[Math.floor(Math.random() * brightPalettes.length)];
+function getRandomBrightPalette(excludedPaletteNames: readonly string[] = []) {
+  const excludedNames = new Set(excludedPaletteNames);
+  const availablePalettes = excludedNames.size > 0
+    ? brightPalettes.filter((palette) => !excludedNames.has(palette.name))
+    : brightPalettes;
+  const palettePool = availablePalettes.length > 0
+    ? availablePalettes
+    : brightPalettes;
+
+  return palettePool[Math.floor(Math.random() * palettePool.length)];
 }
 
 function clearBrightPalette(target: HTMLElement) {
@@ -1815,8 +1800,11 @@ function clearBrightPalette(target: HTMLElement) {
   });
 }
 
-function applyBrightPalette(target: HTMLElement) {
-  const palette = getRandomBrightPalette();
+function applyBrightPalette(
+  target: HTMLElement,
+  options: { excludedPaletteNames?: readonly string[] } = {},
+) {
+  const palette = getRandomBrightPalette(options.excludedPaletteNames);
 
   clearBrightPalette(target);
   Object.entries(palette.values).forEach(([property, value]) => {
@@ -1825,14 +1813,27 @@ function applyBrightPalette(target: HTMLElement) {
   target.dataset.brightPalette = palette.name;
 }
 
-export function applyThemeToDocument(theme: ThemeMode) {
+export function applyThemeToDocument(
+  theme: ThemeMode,
+  options: {
+    avoidCurrentBrightPalette?: boolean;
+    excludedBrightPaletteName?: string;
+  } = {},
+) {
   const root = document.documentElement;
 
   root.dataset.theme = theme;
   root.style.colorScheme = theme === "dark" ? "dark" : "light";
 
   if (theme === "bright") {
-    applyBrightPalette(root);
+    const excludedPaletteNames = [
+      options.excludedBrightPaletteName,
+      options.avoidCurrentBrightPalette ? root.dataset.brightPalette : undefined,
+    ].filter((name): name is string => Boolean(name));
+
+    applyBrightPalette(root, {
+      excludedPaletteNames,
+    });
     return;
   }
 
@@ -1854,9 +1855,7 @@ export function getThemeInitScript() {
         const storageKey = ${JSON.stringify(THEME_STORAGE_KEY)};
         const storedValue = window.localStorage.getItem(storageKey);
         const preference =
-          storedValue === "light" || storedValue === "dark" || storedValue === "bright"
-            ? storedValue
-            : null;
+          storedValue === "dark" || storedValue === "bright" ? storedValue : null;
         const resolved = preference ?? "dark";
 
         document.documentElement.dataset.theme = resolved;
