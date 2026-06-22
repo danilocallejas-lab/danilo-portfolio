@@ -21,7 +21,7 @@ export const embeddedPrototypeTargets = [
     type: "vite",
     workspace:
       "/Users/redeemer/Desktop/danilo-prototypes/opendoor/agent-led-offers-tooling-platform/web",
-    entryPath: "/?embed=1",
+    entryPath: "/index.html?embed=1",
   },
   {
     slug: "draftkings-betslip-redesign-migration",
@@ -118,6 +118,24 @@ export const embeddedPrototypeTargets = [
     label: "Dropbox Paper Desktop",
     type: "next",
     workspace: "/Users/redeemer/Desktop/danilo-prototypes/dropbox/paper-desktop",
+    entryPath: "/",
+    presentation: "framed",
+  },
+  {
+    slug: "dropbox-paper-marketing-page",
+    label: "Dropbox Paper Marketing Page",
+    type: "next",
+    workspace:
+      "/Users/redeemer/Desktop/danilo-prototypes/dropbox/paper-marketing-page",
+    entryPath: "/",
+    presentation: "framed",
+  },
+  {
+    slug: "dropbox-paper-templates",
+    label: "Dropbox Paper Templates",
+    type: "next",
+    workspace:
+      "/Users/redeemer/Desktop/danilo-prototypes/dropbox/paper-templates",
     entryPath: "/",
     presentation: "framed",
   },

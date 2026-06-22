@@ -1,3 +1,5 @@
+import type { ProjectDisciplineTagValue } from "@/lib/project-tags";
+
 export type PrototypeType = "iframe" | "local";
 export type PrototypeLifecycle =
   | "planned"
@@ -6,9 +8,10 @@ export type PrototypeLifecycle =
   | "blocked";
 export type PrototypeStatus = PrototypeLifecycle;
 export type PrototypeFrameSurface =
-  | "opendoor-stone"
-  | "draftkings-charcoal"
-  | "coinbase-wash";
+  | "opendoor"
+  | "dropbox"
+  | "draftkings"
+  | "coinbase";
 
 export type FallbackComponentKey =
   | "OpendoorSellerDemo"
@@ -34,6 +37,34 @@ export type CaseStudyImage = {
   src: string;
   alt: string;
 };
+
+export type CaseStudyMediaImage = CaseStudyImage & {
+  frameClassName?: string;
+  imageClassName?: string;
+};
+
+export type CaseStudyImageSection = {
+  title: string;
+  summary: string;
+  caption: string;
+  presentation?: "image" | "carousel";
+  image: CaseStudyMediaImage;
+  slides?: readonly CaseStudyMediaImage[];
+};
+
+export type CaseStudyVideoEmbedSection = {
+  title: string;
+  summary: string;
+  caption: string;
+  presentation: "video-embed";
+  embedUrl: string;
+  embedTitle: string;
+  frameClassName?: string;
+};
+
+export type CaseStudyMediaSection =
+  | CaseStudyImageSection
+  | CaseStudyVideoEmbedSection;
 
 export type PrototypeDeploymentTarget = {
   intendedVercelProject: string;
@@ -69,6 +100,7 @@ export type ProjectSection = {
   role: string;
   title: string;
   time_period: string;
+  discipline_tags: readonly ProjectDisciplineTagValue[];
   summary: string;
   problem: string;
   what_i_did: readonly string[];
@@ -79,6 +111,7 @@ export type ProjectSection = {
     embedUrl: string | null;
     openUrl: string | null;
     frameSurface: PrototypeFrameSurface | null;
+    frameScale: number | null;
     fallbackComponent: FallbackComponentKey;
     lifecycle: PrototypeLifecycle;
     status: PrototypeStatus;
@@ -92,6 +125,7 @@ export type ProjectSection = {
   accent: string;
   show_on_homepage: boolean;
   case_study_gallery?: readonly CaseStudyImage[];
+  case_study_sections?: readonly CaseStudyMediaSection[];
   left_panel: {
     eyebrow_label: string;
     short_title: string;
@@ -117,6 +151,7 @@ type LegacyProjectSection = Omit<
   prototype_open_url?: string | null;
   prototype_lifecycle?: PrototypeLifecycle;
   prototype_frame_surface?: PrototypeFrameSurface;
+  prototype_frame_scale?: number;
   right_panel: {
     fallback_component: FallbackComponentKey;
     loading_label: string;
@@ -218,6 +253,16 @@ const retiredPrototypeDeployments: Partial<
 
 const PORTFOLIO_PRODUCTION_ORIGIN =
   "https://danilo-callejas-portfolio.vercel.app";
+const dropboxSpacesCargoImageBase = "/images/cargo/dropbox-spaces";
+const dropboxSpacesCargoMediaFrame =
+  "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]";
+
+const prototypeFrameSurfaceByCompany: Record<string, PrototypeFrameSurface> = {
+  Opendoor: "opendoor",
+  Dropbox: "dropbox",
+  DraftKings: "draftkings",
+  Coinbase: "coinbase",
+};
 
 const embeddedPrototypeUrls: Partial<Record<string, string>> = {
   "opendoor-seller-experience":
@@ -225,7 +270,7 @@ const embeddedPrototypeUrls: Partial<Record<string, string>> = {
   "opendoor-home-insights":
     "/embedded-prototypes/opendoor-home-insights/hub/",
   "opendoor-agent-led-offers-tooling-platform":
-    "/embedded-prototypes/opendoor-agent-led-offers-tooling-platform/?embed=1",
+    "/embedded-prototypes/opendoor-agent-led-offers-tooling-platform/dashboard?embed=1",
   "draftkings-betslip-redesign-migration":
     "/embedded-prototypes/draftkings-betslip-redesign-migration/",
   "draftkings-quick-betslip":
@@ -250,6 +295,10 @@ const embeddedPrototypeUrls: Partial<Record<string, string>> = {
     "/embedded-prototypes/dropbox-spaces-tasks/",
   "dropbox-paper-desktop":
     "/embedded-prototypes/dropbox-paper-desktop/",
+  "dropbox-paper-marketing-page":
+    "/embedded-prototypes/dropbox-paper-marketing-page/",
+  "dropbox-paper-templates":
+    "/embedded-prototypes/dropbox-paper-templates/",
 };
 
 const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = {
@@ -260,26 +309,12 @@ const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = 
     path: "/hub",
     startCommand: "npm run dev -- --port 4101",
   },
-  "opendoor-home-insights": {
-    workspace:
-      "/Users/redeemer/Desktop/danilo-prototypes/opendoor/home-insights",
-    port: 4102,
-    path: "/hub",
-    startCommand: "npm run dev -- --webpack --port 4102",
-  },
   "opendoor-agent-led-offers-tooling-platform": {
     workspace:
       "/Users/redeemer/Desktop/danilo-prototypes/opendoor/agent-led-offers-tooling-platform/web",
     port: 4173,
     path: "/dashboard?embed=1",
     startCommand: "npm run dev -- --host 127.0.0.1 --port 4173",
-  },
-  "draftkings-betslip-redesign-migration": {
-    workspace:
-      "/Users/redeemer/Desktop/danilo-prototypes/draftkings/betslip-redesign-migration",
-    port: 4201,
-    path: "/",
-    startCommand: "npm run dev -- --port 4201",
   },
   "draftkings-quick-betslip": {
     workspace:
@@ -288,13 +323,6 @@ const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = 
     path: "/",
     startCommand: "npm run dev -- --port 4202",
   },
-  "draftkings-player-pages": {
-    workspace:
-      "/Users/redeemer/Desktop/danilo-prototypes/draftkings/player-pages",
-    port: 4203,
-    path: "/",
-    startCommand: "npm run dev -- --port 4203",
-  },
   "draftkings-global-switcher": {
     workspace:
       "/Users/redeemer/Desktop/danilo-prototypes/draftkings/global-switcher",
@@ -302,20 +330,6 @@ const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = 
     path:
       "/events/new-orleans-pelicans-at-sacramento-kings",
     startCommand: "npm run dev -- --port 4204",
-  },
-  "draftkings-pools-one-and-done": {
-    workspace:
-      "/Users/redeemer/Desktop/danilo-prototypes/draftkings/pools-one-and-done",
-    port: 4205,
-    path: "/",
-    startCommand: "npm run dev -- --port 4205",
-  },
-  "draftkings-baseball-play-by-play": {
-    workspace:
-      "/Users/redeemer/Desktop/danilo-prototypes/draftkings/baseball-play-by-play",
-    port: 4207,
-    path: "/",
-    startCommand: "npm run dev -- --port 4207",
   },
   "coinbase-pay-tab-architecture": {
     workspace:
@@ -350,6 +364,20 @@ const localPrototypeTargets: Partial<Record<string, PrototypeLocalDevTarget>> = 
     path: "/paper-desktop",
     startCommand: "npm run dev -- --port 4402",
   },
+  "dropbox-paper-marketing-page": {
+    workspace:
+      "/Users/redeemer/Desktop/danilo-prototypes/dropbox/paper-marketing-page",
+    port: 4403,
+    path: "/",
+    startCommand: "npm run dev -- --port 4403",
+  },
+  "dropbox-paper-templates": {
+    workspace:
+      "/Users/redeemer/Desktop/danilo-prototypes/dropbox/paper-templates",
+    port: 4404,
+    path: "/",
+    startCommand: "npm run dev -- --port 4404",
+  },
 };
 
 const prototypeBacklogBySectionId: Partial<
@@ -361,20 +389,6 @@ const prototypeBacklogBySectionId: Partial<
       "https://danilo-callejas-portfolio.vercel.app/embedded-prototypes/coinbase-instant-sell",
     sourceWorkspace: null,
     healthPath: "/embedded-prototypes/coinbase-instant-sell",
-  },
-  "dropbox-paper-marketing-page": {
-    intendedVercelProject: "danilo-callejas-portfolio",
-    expectedStableUrl:
-      "https://danilo-callejas-portfolio.vercel.app/embedded-prototypes/dropbox-paper-marketing-page",
-    sourceWorkspace: null,
-    healthPath: "/embedded-prototypes/dropbox-paper-marketing-page",
-  },
-  "dropbox-paper-templates": {
-    intendedVercelProject: "danilo-callejas-portfolio",
-    expectedStableUrl:
-      "https://danilo-callejas-portfolio.vercel.app/embedded-prototypes/dropbox-paper-templates",
-    sourceWorkspace: null,
-    healthPath: "/embedded-prototypes/dropbox-paper-templates",
   },
 };
 
@@ -396,6 +410,8 @@ const prototypeLifecycleBySectionId: Partial<
   "coinbase-crypto-gifting": "published",
   "dropbox-spaces-tasks": "published",
   "dropbox-paper-desktop": "published",
+  "dropbox-paper-marketing-page": "published",
+  "dropbox-paper-templates": "published",
 };
 
 function getPrototypeLifecycle(section: LegacyProjectSection) {
@@ -479,7 +495,11 @@ function normalizeProjectSection(section: LegacyProjectSection): ProjectSection 
       slug: section.section_id,
       embedUrl: prototypeEmbedUrl,
       openUrl: prototypeOpenUrl,
-      frameSurface: section.prototype_frame_surface ?? null,
+      frameSurface:
+        section.prototype_frame_surface ??
+        prototypeFrameSurfaceByCompany[section.company] ??
+        null,
+      frameScale: section.prototype_frame_scale ?? null,
       fallbackComponent: section.right_panel.fallback_component,
       lifecycle: prototypeLifecycle,
       status: prototypeLifecycle,
@@ -508,6 +528,7 @@ const legacyPortfolioSections = [
     role: "Staff Product Designer",
     title: "Seller Experience",
     time_period: "2024-Present",
+    discipline_tags: ["product"],
     summary:
       "I broadened the earliest seller journey from a quick value check into a steadier experience built around readiness, trust, and clearer next steps.",
     problem:
@@ -525,9 +546,8 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "opendoor-stone",
     notes:
-      "The former standalone seller prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
+      "Published as a same-origin portfolio embed from the current Seller Experience prototype workspace.",
     accent: "warm mineral, calm, residential",
     case_study_gallery: [
       {
@@ -557,6 +577,7 @@ const legacyPortfolioSections = [
     role: "Staff Product Designer",
     title: "Home Insights",
     time_period: "2024-Present",
+    discipline_tags: ["product"],
     summary:
       "Most homeowners want to know what their home is worth, but other tools stop there. Home Insights paired value with market context so curiosity could turn into confidence.",
     problem:
@@ -574,7 +595,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "opendoor-stone",
     notes:
       "The former standalone Home Insights prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
     accent: "warm mineral, architectural, quiet",
@@ -605,8 +625,9 @@ const legacyPortfolioSections = [
     company: "Opendoor",
     product_line: "Agent operations",
     role: "Staff Product Designer",
-    title: "Agent Led Offers / Tooling Platform",
+    title: "Agent led offers",
     time_period: "2024-Present",
+    discipline_tags: ["product", "internal-tools"],
     summary:
       "Even with strong digital tools, sellers still want human guidance. I designed the agent-led offers workflow so pricing, assessment, options, and follow-through lived in one clearer system.",
     problem:
@@ -649,12 +670,62 @@ const legacyPortfolioSections = [
     },
   },
   {
+    section_id: "draftkings-global-switcher",
+    section_type: "project",
+    company: "DraftKings",
+    role: "Product Designer",
+    title: "Global Switcher",
+    time_period: "2023-2024",
+    discipline_tags: ["product"],
+    summary:
+      "When users want to move between events, they are limited in their options. I designed a switcher that made leagues, events, teams, and players easier to reach.",
+    problem:
+      "Crossing contexts still felt slower and more fragmented than it should in a live product.",
+    what_i_did: [
+      "Designed a clearer switching pattern between major product contexts.",
+      "Reduced the navigation cost of moving across surfaces.",
+      "Tested how a lighter global control could preserve orientation.",
+    ],
+    impact_metrics: [
+      "Cleaner cross-surface movement",
+      "Stronger orientation during mode changes",
+      "More coherent global navigation layer",
+    ],
+    prototype_type: "iframe",
+    prototype_embed_url: null,
+    prototype_open_url: null,
+    notes:
+      "The former standalone Switchers prototype has been retired from Vercel. Public portfolio pages use the same-origin embedded Global Switcher event prototype.",
+    accent: "ember, utility, focused",
+    case_study_gallery: [
+      {
+        src: "/case-studies/draftkings/global-switcher.png",
+        alt: "DraftKings global switcher concept.",
+      },
+    ],
+    left_panel: {
+      eyebrow_label: "DraftKings",
+      short_title: "Switching contexts needed to feel easier and more deliberate.",
+      short_summary:
+        "A lighter switching pattern that reduced navigation friction without adding more chrome.",
+      why_it_mattered:
+        "Better movement across the product made the whole system feel more unified.",
+    },
+    right_panel: {
+      fallback_component: "DraftKingsSportsbookDemo",
+      loading_label: "Loading switcher prototype",
+      allow_expand: true,
+      expand_label: "Open prototype",
+    },
+  },
+  {
     section_id: "draftkings-betslip-redesign-migration",
     section_type: "project",
     company: "DraftKings",
     role: "Product Designer",
-    title: "Betslip Redesign & Migration",
+    title: "Betslip Redesign",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     summary:
       "During our codebase migration, I used the redesign window to address user concerns and improve how confidently people could place their bets.",
     problem:
@@ -672,7 +743,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "draftkings-charcoal",
     notes:
       "The former standalone Betslip Migration prototype has been retired from Vercel. Public portfolio pages use the curated fallback until this work is rebuilt as a same-origin portfolio embed.",
     accent: "ember, stadium black, sharp",
@@ -704,6 +774,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Quick Betslip",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     summary:
       "Users often struggle to place successive bets quickly. Quick Betslip kept discovery and entry moving without making the flow feel disposable.",
     problem:
@@ -750,6 +821,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Player Pages",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     summary:
       "Users often find it challenging to discover specific players and their available prop bets. Player Pages brought browsing and placement into one place.",
     problem:
@@ -790,60 +862,13 @@ const legacyPortfolioSections = [
     },
   },
   {
-    section_id: "draftkings-global-switcher",
-    section_type: "project",
-    company: "DraftKings",
-    role: "Product Designer",
-    title: "Global Switcher",
-    time_period: "2023-2024",
-    summary:
-      "When users want to move between events, they are limited in their options. I designed a switcher that made leagues, events, teams, and players easier to reach.",
-    problem:
-      "Crossing contexts still felt slower and more fragmented than it should in a live product.",
-    what_i_did: [
-      "Designed a clearer switching pattern between major product contexts.",
-      "Reduced the navigation cost of moving across surfaces.",
-      "Tested how a lighter global control could preserve orientation.",
-    ],
-    impact_metrics: [
-      "Cleaner cross-surface movement",
-      "Stronger orientation during mode changes",
-      "More coherent global navigation layer",
-    ],
-    prototype_type: "iframe",
-    prototype_embed_url: null,
-    prototype_open_url: null,
-    notes:
-      "The former standalone Switchers prototype has been retired from Vercel. Public portfolio pages use the same-origin embedded Global Switcher event prototype.",
-    accent: "ember, utility, focused",
-    case_study_gallery: [
-      {
-        src: "/case-studies/draftkings/global-switcher.png",
-        alt: "DraftKings global switcher concept.",
-      },
-    ],
-    left_panel: {
-      eyebrow_label: "DraftKings",
-      short_title: "Switching contexts needed to feel easier and more deliberate.",
-      short_summary:
-        "A lighter switching pattern that reduced navigation friction without adding more chrome.",
-      why_it_mattered:
-        "Better movement across the product made the whole system feel more unified.",
-    },
-    right_panel: {
-      fallback_component: "DraftKingsSportsbookDemo",
-      loading_label: "Loading switcher prototype",
-      allow_expand: true,
-      expand_label: "Open prototype",
-    },
-  },
-  {
     section_id: "draftkings-pools-one-and-done",
     section_type: "project",
     company: "DraftKings",
     role: "Product Designer",
     title: "Pools: One & Done",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     summary:
       "One & Done introduced a new way to join and compete in golf contests, designed to meet the growing demand for pooled fantasy formats on DraftKings.",
     problem:
@@ -893,6 +918,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Player Props: Stats & Scores",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     summary:
       "When bettors want to place props, they often leave the app to check stats and score history. I brought that context closer to the decision.",
     problem:
@@ -941,6 +967,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Baseball Play by Play",
     time_period: "2023-2024",
+    discipline_tags: ["product"],
     show_on_homepage: false,
     summary:
       "After placing bets, users often close the app to follow the game elsewhere. I designed a live baseball surface that kept the action and the product in the same place.",
@@ -990,6 +1017,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Pay Tab Architecture",
     time_period: "2021-2023",
+    discipline_tags: ["product"],
     summary:
       "As new users entered the space, they needed help understanding what crypto could do for them. The Pay tab became the home for everyday transactions and new use cases.",
     problem:
@@ -1036,6 +1064,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Crypto Payroll",
     time_period: "2021-2023",
+    discipline_tags: ["product"],
     summary:
       "When people struggle with their traditional banks, Crypto Payroll lets workers take a first step into economic freedom by getting paid in up to five cryptocurrencies.",
     problem:
@@ -1053,7 +1082,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "coinbase-wash",
     accent: "cool blue, utility, measured",
     case_study_gallery: [
       {
@@ -1083,6 +1111,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Crypto Gifting",
     time_period: "2021-2023",
+    discipline_tags: ["product"],
     summary:
       "As more people discover crypto, they are still figuring out what to do with it. Crypto Gifting turned peer-to-peer gifting into a more legible everyday use case.",
     problem:
@@ -1100,7 +1129,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: null,
     prototype_open_url: null,
-    prototype_frame_surface: "coinbase-wash",
     accent: "mist blue, human, clear",
     case_study_gallery: [
       {
@@ -1130,6 +1158,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Instant Sell",
     time_period: "2021-2023",
+    discipline_tags: ["product"],
     show_on_homepage: false,
     summary:
       "When users want to cash out directly to their bank, they cannot always do so easily. Instant Sell simplified the path from crypto to cash.",
@@ -1145,9 +1174,9 @@ const legacyPortfolioSections = [
       "Clearer destination selection",
       "More direct sell experience",
     ],
-    prototype_type: "local",
-    prototype_embed_url: null,
-    prototype_open_url: null,
+    prototype_type: "iframe",
+    prototype_embed_url: "/embedded-prototypes/dropbox-paper-templates/",
+    prototype_open_url: "/embedded-prototypes/dropbox-paper-templates/",
     accent: "cool utility blue, calm, direct",
     case_study_gallery: [
       {
@@ -1177,7 +1206,8 @@ const legacyPortfolioSections = [
     product_line: "Dropbox Spaces",
     role: "Product Designer",
     title: "Spaces Tasks",
-    time_period: "2018-2021",
+    time_period: "2018-2019",
+    discipline_tags: ["product"],
     summary:
       "Teams rely on tasks to coordinate work, but they are usually scattered. I helped make tasks a lightweight part of the workspace itself inside Dropbox Spaces.",
     problem:
@@ -1195,19 +1225,145 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: "/embedded-prototypes/dropbox-spaces-tasks/",
     prototype_open_url: "/embedded-prototypes/dropbox-spaces-tasks/",
+    prototype_frame_scale: 1.08,
     accent: "pale slate, workspace calm, airy",
     case_study_gallery: [
       {
-        src: "/case-studies/dropbox/spaces-tasks-1.jpg",
-        alt: "Dropbox Spaces task creation and overview screens.",
+        src: `${dropboxSpacesCargoImageBase}/cover.jpg`,
+        alt: "Dropbox Spaces 2.0 workspace hero image.",
+      },
+    ],
+    case_study_sections: [
+      {
+        title: "Dropbox Spaces 2.0",
+        summary:
+          "Dropbox Spaces 2.0 is a virtual workspace that brings together teams and projects.",
+        caption: "Dropbox Spaces launch cover image.",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/cover.jpg`,
+          alt: "Dropbox Spaces 2.0 workspace hero image.",
+          frameClassName:
+            "aspect-[1200/519] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+          imageClassName: "object-cover",
+        },
       },
       {
-        src: "/case-studies/dropbox/spaces-tasks-2.jpg",
-        alt: "Dropbox Spaces tasks on content screens.",
+        title: "Tasks Creation",
+        summary:
+          "When teams use tasks to coordinate work, they struggle to track and complete them because they are usually not in one place. I worked on creating a lightweight way for teams to track their tasks in one place to feel accountable, confident, and accomplished.",
+        caption: "A slideshow of Dropbox Spaces task creation explorations.",
+        presentation: "carousel",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/tasks-creation-1.jpg`,
+          alt: "Dropbox Spaces task creation screen.",
+          frameClassName: dropboxSpacesCargoMediaFrame,
+          imageClassName: "object-cover",
+        },
+        slides: [
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-creation-1.jpg`,
+            alt: "Dropbox Spaces task creation screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-creation-2.jpg`,
+            alt: "Dropbox Spaces task tracking screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-creation-3.jpg`,
+            alt: "Dropbox Spaces task list and workspace screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-creation-4.jpg`,
+            alt: "Dropbox Spaces task details screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+        ],
       },
       {
-        src: "/case-studies/dropbox/spaces-tasks-3.jpg",
-        alt: "Dropbox Spaces task reminders screen.",
+        title: "Tasks on Content",
+        summary:
+          "When work revolves around content, it is not easy to align with others on what needs to get done. By bringing tasks closer to content and giving users the ability to create, prioritize, and delegate tasks from content, we enable teams to coordinate effectively.",
+        caption: "A slideshow of tasks living closer to Dropbox Spaces content.",
+        presentation: "carousel",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/tasks-on-content-1.jpg`,
+          alt: "Dropbox Spaces content task screen.",
+          frameClassName: dropboxSpacesCargoMediaFrame,
+          imageClassName: "object-cover",
+        },
+        slides: [
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-on-content-1.jpg`,
+            alt: "Dropbox Spaces content task screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-on-content-2.jpg`,
+            alt: "Dropbox Spaces task assignment on content.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+          {
+            src: `${dropboxSpacesCargoImageBase}/tasks-on-content-3.jpg`,
+            alt: "Dropbox Spaces content coordination screen.",
+            frameClassName: dropboxSpacesCargoMediaFrame,
+            imageClassName: "object-cover",
+          },
+        ],
+      },
+      {
+        title: "Task Responsiveness",
+        summary:
+          "To unblock teams and individuals and help deliver a more flexible and robust user experience, we maintained cohesiveness across platforms and devices so customers could use the product from any device and browser size they saw fit.",
+        caption: "Responsive Dropbox Spaces task surfaces across device sizes.",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/task-responsiveness.jpg`,
+          alt: "Dropbox Spaces responsive task screens.",
+          frameClassName: dropboxSpacesCargoMediaFrame,
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Task Reminders",
+        summary:
+          "After tasks are assigned, it becomes increasingly difficult to keep track of them and know when they are due. To provide users with awareness, Spaces automatically reminded assignees when tasks were due or overdue across all spaces.",
+        caption: "Dropbox Spaces task reminder experience.",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/task-reminders.jpg`,
+          alt: "Dropbox Spaces task reminders screen.",
+          frameClassName: dropboxSpacesCargoMediaFrame,
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Spaces Beta Request Page",
+        summary:
+          "Users who had recently become aware of Spaces needed a place to learn more and request the beta. We created a marketing page for the Spaces 2.0 launch to drive awareness and generate a pool of users to gather feedback.",
+        caption: "Dropbox Spaces beta request page.",
+        image: {
+          src: `${dropboxSpacesCargoImageBase}/beta-request-page.jpg`,
+          alt: "Dropbox Spaces beta request marketing page.",
+          frameClassName: dropboxSpacesCargoMediaFrame,
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Spaces Overview Video",
+        summary:
+          "A short motion overview for the Dropbox Spaces 2.0 launch story.",
+        caption: "Dropbox Spaces Vimeo overview.",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/507790102",
+        embedTitle: "Dropbox Spaces overview video",
+        frameClassName: "aspect-video bg-black",
       },
     ],
     left_panel: {
@@ -1233,6 +1389,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Paper Desktop",
     time_period: "2018-2021",
+    discipline_tags: ["product"],
     summary:
       "I inherited a nascent Paper Desktop initiative and helped grow it into a more capable product around activation, search, and a more flexible desktop workflow.",
     problem:
@@ -1250,6 +1407,7 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: "/embedded-prototypes/dropbox-paper-desktop/",
     prototype_open_url: "/embedded-prototypes/dropbox-paper-desktop/",
+    prototype_frame_scale: 1.08,
     accent: "pale paper, editorial, structured",
     case_study_gallery: [
       {
@@ -1288,6 +1446,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Paper Marketing Page",
     time_period: "2018-2021",
+    discipline_tags: ["marketing", "web-design"],
     summary:
       "I redesigned the Dropbox Paper marketing page to cut load time, sharpen the value story, and improve conversion.",
     problem:
@@ -1302,9 +1461,9 @@ const legacyPortfolioSections = [
       "Up to 3% conversion lift",
       "Stronger external product story",
     ],
-    prototype_type: "local",
-    prototype_embed_url: null,
-    prototype_open_url: null,
+    prototype_type: "iframe",
+    prototype_embed_url: "/embedded-prototypes/dropbox-paper-marketing-page/",
+    prototype_open_url: "/embedded-prototypes/dropbox-paper-marketing-page/",
     accent: "pale paper, editorial, restrained",
     case_study_gallery: [
       {
@@ -1339,6 +1498,7 @@ const legacyPortfolioSections = [
     role: "Product Designer",
     title: "Paper Templates",
     time_period: "2018-2021",
+    discipline_tags: ["product", "marketing"],
     summary:
       "We shifted toward acquisition and activation by creating template packs and a template library designed around real user problems.",
     problem:
@@ -1353,9 +1513,9 @@ const legacyPortfolioSections = [
       "Lower-friction project starts",
       "Clearer structured entry points",
     ],
-    prototype_type: "local",
-    prototype_embed_url: null,
-    prototype_open_url: null,
+    prototype_type: "iframe",
+    prototype_embed_url: "/embedded-prototypes/dropbox-paper-templates/",
+    prototype_open_url: "/embedded-prototypes/dropbox-paper-templates/",
     accent: "pale paper, soft slate, clean",
     case_study_gallery: [
       {
@@ -1399,7 +1559,7 @@ export function getRetiredPrototypeDeployment(slug: string) {
 export function getPrototypeLifecycleLabel(lifecycle: PrototypeLifecycle) {
   switch (lifecycle) {
     case "published":
-      return "Live prototype";
+      return "Published";
     case "local-preview":
       return "Local preview";
     case "blocked":
@@ -1490,7 +1650,11 @@ export function getPrototypeMetaLabel(
   counterLabel: string,
 ) {
   if (shouldUseLocalPrototypeEmbed(project.prototype)) {
-    return `${counterLabel} / Local live prototype`;
+    return `${counterLabel} / Local preview`;
+  }
+
+  if (project.prototype.lifecycle === "published") {
+    return counterLabel;
   }
 
   return `${counterLabel} / ${getPrototypeLifecycleLabel(project.prototype.lifecycle)}`;

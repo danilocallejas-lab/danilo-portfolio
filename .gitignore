@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/test-results/
 
 # next.js
 /.next/
@@ -31,6 +32,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local tooling noise
+.codex-artifacts/
 .playwright-cli/
 /output/
 

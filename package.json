@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:unit": "node --test src/lib/*.test.ts",
+    "audit:code-duplicates": "node scripts/audit-code-duplicates.mjs",
     "audit:embedded-prototypes": "node scripts/audit-embedded-prototypes.mjs",
     "audit:vercel-project-fat": "node scripts/audit-vercel-project-fat.mjs",
     "audit:prototype-embeds": "node scripts/audit-prototype-embeds.mjs",

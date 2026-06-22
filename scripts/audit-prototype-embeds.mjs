@@ -1,12 +1,14 @@
-import { existsSync, readdirSync } from "node:fs";
-import { homedir } from "node:os";
-import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import {
   getPrototypeFrameUrl,
   portfolio_sections,
 } from "../src/lib/portfolio-content.ts";
 import { getSupportedPrototypeEmbedOrigins } from "../src/lib/prototype-embed-policy.ts";
+import {
+  getEmbeddedFrameHandle,
+  getEmbeddedFrameText,
+  loadPlaywright,
+  responseBelongsToEmbed,
+} from "./prototype-shared.mjs";
 
 const args = new Set(process.argv.slice(2));
 const includeBlocked = args.has("--include-blocked");
@@ -26,43 +28,6 @@ const portfolioBaseUrl =
 const portfolioOrigin = new URL(portfolioBaseUrl).origin;
 
 const requiredFrameAncestors = getSupportedPrototypeEmbedOrigins();
-
-async function loadPlaywright() {
-  try {
-    return await import("playwright");
-  } catch {
-    // Playwright may be available from a previous npx install in Codex.
-  }
-
-  const candidates = [
-    process.env.PLAYWRIGHT_PACKAGE_DIR,
-    ...findCachedPlaywrightPackages(),
-  ].filter(Boolean);
-
-  for (const packageDir of candidates) {
-    const modulePath = join(packageDir, "index.mjs");
-
-    if (existsSync(modulePath)) {
-      return import(pathToFileURL(modulePath).href);
-    }
-  }
-
-  throw new Error(
-    "Playwright is not available. Install it or set PLAYWRIGHT_PACKAGE_DIR.",
-  );
-}
-
-function findCachedPlaywrightPackages() {
-  const npxCacheDir = join(homedir(), ".npm", "_npx");
-
-  if (!existsSync(npxCacheDir)) {
-    return [];
-  }
-
-  return readdirSync(npxCacheDir)
-    .map((entry) => join(npxCacheDir, entry, "node_modules", "playwright"))
-    .filter((packageDir) => existsSync(join(packageDir, "package.json")));
-}
 
 function projectUrl(slug) {
   return new URL(`/prototypes/${slug}`, portfolioBaseUrl).toString();
@@ -173,78 +138,6 @@ function validateHeaders(project, response, label) {
   return failures.map((message) => `${project.section_id}: ${message}`);
 }
 
-function sameFrameUrl(candidateUrl, expectedUrl) {
-  try {
-    const candidate = new URL(candidateUrl, portfolioBaseUrl);
-    const expected = new URL(expectedUrl, portfolioBaseUrl);
-
-    return (
-      candidate.origin === expected.origin &&
-      candidate.pathname === expected.pathname &&
-      candidate.search === expected.search
-    );
-  } catch {
-    return false;
-  }
-}
-
-function responseBelongsToEmbed(responseUrl, expectedUrl) {
-  try {
-    const response = new URL(responseUrl, portfolioBaseUrl);
-    const expected = new URL(expectedUrl, portfolioBaseUrl);
-    const expectedDirectory = expected.pathname.endsWith("/")
-      ? expected.pathname
-      : `${expected.pathname}/`;
-
-    return (
-      response.origin === expected.origin &&
-      (response.pathname === expected.pathname ||
-        response.pathname.startsWith(expectedDirectory))
-    );
-  } catch {
-    return false;
-  }
-}
-
-async function getEmbeddedFrameHandle(page, expectedUrl) {
-  const deadline = Date.now() + 15000;
-  const expected = new URL(expectedUrl, portfolioBaseUrl);
-
-  while (Date.now() < deadline) {
-    const handles = await page.locator("iframe").elementHandles();
-
-    for (const handle of handles) {
-      const src = await handle.getAttribute("src");
-
-      if (src && sameFrameUrl(src, expected.href)) {
-        return handle;
-      }
-    }
-
-    await page.waitForTimeout(250);
-  }
-
-  throw new Error(`Timed out waiting for iframe ${expected.pathname}`);
-}
-
-async function getEmbeddedFrameText(iframeHandle, expectedUrl) {
-  const deadline = Date.now() + 15000;
-
-  while (Date.now() < deadline) {
-    const frame = await iframeHandle.contentFrame();
-
-    if (frame) {
-      return frame.locator("body").innerText({ timeout: 5000 });
-    }
-
-    await iframeHandle.evaluate(
-      () => new Promise((resolve) => setTimeout(resolve, 250)),
-    );
-  }
-
-  throw new Error(`Timed out waiting for iframe content from ${expectedUrl}`);
-}
-
 async function runBrowserAudit(projects) {
   const { chromium } = await loadPlaywright();
   const browser = await chromium.launch();
@@ -277,8 +170,11 @@ async function runBrowserAudit(projects) {
         waitUntil: localMode ? "domcontentloaded" : "networkidle",
       });
 
-      const iframeHandle = await getEmbeddedFrameHandle(page, resolvedEmbedUrl)
-        .catch(() => null);
+      const iframeHandle = await getEmbeddedFrameHandle(
+        page,
+        resolvedEmbedUrl,
+        { baseUrl: portfolioBaseUrl },
+      ).catch(() => null);
 
       if (!iframeHandle) {
         failures.push(
@@ -300,7 +196,11 @@ async function runBrowserAudit(projects) {
         .slice(responseStart)
         .find((response) => {
           return (
-            responseBelongsToEmbed(response.url, resolvedEmbedUrl) &&
+            responseBelongsToEmbed(
+              response.url,
+              resolvedEmbedUrl,
+              portfolioBaseUrl,
+            ) &&
             (response.status === 403 ||
               response.headers["x-vercel-mitigated"] === "deny")
           );

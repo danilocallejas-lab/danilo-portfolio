@@ -1,24 +1,51 @@
-export type ProjectSection = {
+import type { ProjectDisciplineTagValue } from "./project-tags";
+
+export type ProjectSectionImage = {
+  src: string;
+  alt: string;
+  frameClassName?: string;
+  imageClassName?: string;
+};
+
+export type ProjectSectionCopyPresentation = "default" | "title-only" | "none";
+
+export type ProjectImageSection = {
   title: string;
   summary: string;
   caption: string;
-  image: {
-    src: string;
-    alt: string;
-    frameClassName?: string;
-    imageClassName?: string;
-  };
+  copyPresentation?: ProjectSectionCopyPresentation;
+  presentation?: "image" | "carousel";
+  image: ProjectSectionImage;
+  slides?: ProjectSectionImage[];
 };
+
+export type ProjectVideoEmbedSection = {
+  title: string;
+  summary: string;
+  caption: string;
+  copyPresentation?: ProjectSectionCopyPresentation;
+  presentation: "video-embed";
+  embedUrl: string;
+  embedTitle: string;
+  frameClassName?: string;
+};
+
+export type ProjectSection = ProjectImageSection | ProjectVideoEmbedSection;
 
 export type FeaturedProject = {
   slug: string;
   title: string;
   company: string;
   category: string;
+  discipline_tags: readonly ProjectDisciplineTagValue[];
   year: string;
   era: string;
   roomLabel: string;
   galleryNote: string;
+  detailPresentation?: "case-study" | "image-archive";
+  detailContentPresentation?: "full" | "overview-only";
+  renderMediaImmediately?: boolean;
+  showProjectMedia?: boolean;
   teaser: string;
   role: string;
   collaborators: string[];
@@ -45,6 +72,7 @@ export type ArchiveProject = {
   category: string;
   year: string;
   summary: string;
+  discipline_tags: readonly ProjectDisciplineTagValue[];
   href?: string;
   image?: string;
 };
@@ -56,6 +84,84 @@ export type ExperienceItem = {
   focus: string;
   href?: string;
 };
+
+const recordLabelDesignImageBase = "/images/cargo/record-label-designs";
+const dropboxSpacesImageBase = "/images/cargo/dropbox-spaces";
+const visionPlatformTrimmedImageBase = "/images/cargo/vision-platform/trimmed";
+
+function getRecordLabelDesignImagePath(index: number) {
+  return `${recordLabelDesignImageBase}/record-label-designs-${String(index).padStart(2, "0")}.jpg`;
+}
+
+function getRecordLabelDesignImage(
+  index: number,
+  label = `Record label design ${String(index).padStart(2, "0")}`,
+): ProjectSectionImage {
+  return {
+    src: getRecordLabelDesignImagePath(index),
+    alt: `${label}.`,
+    frameClassName:
+      "aspect-[16/10] bg-[linear-gradient(180deg,#f5f0ea_0%,#ffffff_100%)]",
+    imageClassName: "object-cover",
+  };
+}
+
+function getRecordLabelDesignSection(index: number): ProjectSection {
+  const label = `Record label design ${String(index).padStart(2, "0")}`;
+
+  return {
+    title: label,
+    summary:
+      "A record label design artifact from the archived 2009-2016 collection.",
+    caption:
+      "Part of a legacy Cargo archive set preserved as an image-led project.",
+    image: getRecordLabelDesignImage(index, label),
+  };
+}
+
+function getRecordLabelDesignSections(): ProjectSection[] {
+  const superGramsSlides = Array.from({ length: 7 }, (_, slideIndex) => {
+    const imageIndex = slideIndex + 2;
+    return getRecordLabelDesignImage(
+      imageIndex,
+      `Super Grams interface ${String(imageIndex).padStart(2, "0")}`,
+    );
+  });
+  const elvisSlides = Array.from({ length: 4 }, (_, slideIndex) => {
+    const imageIndex = slideIndex + 10;
+    return getRecordLabelDesignImage(
+      imageIndex,
+      `Elvis archive interface ${String(imageIndex).padStart(2, "0")}`,
+    );
+  });
+
+  return [
+    {
+      title: "Super Grams",
+      summary:
+        "A set of Super Grams browser and game interface screens from the record label archive.",
+      caption:
+        "Grouped as a manual image carousel so the related Super Grams sequence reads as one project moment.",
+      presentation: "carousel",
+      image: superGramsSlides[0],
+      slides: superGramsSlides,
+    },
+    getRecordLabelDesignSection(9),
+    {
+      title: "Elvis",
+      summary:
+        "A compact sequence of Elvis-themed interface screens from the record label archive.",
+      caption:
+        "Grouped as a manual image carousel so the Elvis set can be viewed as one sequence.",
+      presentation: "carousel",
+      image: elvisSlides[0],
+      slides: elvisSlides,
+    },
+    ...Array.from({ length: 13 }, (_, sectionIndex) =>
+      getRecordLabelDesignSection(sectionIndex + 14),
+    ),
+  ];
+}
 
 export const siteIntro = {
   title: "Danilo Callejas",
@@ -73,6 +179,7 @@ export const featuredProjects: FeaturedProject[] = [
     title: "Opendoor",
     company: "Opendoor",
     category: "Seller experience",
+    discipline_tags: ["product", "internal-tools"],
     year: "2024-Present",
     era: "Current work",
     roomLabel: "North wall",
@@ -163,6 +270,7 @@ export const featuredProjects: FeaturedProject[] = [
     title: "DraftKings",
     company: "DraftKings",
     category: "Sportsbook product design",
+    discipline_tags: ["product"],
     year: "2023-2024",
     era: "Current work",
     roomLabel: "East turn",
@@ -254,6 +362,7 @@ export const featuredProjects: FeaturedProject[] = [
     title: "Coinbase",
     company: "Coinbase",
     category: "Payments and everyday crypto",
+    discipline_tags: ["product"],
     year: "2021-2023",
     era: "Current work",
     roomLabel: "East gallery",
@@ -340,141 +449,135 @@ export const featuredProjects: FeaturedProject[] = [
     title: "Dropbox Spaces",
     company: "Dropbox",
     category: "Collaborative workspace",
-    year: "2018-2021",
-    era: "Current work",
+    discipline_tags: ["product"],
+    year: "2018-2019",
+    era: "Archive work",
     roomLabel: "South hall",
     galleryNote: "A longer corridor about reframing a company from storage to workspace.",
     teaser:
       "Turning Dropbox from a destination for files into a living workspace for projects, context, and team momentum.",
     role: "Product Designer",
-    collaborators: ["Dropbox collaboration teams"],
+    collaborators: ["Walter Somerville", "John Saito", "Jason Perez"],
     thesis:
-      "Shift Dropbox from a static repository of files into a more connected workspace where people can orient around the work itself.",
+      "Dropbox Spaces 2.0 is a virtual workspace that brings together teams and projects.",
     overview:
-      "Dropbox Spaces was a workspace layer that brought files, docs, links, and project context closer together. The opportunity was not just shipping another surface, but helping Dropbox tell a broader story about how work happens across people and artifacts.",
+      "Spaces was designed so small, content-centric teams could streamline their work, prioritize their day, and stay connected from anywhere.",
     problem:
-      "Dropbox was deeply associated with storage, but teams needed a stronger sense of project context, shared momentum, and living workspaces that went beyond folders.",
+      "Teams needed a stronger sense of project context, shared momentum, and living workspaces that went beyond folders and scattered task lists.",
     constraints: [
-      "The concept had to feel additive to an existing product people already understood in a narrower way.",
-      "The system needed to support both lightweight browsing and deeper collaborative context.",
-      "The experience had to feel useful immediately rather than aspirational from a distance.",
+      "Tasks needed to live close to content without making the workspace feel heavier.",
+      "The experience had to stay cohesive across platforms, devices, and browser sizes.",
+      "The beta request experience needed to drive awareness and create a feedback pool for launch.",
     ],
     designStrategy:
-      "Use the workspace as a connective layer: a place where files, docs, decisions, and people could sit together in a more legible narrative about the work.",
+      "Use the workspace as a connective layer where files, docs, tasks, decisions, and people could sit together in a more legible narrative about the work.",
     outcomes: [
       "Helped broaden Dropbox's product story beyond file storage.",
       "Made project context and collaboration feel more native to the product.",
-      "Created a more team-centered frame for how work could be organized and revisited.",
+      "Created a more team-centered frame for tracking, prioritizing, and revisiting work.",
     ],
     reflection:
       "This project sharpened my interest in product framing. Sometimes the biggest design move is helping people see an existing platform differently.",
     wallTone: "sage",
     cover: {
-      src: "/images/archive/dropbox-spaces.jpg",
-      alt: "Dropbox Spaces workspace interface.",
+      src: `${dropboxSpacesImageBase}/cover.jpg`,
+      alt: "Dropbox Spaces 2.0 workspace hero image.",
       frameClassName:
-        "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+        "aspect-[1200/519] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
       imageClassName: "object-cover",
     },
-    sections: [
-      {
-        title: "Workspace Layer",
-        summary:
-          "Spaces gave projects a clearer home by bringing the most relevant materials into one collaborative surface.",
-        caption:
-          "The move was architectural. It gave teams a place to orient around the work instead of around a file tree.",
-        image: {
-          src: "/images/archive/dropbox-spaces.jpg",
-          alt: "Dropbox Spaces overview.",
-          frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
-          imageClassName: "object-cover",
-        },
-      },
-      {
-        title: "Project Context",
-        summary:
-          "The experience treated context as a design material, making related docs, artifacts, and collaborators easier to understand together.",
-        caption:
-          "Good collaboration tools do more than hold content. They make the shape of a project easier to read.",
-        image: {
-          src: "/images/archive/dropbox-spaces.jpg",
-          alt: "Dropbox Spaces project context.",
-          frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#f5f8f4_0%,#ffffff_100%)]",
-          imageClassName: "object-cover object-left",
-        },
-      },
-    ],
+    sections: [],
   },
   {
     slug: "apple-edu",
     title: "Apple EDU",
-    company: "Kettle x Apple",
+    company: "Apple",
     category: "Education and campaign work",
-    year: "2017",
-    era: "Current work",
-    roomLabel: "West gallery",
-    galleryNote: "A brighter room about embedded collaboration and educational storytelling.",
+    discipline_tags: ["marketing", "web-design", "art-direction"],
+    year: "2018",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "Apple EDU social and learning center work from the legacy archive.",
     teaser:
-      "Working inside Apple to shape educational storytelling and launch-facing visuals around classroom products and iOS features.",
-    role: "Art Direction and Design",
-    collaborators: ["Kettle", "Apple EDU team", "App Store team"],
+      "Embedded with the App Store and Apple EDU teams to shape iOS 11 social systems and Apple Learning Center how-to storytelling.",
+    role: "Senior Designer",
+    collaborators: ["Matt Brant"],
     thesis:
-      "Translate education-focused product value into visual stories that feel clear, aspirational, and recognizably Apple without becoming generic campaign work.",
+      "Make Apple EDU learning stories feel immediate, creative, and useful across social branding and feature-driven how-to films.",
     overview:
-      "At Kettle, I worked on-site at Apple in Cupertino, embedded with the App Store and Apple EDU teams. The work spanned social, launch, and educational product storytelling intended to make classroom value legible and emotionally resonant.",
+      "At Kettle, I worked on-site at Apple headquarters in Cupertino, CA, embedded with the App Store and Apple EDU teams. I assisted with the iOS 11 social channels branding design system and storyboarding videos for new features and promotional campaigns for the Apple Learning Center. Client: Apple. Agency: Kettle. Role: Senior Designer. Collaborator: Matt Brant.",
     problem:
-      "Educational products can easily flatten into feature lists. The real challenge was making the benefits feel immediate, visual, and human without losing product clarity.",
+      "Education stories need to teach without feeling instructional in a flat way. Apple EDU needed short-form work that made product features feel creative, clear, and classroom-ready.",
     constraints: [
-      "The work had to align with Apple's visual standards while still making room for strong editorial choices.",
-      "Messaging needed to land across both education and broader consumer-adjacent surfaces.",
-      "The system had to support product value, campaign needs, and platform-specific output at once.",
+      "The work had to align with Apple standards while staying legible across social and learning surfaces.",
+      "The videos needed to make feature value visible quickly.",
+      "The storytelling had to support both teachers and students without overexplaining.",
     ],
     designStrategy:
-      "Use clean, confident visual framing and tight narrative focus so the story stays about learning, possibility, and product usefulness rather than decoration.",
+      "Use tight storyboards, clean visual framing, and simple instructional arcs so each feature felt like a creative prompt.",
     outcomes: [
-      "Supported Apple EDU and App Store storytelling with clearer visual direction.",
-      "Helped educational product benefits read with more immediacy and polish.",
-      "Strengthened my ability to work inside a highly constrained brand system without losing authorship.",
+      "Supported Apple EDU and App Store storytelling for iOS 11 and Apple Learning Center campaigns.",
+      "Helped feature-led lessons read as creative invitations.",
+      "Created how-to narratives that balanced clarity, product value, and inspiration.",
     ],
     reflection:
       "Apple EDU taught me how much can be expressed inside constraint when the framing is exact. Strong systems do not eliminate voice; they make precision matter more.",
     wallTone: "sunset",
     cover: {
-      src: "/images/archive/apple-edu.jpg",
-      alt: "Apple EDU campaign artwork.",
+      src: "/images/cargo/apple-edu/header.jpg",
+      alt: "Apple EDU campaign header artwork.",
       frameClassName:
-        "aspect-[16/10] bg-[linear-gradient(180deg,#fdf2ec_0%,#fffaf6_100%)]",
+        "aspect-[3/2] bg-[linear-gradient(180deg,#fdf2ec_0%,#fffaf6_100%)]",
       imageClassName: "object-cover",
     },
     sections: [
       {
-        title: "Embedded Collaboration",
+        title: "Discover Shapes In Keynote",
         summary:
-          "Working inside Apple meant design choices had to stay highly deliberate while moving across education, product, and social contexts.",
+          "As part of the Apple Learning Center, we created a how-to video for Apple EDU demonstrating how to build new shapes in Keynote with the shape tool to promote creativity and exploration.",
         caption:
-          "The most useful contribution was often framing the work in a way that helped different teams rally around the same visual story.",
+          "The video treated a product feature as a creative exercise.",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/237159710",
+        embedTitle: "Apple EDU Discover Shapes In Keynote video",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Discover Shapes In Keynote still",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
         image: {
-          src: "/images/archive/apple-edu.jpg",
-          alt: "Apple EDU campaign work.",
+          src: "/images/cargo/apple-edu/frame-2248.png",
+          alt: "Apple EDU Discover Shapes In Keynote storyboard frame.",
           frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#fdf1e8_0%,#fff9f4_100%)]",
+            "aspect-[3/2] bg-[linear-gradient(180deg,#fdf1e8_0%,#fff9f4_100%)]",
           imageClassName: "object-cover",
         },
       },
       {
-        title: "Education Storytelling",
+        title: "Create Silhouettes In Keynote",
         summary:
-          "The work treated classroom value as something to be seen and felt, not just explained through product marketing language.",
+          "Apple EDU helped bridge the student-teacher gap through Silhouettes in Keynote. Students could customize silhouettes that matched their personalities and fill them with shapes to identify themselves.",
         caption:
-          "The challenge was balancing inspiration with usefulness so the work still felt grounded in product reality.",
+          "The story connected self-expression to a practical classroom activity.",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/237160589",
+        embedTitle: "Apple EDU Create Silhouettes In Keynote video",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Create Silhouettes In Keynote still",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
         image: {
-          src: "/images/archive/apple-edu.jpg",
-          alt: "Apple EDU visual storytelling.",
+          src: "/images/cargo/apple-edu/frame-2249.png",
+          alt: "Apple EDU Create Silhouettes In Keynote storyboard frame.",
           frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#fff5ee_0%,#ffffff_100%)]",
-          imageClassName: "object-cover object-left",
+            "aspect-[3/2] bg-[linear-gradient(180deg,#fff5ee_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
         },
       },
     ],
@@ -482,78 +585,1268 @@ export const featuredProjects: FeaturedProject[] = [
   {
     slug: "bellwether-coffee",
     title: "Bellwether Coffee",
-    company: "Frog",
-    category: "Branding and venture work",
+    company: "Bellwether Coffee",
+    category: "Brand and digital experience",
+    discipline_tags: ["branding-identity", "marketing", "web-design"],
     year: "2018",
-    era: "Current work",
-    roomLabel: "Return wall",
-    galleryNote: "The closing room, where brand, digital presence, and product theater come together.",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "A venture rebrand and digital experience from the legacy archive.",
     teaser:
-      "A venture rebrand and digital presence designed to make an ambitious coffee platform feel premium, modern, and commercially credible.",
-    role: "UI/UX and Branding",
-    collaborators: ["Frog venture team", "Executive creative direction"],
+      "A Frog Design venture rebrand and end-to-end digital experience for Bellwether Coffee.",
+    role: "Interactive, Visual Designer",
+    collaborators: ["Andreas Markdalen"],
     thesis:
-      "Build a visual and digital system that makes Bellwether Coffee feel like a serious modern platform, not just a technical product with a good story.",
+      "Design an end-to-end digital experience that made Bellwether Coffee's venture story feel premium, credible, and market-ready.",
     overview:
-      "At Frog, I worked closely with the executive creative director on rebranding Bellwether Coffee, a venture client. My role was to help conceptualize, design, and execute the brand expression and digital presence so the company felt more distinctive and market-ready.",
+      "I worked closely with the ECD on rebranding Frog Design's venture client Bellwether Coffee. My role was to conceptualize, design, and execute the entire end-to-end digital experience for Bellwether Coffee while my partner refreshed the identity. Client: Bellwether Coffee. Agency: Frog Design. Role: Interactive, Visual Designer. Collaborator: Andreas Markdalen.",
     problem:
-      "New ventures often have an idea people can explain but not yet a presence people can trust. Bellwether needed a stronger identity that made the product feel premium and real in the market.",
+      "New ventures often have an idea people can explain but not yet a presence people can trust. Bellwether needed a stronger digital experience that made the product feel premium and real in the market.",
     constraints: [
-      "The work had to bridge brand storytelling and practical product credibility.",
-      "The system needed to feel premium without becoming ornamental.",
-      "Digital execution had to support both narrative and conversion.",
+      "The work had to connect a refreshed identity to a complete digital experience.",
+      "The site needed to balance venture storytelling, product credibility, and premium presentation.",
+      "The digital system had to support narrative, conversion, and the product's physical presence.",
     ],
     designStrategy:
-      "Use a cleaner, more self-assured visual system and a sharper digital presentation so the company feels intentional from the first glance.",
+      "Use a confident editorial structure, rich product imagery, and a sharper digital system so the company felt intentional from the first glance.",
     outcomes: [
-      "Created a stronger brand presence around the venture's product vision.",
-      "Improved how Bellwether's story read across digital touchpoints.",
-      "Showed how brand systems and product storytelling can reinforce one another when designed together.",
+      "Designed the end-to-end digital experience for the Bellwether Coffee rebrand.",
+      "Helped translate the venture story into a more premium product presence.",
+      "Connected brand identity, product education, and digital storytelling into one system.",
     ],
     reflection:
       "Bellwether is a reminder that product, brand, and interface can be one conversation. Some of the most persuasive product work begins before the UI ever appears.",
     wallTone: "espresso",
     cover: {
-      src: "/images/archive/bellwether-coffee.jpg",
+      src: "/images/cargo/bellwether-coffee/cover.jpg",
       alt: "Bellwether Coffee brand and website work.",
       frameClassName:
-        "aspect-[16/10] bg-[linear-gradient(180deg,#f1ebe6_0%,#fbf8f5_100%)]",
+        "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1ebe6_0%,#fbf8f5_100%)]",
       imageClassName: "object-cover",
     },
     sections: [
       {
-        title: "Brand Presence",
-        summary:
-          "The identity work made the venture feel more decisive and more ready for the world it was trying to enter.",
-        caption:
-          "Strong venture design is often about compressing uncertainty. The visual language helped do that work.",
+        title: "Bellwether Coffee hero",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
         image: {
-          src: "/images/archive/bellwether-coffee.jpg",
-          alt: "Bellwether Coffee brand system.",
+          src: "/images/cargo/bellwether-coffee/cover.jpg",
+          alt: "Bellwether Coffee hero artwork.",
           frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
           imageClassName: "object-cover",
         },
       },
       {
-        title: "Digital Storytelling",
-        summary:
-          "The digital expression helped connect product ambition, company credibility, and a more premium point of view.",
-        caption:
-          "The site did not just explain the company. It staged the company.",
+        title: "Bellwether Coffee landing page",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
         image: {
-          src: "/images/archive/bellwether-coffee.jpg",
-          alt: "Bellwether Coffee digital experience.",
+          src: "/images/cargo/bellwether-coffee/landing-page.jpg",
+          alt: "Bellwether Coffee landing page design.",
           frameClassName:
-            "aspect-[16/10] bg-[linear-gradient(180deg,#f7f1eb_0%,#ffffff_100%)]",
-          imageClassName: "object-cover object-right",
+            "aspect-[4/3] bg-[linear-gradient(180deg,#f7f1eb_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee brand system",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/brand-system.jpg",
+          alt: "Bellwether Coffee brand system.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee brand film",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/249776769",
+        embedTitle: "Bellwether Coffee brand film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Bellwether Coffee product story 01",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/product-story-01.jpg",
+          alt: "Bellwether Coffee product story layout.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee product story 02",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/product-story-02.jpg",
+          alt: "Bellwether Coffee product detail layout.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee product story 03",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/product-story-03.jpg",
+          alt: "Bellwether Coffee product storytelling page.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee product film",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/249777003",
+        embedTitle: "Bellwether Coffee product film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Bellwether Coffee experience 01",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-01.jpg",
+          alt: "Bellwether Coffee experience screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 02",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-02.jpg",
+          alt: "Bellwether Coffee digital experience page.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 03",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-03.jpg",
+          alt: "Bellwether Coffee website module.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 04",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-04.jpg",
+          alt: "Bellwether Coffee website detail.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 05",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-05.jpg",
+          alt: "Bellwether Coffee digital brand page.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 06",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-06.jpg",
+          alt: "Bellwether Coffee digital system screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee experience 07",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/experience-07.jpg",
+          alt: "Bellwether Coffee product storytelling screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f1e9e3_0%,#fffdfa_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee identity detail 01",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/identity-detail-01.png",
+          alt: "Bellwether Coffee identity detail.",
+          frameClassName:
+            "aspect-video bg-[linear-gradient(180deg,#f7f1eb_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Bellwether Coffee identity detail 02",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/bellwether-coffee/identity-detail-02.png",
+          alt: "Bellwether Coffee identity detail screen.",
+          frameClassName:
+            "aspect-video bg-[linear-gradient(180deg,#f7f1eb_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
         },
       },
     ],
   },
+  {
+    slug: "dropbox-paper",
+    title: "Dropbox Paper",
+    company: "Dropbox",
+    category: "Co-editing and collaboration",
+    discipline_tags: ["product"],
+    year: "2018-2021",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A focused look at creation, coordination, and collaborative documents.",
+    teaser:
+      "Connecting writing, planning, templates, and team coordination inside Dropbox Paper.",
+    role: "Product Designer",
+    collaborators: ["Dropbox Paper team"],
+    thesis:
+      "Make Paper feel like a calmer collaboration space where people can move from a blank document into coordinated team work.",
+    overview:
+      "Dropbox Paper sat at the intersection of document creation and project coordination. This work focused on making the product feel more useful across writing, editing, templates, and repeatable team workflows.",
+    problem:
+      "Collaborative documents can become either too empty to guide teams or too rigid to feel like a workspace. Paper needed to support both expressive creation and practical coordination.",
+    constraints: [
+      "The product had to stay lightweight while making more workflow value visible.",
+      "Templates and editing surfaces needed to support many kinds of teams without becoming generic.",
+      "The experience had to feel connected to Dropbox without losing Paper's softer creation-first personality.",
+    ],
+    designStrategy:
+      "Use document surfaces as starting points for momentum: clearer editing states, more helpful templates, and tighter bridges between writing and organizing.",
+    outcomes: [
+      "Made Paper's collaboration value easier to understand from first use.",
+      "Helped frame templates as a practical path into repeatable team work.",
+      "Extended the product story beyond documents into coordinated workspaces.",
+    ],
+    reflection:
+      "Paper reinforced how much collaboration design depends on tone. A good workspace has to guide people without making the document feel overdetermined.",
+    wallTone: "sage",
+    cover: {
+      src: "/images/archive/dropbox-paper.jpg",
+      alt: "Dropbox Paper collaboration surface.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Writing and Editing",
+        summary:
+          "The editing surface kept creation central while making collaboration feel more visible and easier to act on.",
+        caption:
+          "The document needed to stay quiet, but not empty. The strongest patterns helped teams understand what to do next without interrupting the work.",
+        image: {
+          src: "/images/cargo/dropbox-paper/editor.jpg",
+          alt: "Dropbox Paper editor interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#edf3ef_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Templates",
+        summary:
+          "Templates gave teams a faster way into recurring workflows without turning Paper into a rigid project management tool.",
+        caption:
+          "The goal was to make a new document feel useful immediately, especially for repeated collaboration patterns.",
+        image: {
+          src: "/images/cargo/dropbox-paper/templates.png",
+          alt: "Dropbox Paper templates surface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#f2f6f3_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Dark Mode",
+        summary:
+          "Dark mode extended Paper's product language into a more comfortable reading and writing context.",
+        caption:
+          "Even a visual mode shift had to preserve Paper's softness and legibility.",
+        image: {
+          src: "/images/cargo/dropbox-paper/dark-mode.png",
+          alt: "Dropbox Paper dark mode interface.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "paper-desktop-app",
+    title: "Paper Desktop App",
+    company: "Dropbox",
+    category: "Desktop app",
+    discipline_tags: ["product"],
+    year: "2018-2019",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "A dedicated Paper desktop app story from the legacy archive.",
+    showProjectMedia: true,
+    teaser:
+      "A dedicated Paper desktop app for creating and accessing docs quickly, staying organized, and reducing distractions.",
+    role: "Product Designer",
+    collaborators: ["Kevin Tunc"],
+    thesis:
+      "Bring Paper closer to daily work with a dedicated desktop app for faster creation, retrieval, and focused document workflows.",
+    overview:
+      "Create and access docs quickly, keep your workspace organized, and focus on your work without distractions with a dedicated Paper desktop app. I inherited a nascent initiative and was responsible for growing and expanding its features and user base. In-house: Dropbox Paper. Role: Product Designer. Collaborator: Kevin Tunc.",
+    problem:
+      "Browser-based collaboration tools often make returning to work feel heavier than it should. Paper needed a desktop presence that made retrieval, activation, and resumption feel immediate.",
+    constraints: [
+      "The app had to feel close to desktop habits while remaining recognizably Paper.",
+      "Closed beta and activation experiments needed to grow the product funnel thoughtfully.",
+      "Search, migration parity, and power-user workflows had to evolve without turning the app into a heavy file manager.",
+    ],
+    designStrategy:
+      "Treat the desktop app as a fast doorway back into work: lightweight activation, shared system foundations, stronger search, multi-window workflows, and a beta path toward broader access.",
+    outcomes: [
+      "Expanded a nascent desktop app initiative into a fuller product surface.",
+      "Supported activation testing, infrastructure migration, search parity, power-user workflows, and beta distribution.",
+      "Helped connect Paper workflows to daily operating system habits.",
+    ],
+    reflection:
+      "This work made the value of proximity clear. Sometimes the design problem is not the document itself, but how quickly someone can get back to it.",
+    wallTone: "sage",
+    cover: {
+      src: "/images/cargo/paper-desktop/cover.jpg",
+      alt: "Dropbox Paper desktop app interface.",
+      frameClassName:
+        "aspect-[1200/795] bg-[linear-gradient(180deg,#eef2ee_0%,#fbfcfb_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Paper Desktop Activation Experiment",
+        summary:
+          "While the Paper Desktop app was in closed beta, we launched a three-way A/B test to understand the impact on new user activation in Paper Desktop's product funnel and identify a thoughtful solution for upselling users.",
+        caption:
+          "The activation experiment made the app's value clearer during closed beta.",
+        image: {
+          src: "/images/cargo/paper-desktop/activation-overview.jpg",
+          alt: "Paper Desktop activation experiment overview.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef2ee_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop activation test A",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/activation-test-a.jpg",
+          alt: "Paper Desktop activation test screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#f3f7f4_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop activation test B",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/activation-test-b.jpg",
+          alt: "Paper Desktop activation test variation.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop activation test C",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/activation-test-c.jpg",
+          alt: "Paper Desktop activation test screen variation.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop activation flow",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/activation-flow.jpg",
+          alt: "Paper Desktop activation flow.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Desktop Design System",
+        summary:
+          "In an effort for Paper Desktop to be ready for an infrastructure migration, we revamped our design system to accommodate new users. We did this with an incremental gain on various aspects of the product.",
+        caption:
+          "The system work helped the desktop app evolve without losing its Paper foundation.",
+        image: {
+          src: "/images/cargo/paper-desktop/design-system-01.jpg",
+          alt: "Paper Desktop design system screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Desktop Design System details",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/design-system-02.jpg",
+          alt: "Paper Desktop design system details.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Desktop Search",
+        summary:
+          "To support the Paper 2020 document migration into Dropbox, Paper Desktop needed to match changes made to users' accounts on the web. This included a new search experience for new and legacy docs across both Dropbox and Paper.",
+        caption:
+          "Search became a bridge between legacy Paper documents and the Dropbox migration.",
+        image: {
+          src: "/images/cargo/paper-desktop/search-overview.jpg",
+          alt: "Paper Desktop search overview.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop search results 01",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/search-results-01.jpg",
+          alt: "Paper Desktop search results screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop search results 02",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/search-results-02.jpg",
+          alt: "Paper Desktop search results variation.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop search results 03",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/search-results-03.jpg",
+          alt: "Paper Desktop search results detail.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Desktop Multi-Window",
+        summary:
+          "Over time, we found that there seemed to be a need for referencing completed or work-in-progress docs with many power users. During Hackweek, I worked on designing a multi-doc experience that would enable a quicker workflow.",
+        caption:
+          "Multi-window workflows supported power users who needed to reference more than one Paper doc at a time.",
+        image: {
+          src: "/images/cargo/paper-desktop/multi-window-overview.jpg",
+          alt: "Paper Desktop multi-window overview.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop multi-window docs",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/multi-window-docs.jpg",
+          alt: "Paper Desktop multi-window document screens.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop multi-window workflow",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/multi-window-workflow.jpg",
+          alt: "Paper Desktop multi-window workflow.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Desktop Beta Page",
+        summary:
+          "In response to users actively requesting the desktop app, I designed a series of beta milestones from closed to open. The deliverables included a beta marketing page and distribution mechanism, gradually allowing an expanded set of users into the app to improve quality and feature set before the full GA release.",
+        caption:
+          "The beta page and distribution flow helped expand access while the product matured.",
+        image: {
+          src: "/images/cargo/paper-desktop/beta-page-hero.jpg",
+          alt: "Paper Desktop beta page.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop beta page flow",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/beta-page-flow.jpg",
+          alt: "Paper Desktop beta page flow.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop beta distribution",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/beta-page-distribution.jpg",
+          alt: "Paper Desktop beta distribution screen.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Paper Desktop beta final state",
+        summary: "",
+        caption: "",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/paper-desktop/beta-page-final.jpg",
+          alt: "Paper Desktop beta page final state.",
+          frameClassName:
+            "aspect-[4098/2715] bg-[linear-gradient(180deg,#eef3f0_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "vision-platform",
+    title: "Vision Platform",
+    company: "Sato Global",
+    category: "Inventory intelligence",
+    discipline_tags: ["product", "internal-tools", "design-systems"],
+    year: "2017-2018",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "A systems story about RFID, video, and retail operations.",
+    teaser:
+      "A retail platform connecting tags, sensors, gateways, and video into actionable inventory and customer engagement insight.",
+    role: "Product Designer",
+    collaborators: ["Jesus Rivera", "Svetlana Sidorovskaya"],
+    thesis:
+      "Make a complex physical retail system readable across associate, fitting room, and management workflows.",
+    overview:
+      "The VISION Retail Platform connects tags, sensors, gateways, and video to deliver actionable insight across inventory management and customer engagement. The product centered on three connected surfaces: the sales associate app, smart fitting room, and management console.",
+    problem:
+      "Retail teams needed hardware-driven signals to become clear software actions: what was happening, where it was happening, and who should respond next.",
+    constraints: [
+      "Agency: Sato Global; role: Product Designer; years: 2017-2018; collaborators: Jesus Rivera and Svetlana Sidorovskaya.",
+      "The product had to make RFID zones, readers, inventory states, tasks, and customer requests feel part of one operational system.",
+      "The design system needed to hold together desktop management workflows and mobile associate tasks.",
+    ],
+    designStrategy:
+      "Use a restrained dashboard and design-system language that connected system status, inventory metadata, task management, and mobile requests without overwhelming the primary action.",
+    outcomes: [
+      "Designed management-console views for analytics, inventory, users, zones, readers, and account personalization.",
+      "Extended the platform to mobile associate workflows for customer requests from fitting rooms.",
+      "Maintained and developed Vision and Aware design-system patterns across supported platforms and devices.",
+    ],
+    reflection:
+      "Vision Platform sat squarely between hardware and software. The useful design move was making invisible systems feel inspectable, assignable, and ready for action.",
+    wallTone: "cobalt",
+    renderMediaImmediately: true,
+    cover: {
+      src: "/images/cargo/vision-platform/cover.jpg",
+      alt: "Vision Platform retail intelligence dashboard.",
+      frameClassName:
+        "aspect-[1366/905] bg-[linear-gradient(180deg,#eef3ff_0%,#fdfefe_100%)]",
+      imageClassName: "object-contain",
+    },
+    sections: [
+      {
+        title: "Analytics Dashboard",
+        summary:
+          "The analytics dashboard allows managers and admins to quickly see and control open, closed, or ongoing tasks, total available or sold items, and each item's location across all locations.",
+        caption:
+          "Cargo source image: Group-Copy-5.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/group-copy-5.jpg`,
+          alt: "Vision Platform analytics dashboard interface.",
+          frameClassName: "aspect-[2136/1680]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Analytics Dashboard Detail",
+        summary:
+          "A second analytics view from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Group-Copy-6.jpg.",
+        copyPresentation: "none",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/group-copy-6.jpg`,
+          alt: "Vision Platform analytics detail interface.",
+          frameClassName: "aspect-[2136/1680]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Inventory",
+        summary:
+          "The inventory page grants managers access and control to view, locate, and retrieve items with robust metadata.",
+        caption:
+          "Cargo source image: Group-Copy-7.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/inventory.jpg`,
+          alt: "Vision Platform inventory management interface.",
+          frameClassName: "aspect-[2136/1680]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "User Management Console",
+        summary:
+          "With the user management console, administrators can supervise active employee tasks and redirect jobs more efficiently.",
+        caption:
+          "Cargo source image: Group-Copy-3.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/user-management-console.jpg`,
+          alt: "Vision Platform user management console interface.",
+          frameClassName: "aspect-[2136/1670]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "RFID Zones Tag Reader",
+        summary:
+          "For zones to work correctly, clients need to identify, control, and locate readers wherever they are in the space at a moment's notice.",
+        caption:
+          "Cargo source image: Group-Copy-8.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/rfid-zones-tag-reader.jpg`,
+          alt: "Vision Platform RFID zones tag reader interface.",
+          frameClassName: "aspect-[2136/1670]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Account Personalization",
+        summary:
+          "Because Vision is a B2B product, businesses needed to customize the app by changing themes and uploading a logo.",
+        caption:
+          "Cargo source image: Group-Copy.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/account-personalization.jpg`,
+          alt: "Vision Platform account personalization interface.",
+          frameClassName: "aspect-[2136/1605]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Sales Associate App",
+        summary:
+          "Retail associates working with customers on the floor receive client requests from fitting rooms, review all tasks, accept new ones, and track ongoing tasks from their phones.",
+        caption:
+          "Cargo source image: Group-Copy-2.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/sales-associate-app.jpg`,
+          alt: "Vision Platform sales associate app interface.",
+          frameClassName: "aspect-[2196/1308]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Vision & Aware Design System",
+        summary:
+          "To maintain consistency and speed up design and development across supported platforms and devices, the design system patterns were maintained and developed alongside the product.",
+        caption:
+          "Cargo source image: icons.jpg.",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/design-system-icons.jpg`,
+          alt: "Vision and Aware design system icon board.",
+          frameClassName: "aspect-[3000/1968]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Vision & Aware Design System Alternate",
+        summary:
+          "A second design-system icon board from the Cargo source sequence.",
+        caption:
+          "Cargo source image: icons-copy-1.jpg.",
+        copyPresentation: "none",
+        image: {
+          src: `${visionPlatformTrimmedImageBase}/design-system-icons-alt.jpg`,
+          alt: "Vision and Aware design system alternate icon board.",
+          frameClassName: "aspect-[3000/2122]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Retail Context",
+        summary:
+          "A retail context image from the Cargo source sequence.",
+        caption:
+          "Cargo source image: 21294749.jpg.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/vision-platform/retail-store-photo.jpg",
+          alt: "Vision Platform retail store context.",
+          frameClassName:
+            "aspect-[1366/905] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Vision Platform Film",
+        summary:
+          "The Cargo source page closes with a product film for the Vision Platform.",
+        caption: "Vision Platform Vimeo film.",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/476999202",
+        embedTitle: "Vision Platform film",
+        frameClassName: "aspect-video bg-black",
+      },
+    ],
+  },
+  {
+    slug: "food-labs",
+    title: "Food Labs",
+    company: "Seaport District NYC",
+    category: "Event and experience design",
+    discipline_tags: ["branding-identity", "art-direction"],
+    year: "2017",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "A culinary experiment for the Seaport, built around two-week chef residencies.",
+    teaser:
+      "A culinary residency at the Seaport translated into an editorial brand, web presence, films, and chef programming.",
+    role: "Senior Designer",
+    collaborators: ["Kiser Barnes", "Alicia Adamerovich"],
+    thesis:
+      "Invite visitors into a culinary experiment while making the Seaport feel like a destination for innovative food concepts and culturally specific chef residencies.",
+    overview:
+      "Food Labs invited visitors to be part of a culinary experiment as it welcomed a series of celebrated chefs in two-week residencies. The Food Lab showcased the Seaport as a destination for innovative culinary concepts, letting guests experience some of the world's most forward-thinking chefs as they took inspiration from a neighborhood with deep historical roots.",
+    problem:
+      "The residency needed to feel alive before guests arrived: part restaurant, part cultural program, and part neighborhood story. The digital system had to make the concept legible while giving each chef enough room to feel distinct.",
+    constraints: [
+      "Client: Seaport District NYC; in-house: The Howard Hughes Corporation; role: Senior Designer; collaborators: Kiser Barnes and Alicia Adamerovich.",
+      "The identity needed to support two-week residencies, chef-specific stories, films, and event context.",
+      "The system had to balance atmosphere with practical information for visitors.",
+    ],
+    designStrategy:
+      "Use an editorial brand and web system that could foreground food, chef programming, and Seaport context while staying direct enough for event discovery.",
+    outcomes: [
+      "Created a digital frame for the Food Labs residency concept and its programming.",
+      "Supported chef-led moments for Jessica Koslow, Hugh Acheson, and Alon Shaya.",
+      "Helped position the Seaport as a destination for experimental culinary experiences.",
+    ],
+    reflection:
+      "Food Labs was a useful reminder that hospitality design is mostly anticipation. The work had to make the room, the chef, and the neighborhood feel real before anyone arrived.",
+    wallTone: "sunset",
+    cover: {
+      src: "/images/cargo/food-labs/header.png",
+      alt: "Food Labs editorial landing page.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#fdf2ec_0%,#fffaf6_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: [
+      {
+        title: "Opening Visual System",
+        summary:
+          "The first visual layer introduced Food Labs as a culinary experiment with enough editorial texture to feel alive before the residency opened.",
+        caption:
+          "Cargo source image: image1.jpg.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/opening-visual-system.png",
+          alt: "Food Labs opening editorial image.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff7f1_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Residency Page",
+        summary:
+          "The web presence framed the Seaport residency around programming, chef stories, and a clear invitation to visit.",
+        caption:
+          "Cargo source image: 3.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/residency.png",
+          alt: "Food Labs residency page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff1e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Event Story Detail",
+        summary:
+          "Supporting layouts gave the concept room to explain the experiment, the location, and the cadence of the chef residencies.",
+        caption:
+          "Cargo source image: 2.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/residency-detail.png",
+          alt: "Food Labs residency detail page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff7f1_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Chef Lineup",
+        summary:
+          "The page sequence introduced the residency as a series of celebrated chefs taking inspiration from the neighborhood's history.",
+        caption:
+          "Cargo source image: 3Inrow.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/chef-lineup.png",
+          alt: "Food Labs chef lineup page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff1e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Food Labs Film",
+        summary:
+          "The source page paired the digital system with motion to make the culinary experiment feel immediate and atmospheric.",
+        caption: "Food Labs Vimeo overview.",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/264297895",
+        embedTitle: "Food Labs overview film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Event Detail",
+        summary:
+          "Additional web layouts carried practical event context while preserving the editorial rhythm of the residency.",
+        caption:
+          "Cargo source image: 1.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/event-detail.png",
+          alt: "Food Labs event detail page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff7f1_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Jessica Koslow",
+        summary:
+          "Jessica Koslow's residency was presented as its own programming moment within the broader Food Labs series.",
+        caption: "Jessica Koslow Vimeo feature.",
+        copyPresentation: "title-only",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/263803284",
+        embedTitle: "Food Labs Jessica Koslow film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Jessica Koslow Image",
+        summary:
+          "The chef-specific visual treatment gave each residency a distinct point of entry while staying inside the Food Labs system.",
+        caption:
+          "Cargo source image: jess-K.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/jessica-koslow.png",
+          alt: "Food Labs Jessica Koslow residency page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff1e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Hugh Acheson",
+        summary:
+          "Hugh Acheson's residency continued the source page's rhythm of chef title, film, and supporting visual.",
+        caption: "Hugh Acheson Vimeo feature.",
+        copyPresentation: "title-only",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/263803156",
+        embedTitle: "Food Labs Hugh Acheson film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Hugh Acheson Image",
+        summary:
+          "The chef page layout preserved the event story while making the individual residency feel ownable.",
+        caption:
+          "Cargo source image: Hugh-A2.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/hugh-acheson.png",
+          alt: "Food Labs Hugh Acheson residency page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff7f1_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+      {
+        title: "Alon Shaya",
+        summary:
+          "Alon Shaya's residency completed the chef sequence preserved from the original Cargo page.",
+        caption: "Alon Shaya Vimeo feature.",
+        copyPresentation: "title-only",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/263803351",
+        embedTitle: "Food Labs Alon Shaya film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Alon Shaya Image",
+        summary:
+          "The final chef visual kept the page grounded in food, place, and the temporary nature of the residency.",
+        caption:
+          "Cargo source image: alonshaya1.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/food-labs/alon-shaya.png",
+          alt: "Food Labs Alon Shaya residency page.",
+          frameClassName:
+            "aspect-[16/10] bg-[linear-gradient(180deg,#fff1e8_0%,#ffffff_100%)]",
+          imageClassName: "object-cover",
+        },
+      },
+    ],
+  },
+  {
+    slug: "garden-bar",
+    title: "Garden Bar",
+    company: "Seaport District",
+    category: "Campaign and spatial storytelling",
+    discipline_tags: [
+      "branding-identity",
+      "marketing",
+      "art-direction",
+    ],
+    year: "2017",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote:
+      "A place-led campaign built around New York history and neighborhood culture.",
+    detailContentPresentation: "overview-only",
+    teaser:
+      "A Seaport District campaign and summer concert series celebrating New York history, people, and neighborhood culture.",
+    role: "Senior Designer",
+    collaborators: ["Kiser Barnes", "Christina Nyguen"],
+    thesis:
+      "Turn a seasonal bar and summer event program into a place-specific campaign rooted in the Seaport District.",
+    overview:
+      "Summer Garden Bar partnered with Chase to promote one of New York City's most historic neighborhoods, the Seaport District. The Garden Bar celebrated people, history, and culture, and along with the summer concert series the events resulted in 200k visitors, 150 digital impressions, and a lot of smiles.",
+    problem:
+      "Place-based campaigns can feel generic when they borrow culture instead of building from it. Garden Bar needed to make a seasonal destination feel hosted by the neighborhood and supported by the partnership.",
+    constraints: [
+      "Client: Seaport District; in-house: The Howard Hughes Corporation; role: Senior Designer; collaborators: Kiser Barnes and Christina Nyguen.",
+      "The system had to support digital, environmental, event-facing, and motion moments.",
+      "Historical references needed to enrich the campaign without slowing down event discovery.",
+    ],
+    designStrategy:
+      "Use a clean campaign system with enough local texture, film, and event rhythm to make the bar feel like part of the district's story.",
+    outcomes: [
+      "Created a visual and digital frame for a place-led event experience and summer concert series.",
+      "Connected Chase participation to a clearer Seaport District neighborhood narrative.",
+      "Supported a campaign that drew 200k visitors and 150 digital impressions.",
+    ],
+    reflection:
+      "Garden Bar sits in the part of design where brand, place, and event behavior overlap. The strongest work gave the setting a voice before the visitor arrived.",
+    wallTone: "sand",
+    cover: {
+      src: "/images/cargo/garden-bar/cover.jpg",
+      alt: "Garden Bar campaign landing page.",
+      frameClassName:
+        "aspect-[2500/1447] bg-[linear-gradient(180deg,#f7f0e8_0%,#fbf7f2_100%)]",
+      imageClassName: "object-contain",
+    },
+    sections: [
+      {
+        title: "Garden Bar Film",
+        summary:
+          "The Cargo source page opens the Garden Bar media sequence with a film.",
+        caption: "Garden Bar Vimeo film.",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/477002766",
+        embedTitle: "Garden Bar film",
+        frameClassName: "aspect-video bg-black",
+      },
+      {
+        title: "Garden Bar Campaign Layout",
+        summary:
+          "The first campaign layout from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Frame-2257_2.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2257.png",
+          alt: "Garden Bar campaign layout.",
+          frameClassName:
+            "aspect-[2500/1667] bg-[linear-gradient(180deg,#fbf4ed_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Garden Bar Campaign Layout Two",
+        summary:
+          "The second campaign layout from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Frame-2260_2.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2260.png",
+          alt: "Garden Bar second campaign layout.",
+          frameClassName:
+            "aspect-[2500/1667] bg-[linear-gradient(180deg,#f7f0e8_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Garden Bar Wide Campaign Detail",
+        summary:
+          "A wide-format campaign detail from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Frame-2259_3.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2259.png",
+          alt: "Garden Bar wide campaign detail.",
+          frameClassName:
+            "aspect-[1250/403] bg-[linear-gradient(180deg,#f8f1ea_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Garden Bar Event Detail",
+        summary:
+          "A supporting event layout from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Frame-2258_2.png.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2258.png",
+          alt: "Garden Bar event detail layout.",
+          frameClassName:
+            "aspect-[2500/1669] bg-[linear-gradient(180deg,#fbf4ed_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Garden Bar Campaign Surface",
+        summary:
+          "A final campaign surface from the Cargo source sequence.",
+        caption:
+          "Cargo source image: Frame-2254_2.jpg.",
+        copyPresentation: "none",
+        image: {
+          src: "/images/cargo/garden-bar/frame-2254.jpg",
+          alt: "Garden Bar campaign surface.",
+          frameClassName:
+            "aspect-[2500/1667] bg-[linear-gradient(180deg,#f7f0e8_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
+        },
+      },
+      {
+        title: "Garden Bar Concert Film",
+        summary:
+          "The Cargo source page closes with a second Garden Bar film.",
+        caption: "Garden Bar Vimeo concert film.",
+        copyPresentation: "none",
+        presentation: "video-embed",
+        embedUrl: "https://player.vimeo.com/video/508213277",
+        embedTitle: "Garden Bar concert film",
+        frameClassName: "aspect-video bg-black",
+      },
+    ],
+  },
+  {
+    slug: "record-label-designs",
+    title: "Record label designs",
+    company: "Independent",
+    category: "Record label design",
+    discipline_tags: ["branding-identity", "art-direction"],
+    year: "2009-2016",
+    era: "Archive work",
+    roomLabel: "Archive room",
+    galleryNote: "A preserved image-led collection from the legacy Cargo archive.",
+    detailPresentation: "image-archive",
+    teaser:
+      "A collection of record label design work preserved from the legacy 2009-2016 archive.",
+    role: "Art Direction and Design",
+    collaborators: [],
+    thesis:
+      "Collect the record label design work into one quiet archive page where the visual artifacts can carry the story.",
+    overview:
+      "This project gathers record label design images from the legacy Cargo archive into a single local portfolio page. The current treatment keeps the copy intentionally light and lets the collection read as a visual record.",
+    problem:
+      "Older archive work can disappear into legacy platforms and broad index pages. The goal here is to preserve the images locally and make them easier to browse inside the current portfolio.",
+    constraints: [
+      "The imported images needed to preserve their original order from the Cargo archive page.",
+      "The page needed to stay lightweight enough for the current portfolio despite the larger image set.",
+      "The project copy is provisional while the collection title and story are still being refined.",
+    ],
+    designStrategy:
+      "Use the existing archive case-study system and keep the presentation image-led: one cover image, then the full record label design sequence in order.",
+    outcomes: [
+      "Brought the record label design images into the portfolio as local assets.",
+      "Added a dedicated route for the full collection.",
+      "Kept the archive grid concise with one card that links to the complete project.",
+    ],
+    reflection:
+      "This is a preservation pass first: enough structure to make the work visible again, with room to refine the story later.",
+    wallTone: "espresso",
+    cover: {
+      src: getRecordLabelDesignImagePath(1),
+      alt: "Record label design 01.",
+      frameClassName:
+        "aspect-[16/10] bg-[linear-gradient(180deg,#f5f0ea_0%,#ffffff_100%)]",
+      imageClassName: "object-cover",
+    },
+    sections: getRecordLabelDesignSections(),
+  },
 ];
 
 export const archiveProjects: ArchiveProject[] = [
+  {
+    title: "Record label designs",
+    company: "Independent",
+    category: "Record label design",
+    year: "2009-2016",
+    summary:
+      "A collection of record label design work preserved from the legacy archive.",
+    discipline_tags: ["branding-identity", "art-direction"],
+    href: "/work/record-label-designs",
+    image: getRecordLabelDesignImagePath(1),
+  },
+  {
+    title: "Apple EDU",
+    company: "Apple",
+    category: "Education and campaign work",
+    year: "2018",
+    summary:
+      "Apple EDU social systems and Apple Learning Center how-to storytelling for Keynote creativity prompts.",
+    discipline_tags: ["marketing", "web-design", "art-direction"],
+    href: "/work/apple-edu",
+    image: "/images/cargo/apple-edu/header.jpg",
+  },
+  {
+    title: "Bellwether Coffee",
+    company: "Bellwether Coffee",
+    category: "Brand and digital experience",
+    year: "2018",
+    summary:
+      "A Frog Design venture rebrand translated into an end-to-end digital experience for Bellwether Coffee.",
+    discipline_tags: ["branding-identity", "marketing", "web-design"],
+    href: "/work/bellwether-coffee",
+    image: "/images/cargo/bellwether-coffee/cover.jpg",
+  },
   {
     title: "Dropbox Paper",
     company: "Dropbox",
@@ -561,6 +1854,8 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2018-2021",
     summary:
       "A collaboration experience built to connect creation and coordination inside the same workspace.",
+    discipline_tags: ["product"],
+    href: "/work/dropbox-paper",
     image: "/images/archive/dropbox-paper.jpg",
   },
   {
@@ -570,31 +1865,46 @@ export const archiveProjects: ArchiveProject[] = [
     year: "2018-2021",
     summary:
       "A dedicated desktop surface focused on quicker access, calmer workflow, and fewer distractions.",
+    discipline_tags: ["product"],
+    href: "/work/paper-desktop-app",
     image: "/images/archive/paper-desktop-app.jpg",
   },
   {
     title: "Vision Platform",
-    company: "Retail platform",
+    company: "Sato Global",
     category: "Inventory intelligence",
-    year: "2018",
+    year: "2017-2018",
     summary:
-      "A retail platform connecting tags, sensors, gateways, and video into a more actionable view of inventory and operations.",
+      "A retail platform connecting tags, sensors, gateways, and video into actionable inventory and customer engagement insight.",
+    discipline_tags: ["product", "internal-tools", "design-systems"],
+    href: "/work/vision-platform",
+    image: "/images/cargo/vision-platform/cover.jpg",
   },
   {
     title: "Food Labs",
-    company: "Hospitality",
+    company: "Seaport District NYC",
     category: "Event and experience design",
     year: "2017",
     summary:
-      "A culinary residency concept translated into a more editorial brand and digital experience.",
+      "A culinary residency at the Seaport translated into an editorial brand, web presence, films, and chef programming.",
+    discipline_tags: ["branding-identity", "art-direction"],
+    href: "/work/food-labs",
+    image: "/images/cargo/food-labs/header.png",
   },
   {
     title: "Garden Bar",
-    company: "Chase x Seaport District",
+    company: "Seaport District",
     category: "Campaign and spatial storytelling",
     year: "2017",
     summary:
-      "A campaign experience celebrating New York history, place, and neighborhood culture through event design and storytelling.",
+      "A Seaport District campaign and summer concert series celebrating New York history, people, and neighborhood culture.",
+    discipline_tags: [
+      "branding-identity",
+      "marketing",
+      "art-direction",
+    ],
+    href: "/work/garden-bar",
+    image: "/images/cargo/garden-bar/cover.jpg",
   },
 ];
 
@@ -682,12 +1992,8 @@ export const capabilityLabels = [
 
 export const socialLinks = [
   {
-    label: "Twitter",
-    href: "https://twitter.com/DaaniloZlatan",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/danilo-callejas-68b368106/",
+    label: "CV",
+    href: "https://www.linkedin.com/in/danilo-callejas/",
   },
 ];
 

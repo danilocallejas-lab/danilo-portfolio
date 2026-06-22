@@ -1,20 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import { ImageArchiveCarousel } from "@/components/image-archive-carousel";
+import { Reveal } from "@/components/reveal";
 import { DemoFrame } from "@/components/portfolio/demo-frame";
+import { ProjectDisciplineTags } from "@/components/portfolio/project-discipline-tags";
 import {
   getPrototypeAllowPreviewEmbed,
   getPrototypeFrameSourceType,
   getPrototypeFrameStatus,
   getPrototypeFrameUrl,
   getPrototypeOpenUrl,
-  getProjectCounterLabel,
-  getPrototypeMetaLabel,
   type ProjectSection,
 } from "@/lib/portfolio-content";
-
-const easeCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const demoToneByCompany: Record<
   string,
@@ -33,56 +31,121 @@ const zineCompanyClassByCompany: Record<string, string> = {
   Dropbox: "zine-company--dropbox",
 };
 
-const frameVariants: Variants = {
-  inactive: {
-    opacity: 0.9,
-    y: 14,
-    scale: 0.992,
-  },
-  active: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.34,
-      ease: easeCurve,
-    },
-  },
-};
+type ProjectMediaSection = NonNullable<
+  ProjectSection["case_study_sections"]
+>[number];
 
-const textVariants: Variants = {
-  inactive: {
-    opacity: 0.78,
-    y: 10,
-  },
-  active: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.32,
-      delay: 0.08,
-      ease: easeCurve,
-    },
-  },
-};
+function ProjectMediaSectionCopy({
+  section,
+}: {
+  section: ProjectMediaSection;
+}) {
+  return (
+    <div className="w-full max-w-full space-y-3 md:max-w-[90%]">
+      <h2 className="project-type-card-title">
+        {section.title}
+      </h2>
+      <p className="project-type-body w-full max-w-full">
+        {section.summary}
+      </p>
+    </div>
+  );
+}
+
+function ProjectMediaSectionVisual({
+  section,
+}: {
+  section: ProjectMediaSection;
+}) {
+  if (section.presentation === "video-embed") {
+    return (
+      <div
+        className={`relative overflow-hidden rounded-lg ${
+          section.frameClassName ?? "aspect-video bg-black"
+        }`}
+      >
+        <iframe
+          src={section.embedUrl}
+          title={section.embedTitle}
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  if (section.presentation === "carousel") {
+    return (
+      <ImageArchiveCarousel
+        label={section.title}
+        slides={section.slides ?? [section.image]}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={`relative overflow-hidden rounded-lg ${
+        section.image.frameClassName ?? "aspect-[16/10]"
+      }`}
+    >
+      <Image
+        src={section.image.src}
+        alt={section.image.alt}
+        fill
+        sizes="(max-width: 1024px) 92vw, 58vw"
+        className={section.image.imageClassName ?? "object-cover"}
+      />
+    </div>
+  );
+}
+
+function ProjectMediaSections({ project }: { project: ProjectSection }) {
+  if (!project.case_study_sections?.length) {
+    return null;
+  }
+
+  return (
+    <section
+      className="space-y-[clamp(3rem,7vw,7rem)]"
+      aria-label="Project media"
+    >
+      {project.case_study_sections.map((section, index) => (
+        <Reveal
+          key={section.title}
+          as="article"
+          className="@container/project-media-section grid gap-[clamp(1.5rem,4vw,4.5rem)] @5xl/project-media-section:grid-cols-[minmax(0,0.36fr)_minmax(0,1fr)] @5xl/project-media-section:items-start"
+          index={index}
+        >
+          <ProjectMediaSectionCopy section={section} />
+          <ProjectMediaSectionVisual section={section} />
+        </Reveal>
+      ))}
+    </section>
+  );
+}
 
 export function ProjectPanel({
   project,
-  is_active,
   transition_key,
 }: {
   project: ProjectSection;
   is_active: boolean;
   transition_key: string;
 }) {
-  const metadataItems = [project.role, project.time_period, project.product_line].filter(
-    Boolean,
-  );
-  const projectCounterLabel = getProjectCounterLabel(project);
-  const prototypeMetaLabel = getPrototypeMetaLabel(project, projectCounterLabel);
+  const eyebrowItems = [
+    project.company,
+    project.time_period,
+  ].filter(Boolean);
+  const metadataItems = [
+    project.product_line,
+  ].filter(Boolean);
   const demoTone = demoToneByCompany[project.company];
   const prototypeFrameSource = getPrototypeFrameSourceType(project.prototype);
   const zineCompanyClassName = zineCompanyClassByCompany[project.company] ?? "";
+  const hasStructuredProjectMedia = Boolean(project.case_study_sections?.length);
 
   return (
     <div
@@ -90,129 +153,139 @@ export function ProjectPanel({
       data-header-theme-section
     >
       <div className="page-content @container/project-panel">
-        <div className="grid w-full gap-[var(--section-gap)] @6xl/project-panel:grid-cols-[minmax(0,0.74fr)_minmax(0,1.16fr)]">
-          <motion.div
-            variants={textVariants}
-            initial={false}
-            animate={is_active ? "active" : "inactive"}
-            className="flex flex-col justify-between gap-8 @6xl/project-panel:border-r @6xl/project-panel:border-[var(--rule)] @6xl/project-panel:pr-8"
+        <div className="w-full space-y-[clamp(3rem,6vw,6.5rem)]">
+          <Reveal
+            as="header"
+            className="grid w-full gap-[clamp(1.5rem,4vw,4.5rem)] @5xl/project-panel:grid-cols-[minmax(0,0.95fr)_minmax(18rem,0.7fr)] @5xl/project-panel:items-start"
           >
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <p className="editorial-eyebrow">{project.company}</p>
-                <div className="space-y-3">
-                  <h1 className="type-h1 font-display text-foreground">
-                    {project.title}
-                  </h1>
-                  <p className="text-[0.78rem] uppercase tracking-[0.18em] text-[var(--muted)]">
-                    {metadataItems.join(" / ")}
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <p className="max-w-[var(--copy-measure-wide)] text-[clamp(1.08rem,1rem+0.48vw,1.34rem)] leading-8 text-foreground">
-                    {project.summary}
-                  </p>
-                  <p className="max-w-[var(--copy-measure-wide)] text-[0.98rem] leading-7 text-[var(--muted)]">
-                    {project.problem}
-                  </p>
-                </div>
+            <div className="w-fit max-w-full space-y-4">
+              <ProjectDisciplineTags tags={project.discipline_tags} />
+              <p className="project-type-label w-fit max-w-full text-[var(--muted)]">
+                {eyebrowItems.join(" / ")}
+              </p>
+              <div className="w-fit max-w-full space-y-3">
+                <h1 className="project-type-title">
+                  {project.title}
+                </h1>
               </div>
-
-              <div className="space-y-3">
-                <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                  Contribution
+              {metadataItems.length ? (
+                <p className="project-type-label w-fit max-w-full text-[var(--muted)]">
+                  {metadataItems.join(" / ")}
                 </p>
-                <ul className="space-y-3">
-                  {project.what_i_did.map((item) => (
-                    <li key={item} className="flex gap-3 text-[0.92rem] leading-6 text-[var(--muted)]">
-                      <span className="mt-[0.62rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/55" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              ) : null}
+            </div>
+
+            <p className="project-type-deck max-w-[var(--copy-measure-wide)] @5xl/project-panel:pt-[clamp(2.1rem,2.8vw,3rem)]">
+              {project.summary}
+            </p>
+          </Reveal>
+
+          <Reveal
+            as="section"
+            className="min-w-0 space-y-7"
+            ariaLabel={`${project.company} ${project.title} prototype`}
+            index={1}
+          >
+            <DemoFrame
+              title={`${project.company} ${project.title} prototype`}
+              source_type={prototypeFrameSource}
+              iframe_url={getPrototypeFrameUrl(project.prototype)}
+              poster_image={project.prototype.posterImage}
+              frame_surface={project.prototype.frameSurface}
+              frame_scale={project.prototype.frameScale}
+              prototype_status={getPrototypeFrameStatus(project.prototype)}
+              allow_preview_embed={getPrototypeAllowPreviewEmbed(project.prototype)}
+              open_prototype_url={getPrototypeOpenUrl(project.prototype)}
+              loading_label={project.right_panel.loading_label}
+              priority="detail"
+              transition_key={transition_key}
+              tone={demoTone}
+              mount_strategy="eager"
+            />
+          </Reveal>
+
+          <Reveal
+            as="section"
+            className="grid gap-[clamp(2.25rem,4vw,4.5rem)] @5xl/project-panel:grid-cols-3"
+            index={2}
+          >
+            <div className="min-w-0 w-full max-w-full space-y-6">
+              <div className="w-fit max-w-full space-y-3">
+                <p className="project-type-label w-fit max-w-full text-[var(--muted)]">Problem</p>
+                <p className="project-type-body w-fit max-w-full">
+                  {project.problem}
+                </p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="auto-fit-grid">
+            <div className="min-w-0 w-full max-w-full space-y-3">
+              <p className="project-type-label w-fit max-w-full text-[var(--muted)]">
+                Contribution
+              </p>
+              <ul className="w-fit max-w-full space-y-3">
+                {project.what_i_did.map((item) => (
+                  <li
+                    key={item}
+                    className="project-type-body flex w-fit max-w-full gap-3"
+                  >
+                    <span className="mt-[0.82rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/55" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="min-w-0 w-full max-w-full space-y-3">
+              <p className="project-type-label w-fit max-w-full text-[var(--muted)]">Impact</p>
+              <ul className="w-fit max-w-full space-y-3">
                 {project.impact_metrics.map((metric) => (
-                  <div key={metric} className="border-t border-[var(--rule)] pt-4">
-                    <p className="text-[0.74rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Impact
-                    </p>
-                    <p className="mt-3 text-[0.92rem] leading-6 text-foreground">{metric}</p>
-                  </div>
+                  <li
+                    key={metric}
+                    className="project-type-body w-fit max-w-full text-foreground"
+                  >
+                    {metric}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+
+          {hasStructuredProjectMedia ? (
+            <ProjectMediaSections project={project} />
+          ) : project.case_study_gallery?.length ? (
+            <Reveal
+              as="section"
+              ariaLabel="Project media"
+              index={4}
+            >
+              <div className="@container/detail-gallery grid gap-4 @4xl/detail-gallery:grid-cols-2">
+                {project.case_study_gallery.map((image, index) => (
+                  <Reveal
+                    key={image.src}
+                    as="figure"
+                    index={index}
+                    className={
+                      project.case_study_gallery &&
+                      project.case_study_gallery.length >= 3 &&
+                      index === 0
+                        ? "@4xl/detail-gallery:col-span-2"
+                        : undefined
+                    }
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-[var(--surface-strong)]">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        sizes="(max-width: 1024px) 92vw, 86vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </Reveal>
                 ))}
               </div>
-
-              {project.left_panel.why_it_mattered ? (
-                <div className="border-t border-[var(--rule)] pt-4">
-                  <p className="text-[0.74rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                    Why it mattered
-                  </p>
-                  <p className="mt-3 text-[0.92rem] leading-7 text-[var(--muted)]">
-                    {project.left_panel.why_it_mattered}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={frameVariants}
-            initial={false}
-            animate={is_active ? "active" : "inactive"}
-            className="min-w-0 @6xl/project-panel:pl-2"
-          >
-            <div className="space-y-5">
-              <DemoFrame
-                title={`${project.company} ${project.title} prototype`}
-                source_type={prototypeFrameSource}
-                iframe_url={getPrototypeFrameUrl(project.prototype)}
-                poster_image={project.prototype.posterImage}
-                frame_surface={project.prototype.frameSurface}
-                prototype_status={getPrototypeFrameStatus(project.prototype)}
-                allow_preview_embed={getPrototypeAllowPreviewEmbed(project.prototype)}
-                meta_label={prototypeMetaLabel}
-                open_prototype_url={getPrototypeOpenUrl(project.prototype)}
-                loading_label={project.right_panel.loading_label}
-                priority="detail"
-                transition_key={transition_key}
-                tone={demoTone}
-                mount_strategy="eager"
-              />
-
-              {project.case_study_gallery?.length ? (
-                <section className="space-y-4">
-                  <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                    Selected frames
-                  </p>
-                  <div className="@container/detail-gallery grid gap-4 sm:gap-5 @4xl/detail-gallery:grid-cols-2">
-                    {project.case_study_gallery.map((image, index) => (
-                      <div
-                        key={image.src}
-                        className={
-                          project.case_study_gallery && project.case_study_gallery.length >= 3 && index === 0
-                            ? "@4xl/detail-gallery:col-span-2"
-                            : ""
-                        }
-                      >
-                        <div className="relative aspect-[16/10] overflow-hidden rounded-[var(--frame-radius)] border border-[var(--rule)] bg-[var(--surface-strong)] shadow-[var(--shadow-soft)]">
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            fill
-                            sizes="(max-width: 1024px) 92vw, 56vw"
-                            className="object-cover"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-            </div>
-          </motion.div>
+            </Reveal>
+          ) : null}
         </div>
       </div>
     </div>

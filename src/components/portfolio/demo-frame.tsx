@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode, SyntheticEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type {
@@ -9,11 +9,8 @@ import type {
   PrototypeFrameSurface,
   PrototypeLifecycle,
 } from "@/lib/portfolio-content";
+import { cx } from "@/lib/classnames";
 import { shouldMountHostedPrototype } from "@/lib/prototype-embed-policy";
-
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export type DemoFrameProps = {
   title: string;
@@ -22,16 +19,19 @@ export type DemoFrameProps = {
   poster_image?: CaseStudyImage | null;
   prototype_status?: PrototypeLifecycle;
   allow_preview_embed?: boolean;
-  meta_label?: string;
+  meta_label?: ReactNode;
   open_prototype_url?: string | null;
   open_prototype_label?: string;
   loading_label?: string;
   className?: string;
   priority?: "lane" | "detail";
+  frame_variant?: "default" | "borderless";
+  frame_radius?: "default" | "tight";
   transition_key?: string;
   interactive?: boolean;
   tone?: "opendoor" | "draftkings" | "coinbase" | "dropbox";
   frame_surface?: PrototypeFrameSurface | null;
+  frame_scale?: number | null;
   mount_strategy?: "eager" | "visible";
 };
 
@@ -40,7 +40,7 @@ function getToneAccent(
 ) {
   switch (tone) {
     case "draftkings":
-      return "#d68446";
+      return "#a8a29a";
     case "coinbase":
       return "#5d78d6";
     case "dropbox":
@@ -53,12 +53,14 @@ function getToneAccent(
 
 function getFrameSurfaceValue(surface?: PrototypeFrameSurface | null) {
   switch (surface) {
-    case "opendoor-stone":
-      return "var(--prototype-frame-surface-opendoor-stone)";
-    case "draftkings-charcoal":
-      return "var(--prototype-frame-surface-draftkings-charcoal)";
-    case "coinbase-wash":
-      return "var(--prototype-frame-surface-coinbase-wash)";
+    case "opendoor":
+      return "var(--prototype-frame-surface-opendoor)";
+    case "dropbox":
+      return "var(--prototype-frame-surface-dropbox)";
+    case "draftkings":
+      return "var(--prototype-frame-surface-draftkings)";
+    case "coinbase":
+      return "var(--prototype-frame-surface-coinbase)";
     default:
       return "var(--prototype-frame-surface-default)";
   }
@@ -168,6 +170,45 @@ function IframeStage({
   on_load: () => void;
   is_loaded: boolean;
 }) {
+  const handleLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
+    on_load();
+
+    try {
+      const iframeDocument = event.currentTarget.contentDocument;
+      const iframeWindow = event.currentTarget.contentWindow;
+      const framePath = iframeWindow?.location.pathname ?? "";
+
+      if (!iframeDocument || !framePath.startsWith("/embedded-prototypes/")) {
+        return;
+      }
+
+      const existingStyle =
+        iframeDocument.getElementById("portfolio-glass-cursor");
+
+      if (existingStyle) {
+        return;
+      }
+
+      const style = iframeDocument.createElement("style");
+      style.id = "portfolio-glass-cursor";
+      style.textContent = `
+        *,
+        *::before,
+        *::after,
+        html,
+        body,
+        a,
+        button,
+        [role="button"] {
+          cursor: url("/cursors/prototype-dot.svg") 16 16, crosshair !important;
+        }
+      `;
+      iframeDocument.head.appendChild(style);
+    } catch {
+      // Cross-origin local prototype iframes cannot be styled from the portfolio.
+    }
+  };
+
   return (
     <motion.div
       initial={false}
@@ -180,7 +221,7 @@ function IframeStage({
         title={title}
         loading={loading}
         className="h-full w-full border-0 bg-transparent"
-        onLoad={on_load}
+        onLoad={handleLoad}
       />
     </motion.div>
   );
@@ -305,10 +346,13 @@ export function DemoFrame({
   loading_label = "Loading prototype",
   className,
   priority = "lane",
+  frame_variant = "default",
+  frame_radius = "default",
   transition_key,
   interactive = true,
   tone,
   frame_surface,
+  frame_scale,
   mount_strategy = "eager",
 }: DemoFrameProps) {
   const prefersReducedMotion = useReducedMotion();
@@ -326,11 +370,23 @@ export function DemoFrame({
   });
   const shouldMountIframe = shouldRenderIframe && hasMountedIframe;
   const shouldRenderPlaceholder = !shouldRenderIframe;
-  const frameClassName = isDetail
-    ? "prototype-frame-surface min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-[var(--frame-radius)] border border-[var(--rule)] shadow-[var(--shadow)]"
-    : "prototype-frame-surface aspect-[16/10] rounded-[calc(var(--frame-radius)-0.125rem)] border border-[var(--rule)] shadow-[var(--shadow-soft)]";
+  const previewRadiusClassName =
+    frame_radius === "tight"
+      ? "rounded-[clamp(0.5rem,0.45rem+0.2vw,0.625rem)]"
+      : "rounded-[calc(var(--frame-radius)-0.125rem)]";
+  const frameClassName = cx(
+    "prototype-frame-surface",
+    isDetail
+      ? "min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-lg shadow-[var(--shadow)]"
+      : cx("aspect-[16/10] shadow-[var(--shadow-soft)]", previewRadiusClassName),
+    frame_variant === "default" && "border border-[var(--rule)]",
+  );
   const frameStyle = {
     viewTransitionName: transition_key,
+  } as CSSProperties;
+  const contentScale = frame_scale && frame_scale > 0 ? frame_scale : 1;
+  const contentStyle = {
+    transform: contentScale === 1 ? undefined : `scale(${contentScale})`,
   } as CSSProperties;
   const wrapperStyle = {
     "--accent": getToneAccent(tone),
@@ -377,15 +433,20 @@ export function DemoFrame({
       style={wrapperStyle}
     >
       {meta_label || open_prototype_url ? (
-        <div className="demo-frame-chrome relative z-10 mb-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[var(--demo-frame-chrome-dot)] opacity-60" />
-            {meta_label ? (
+        <div
+          className={cx(
+            "demo-frame-chrome relative z-10 mb-4 flex items-center gap-4",
+            meta_label ? "justify-between" : "justify-end",
+          )}
+        >
+          {meta_label ? (
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[var(--demo-frame-chrome-dot)] opacity-60" />
               <p className="demo-frame-chrome-label text-[0.68rem] uppercase tracking-[0.18em] text-[var(--demo-frame-chrome-meta,var(--muted))]">
                 {meta_label}
               </p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           {open_prototype_url ? (
             <a
@@ -409,9 +470,11 @@ export function DemoFrame({
         ref={frameRef}
       >
         <div
-          className={
-            interactive ? "h-full w-full" : "pointer-events-none h-full w-full select-none"
-          }
+          className={cx(
+            "h-full w-full origin-center transition-transform duration-300 ease-out",
+            interactive ? "" : "pointer-events-none select-none",
+          )}
+          style={contentStyle}
         >
           {shouldRenderIframe && iframe_url ? (
             <HostedIframePreview

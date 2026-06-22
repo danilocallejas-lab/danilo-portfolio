@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/reveal";
 import { experience } from "@/lib/site-content";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default function CvPage() {
     <div className="page-shell">
       <div className="page-content space-y-[var(--section-gap)]">
         <section className="space-y-4">
-          {experience.map((item) => {
+          {experience.map((item, index) => {
             const row = (
               <div className="surface-card @container/cv-row px-[var(--panel-padding)] py-[var(--panel-padding)]">
                 <div className="grid gap-4 @6xl/cv-row:grid-cols-[minmax(0,1.2fr)_14rem_18rem] @6xl/cv-row:items-start">
@@ -41,19 +42,24 @@ export default function CvPage() {
             );
 
             if (!item.href) {
-              return <div key={item.company}>{row}</div>;
+              return (
+                <Reveal key={item.company} index={index}>
+                  {row}
+                </Reveal>
+              );
             }
 
             return (
-              <a
-                key={item.company}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                className="block"
-              >
-                {row}
-              </a>
+              <Reveal key={item.company} index={index}>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block"
+                >
+                  {row}
+                </a>
+              </Reveal>
             );
           })}
         </section>

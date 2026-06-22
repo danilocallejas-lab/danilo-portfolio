@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
+  SegmentedControl,
+  type SegmentedControlItem,
+} from "@/components/segmented-control";
+import {
   BRIGHT_SHUFFLE_STEPS,
   BRIGHT_SHUFFLE_STEP_MS,
   THEME_CHANGE_EVENT,
@@ -19,6 +23,9 @@ type ThemeState = {
   resolved: ThemeMode;
 };
 
+type ThemeChangeDetail = ThemeState;
+type ThemeToggleMode = "dark" | "bright";
+
 function MoonIcon() {
   return (
     <svg
@@ -32,24 +39,6 @@ function MoonIcon() {
       strokeWidth="1.8"
     >
       <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.9 8.9 0 1 0 11 11Z" />
-    </svg>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-4 w-4"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.8"
-    >
-      <circle cx="12" cy="12" r="4.2" />
-      <path d="M12 2.75v2.1M12 19.15v2.1M21.25 12h-2.1M4.85 12h-2.1M18.54 5.46l-1.48 1.48M6.94 17.06l-1.48 1.48M18.54 18.54l-1.48-1.48M6.94 6.94 5.46 5.46" />
     </svg>
   );
 }
@@ -95,7 +84,13 @@ function getThemeState(): ThemeState {
   return { preference, resolved };
 }
 
-function commitThemePreference(nextPreference: ThemeMode | null) {
+function commitThemePreference(
+  nextPreference: ThemeMode | null,
+  options: {
+    avoidCurrentBrightPalette?: boolean;
+    excludedBrightPaletteName?: string;
+  } = {},
+) {
   try {
     if (nextPreference) {
       window.localStorage.setItem(THEME_STORAGE_KEY, nextPreference);
@@ -110,25 +105,22 @@ function commitThemePreference(nextPreference: ThemeMode | null) {
     nextPreference,
   );
 
-  applyThemeToDocument(resolved);
+  applyThemeToDocument(resolved, {
+    avoidCurrentBrightPalette: options.avoidCurrentBrightPalette,
+    excludedBrightPaletteName: options.excludedBrightPaletteName,
+  });
   dispatchThemeChange({ preference: nextPreference, resolved });
 
   return { preference: nextPreference, resolved };
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ variant = "default" }: { variant?: "default" | "compact" }) {
   const prefersReducedMotion = useReducedMotion();
   const shuffleTimeoutsRef = useRef<number[]>([]);
   const [isShuffling, setIsShuffling] = useState(false);
-  const [themeState, setThemeState] = useState<ThemeState>(() => {
-    if (typeof window === "undefined") {
-      return {
-        preference: null,
-        resolved: "dark",
-      };
-    }
-
-    return getThemeState();
+  const [themeState, setThemeState] = useState<ThemeState>({
+    preference: null,
+    resolved: "dark",
   });
 
   useEffect(() => {
@@ -139,17 +131,25 @@ export function ThemeToggle() {
       shuffleTimeoutsRef.current = [];
     };
 
-    const syncThemeState = () => {
+    const handleThemeChange = (event: Event) => {
+      const nextState = (event as CustomEvent<ThemeChangeDetail>).detail;
+
+      if (nextState) {
+        setThemeState(nextState);
+        return;
+      }
+
       setThemeState(getThemeState());
     };
 
-    const handleThemeChange = () => {
-      syncThemeState();
-    };
+    const syncTimeout = window.setTimeout(() => {
+      setThemeState(getThemeState());
+    }, 0);
 
     window.addEventListener(THEME_CHANGE_EVENT, handleThemeChange as EventListener);
 
     return () => {
+      window.clearTimeout(syncTimeout);
       clearShuffleTimeouts();
       window.removeEventListener(THEME_CHANGE_EVENT, handleThemeChange as EventListener);
     };
@@ -168,11 +168,9 @@ export function ThemeToggle() {
   }, [themeState.preference, themeState.resolved]);
   const activeMode = themeState.preference ?? "dark";
 
-  const handleModeClick = (nextMode: ThemeMode) => {
-    const shouldResetToDefault = themeState.preference === nextMode;
-
+  const handleModeClick = (nextMode: "dark") => {
     setIsShuffling(false);
-    setThemeState(commitThemePreference(shouldResetToDefault ? null : nextMode));
+    setThemeState(commitThemePreference(nextMode));
   };
 
   const handleShuffleClick = () => {
@@ -180,9 +178,16 @@ export function ThemeToggle() {
       window.clearTimeout(timeout);
     });
     shuffleTimeoutsRef.current = [];
+    const startingBrightPalette =
+      document.documentElement.dataset.brightPalette;
 
     if (prefersReducedMotion) {
-      setThemeState(commitThemePreference("bright"));
+      setThemeState(
+        commitThemePreference("bright", {
+          avoidCurrentBrightPalette: true,
+          excludedBrightPaletteName: startingBrightPalette,
+        }),
+      );
       return;
     }
 
@@ -190,7 +195,12 @@ export function ThemeToggle() {
 
     Array.from({ length: BRIGHT_SHUFFLE_STEPS }).forEach((_, index) => {
       const timeout = window.setTimeout(() => {
-        setThemeState(commitThemePreference("bright"));
+        setThemeState(
+          commitThemePreference("bright", {
+            avoidCurrentBrightPalette: true,
+            excludedBrightPaletteName: startingBrightPalette,
+          }),
+        );
 
         if (index === BRIGHT_SHUFFLE_STEPS - 1) {
           setIsShuffling(false);
@@ -202,76 +212,63 @@ export function ThemeToggle() {
     });
   };
 
-  const baseButtonClassName =
-    "tap-target inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35";
+  const items: readonly SegmentedControlItem<ThemeToggleMode>[] = [
+    {
+      value: "dark",
+      label: "Switch to dark mode",
+      activeLabel: "Dark mode active.",
+      title: "Dark",
+      icon: <MoonIcon />,
+    },
+    {
+      value: "bright",
+      label: "Switch to bright shuffle mode",
+      activeLabel: "Shuffle bright palette",
+      title: "Shuffle",
+      icon: <ShuffleIcon />,
+    },
+  ];
+
+  const handleThemeValueChange = (nextMode: ThemeToggleMode) => {
+    if (nextMode === "bright") {
+      handleShuffleClick();
+      return;
+    }
+
+    handleModeClick(nextMode);
+  };
 
   return (
-    <div className="inline-flex items-center rounded-full border border-[var(--theme-toggle-border)] bg-[var(--theme-toggle-surface)] p-1 shadow-[var(--theme-toggle-shadow)] backdrop-blur">
+    <div className="inline-flex items-center">
       <span aria-live="polite" className="sr-only" suppressHydrationWarning>
         {statusLabel}
       </span>
-
-      <button
-        type="button"
-        aria-label={
-          activeMode === "dark"
-            ? "Dark mode active. Activate to return to default dark mode."
-            : "Switch to dark mode"
+      <SegmentedControl
+        items={items}
+        value={activeMode}
+        onValueChange={handleThemeValueChange}
+        ariaLabel="Site style"
+        variant={variant}
+        renderIcon={(item) =>
+          item.value === "bright" ? (
+            <motion.span
+              animate={
+                isShuffling
+                  ? { rotate: 360, scale: [1, 1.18, 1] }
+                  : { rotate: 0, scale: 1 }
+              }
+              transition={{
+                duration: prefersReducedMotion ? 0 : 0.52,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              {item.icon}
+            </motion.span>
+          ) : (
+            item.icon
+          )
         }
-        aria-pressed={activeMode === "dark"}
-        className={`${baseButtonClassName} ${
-          activeMode === "dark"
-            ? "bg-[var(--theme-toggle-active-surface)] text-[var(--theme-toggle-active-foreground)]"
-            : "text-[var(--theme-toggle-foreground)] hover:bg-[var(--theme-toggle-hover-surface)]"
-        }`}
-        onClick={() => handleModeClick("dark")}
-      >
-        <MoonIcon />
-      </button>
-
-      <button
-        type="button"
-        aria-label={
-          activeMode === "light"
-            ? "Light mode active. Activate to return to default dark mode."
-            : "Switch to light mode"
-        }
-        aria-pressed={activeMode === "light"}
-        className={`${baseButtonClassName} ${
-          activeMode === "light"
-            ? "bg-[var(--theme-toggle-active-surface)] text-[var(--theme-toggle-active-foreground)]"
-            : "text-[var(--theme-toggle-foreground)] hover:bg-[var(--theme-toggle-hover-surface)]"
-        }`}
-        onClick={() => handleModeClick("light")}
-      >
-        <SunIcon />
-      </button>
-
-      <button
-        type="button"
-        aria-label={
-          activeMode === "bright"
-            ? "Shuffle bright palette"
-            : "Switch to bright shuffle mode"
-        }
-        aria-pressed={activeMode === "bright"}
-        className={`${baseButtonClassName} ${
-          activeMode === "bright"
-            ? "bg-[var(--theme-toggle-active-surface)] text-[var(--theme-toggle-active-foreground)]"
-            : "text-[var(--theme-toggle-foreground)] hover:bg-[var(--theme-toggle-hover-surface)]"
-        }`}
-        onClick={handleShuffleClick}
-      >
-        <motion.span
-          animate={isShuffling ? { rotate: 360, scale: [1, 1.18, 1] } : { rotate: 0, scale: 1 }}
-          transition={{
-            duration: prefersReducedMotion ? 0 : 0.52,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <ShuffleIcon />
-        </motion.span>
-      </button>
+      />
     </div>
   );
 }

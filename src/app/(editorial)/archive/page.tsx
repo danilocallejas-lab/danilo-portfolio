@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { archiveProjects } from "@/lib/site-content";
+import Link from "next/link";
+import { Reveal } from "@/components/reveal";
+import { ProjectDisciplineTags } from "@/components/portfolio/project-discipline-tags";
+import {
+  archiveProjects,
+  type ArchiveProject,
+} from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Archive",
@@ -8,86 +14,129 @@ export const metadata: Metadata = {
     "Additional work from Danilo Callejas's current portfolio, kept as a lighter side room off the main gallery.",
 };
 
+const archivePreviewClassName =
+  "relative aspect-[16/10] overflow-hidden rounded-[clamp(0.5rem,0.45rem+0.2vw,0.625rem)] bg-[var(--archive-preview-gradient)]";
+const archivePlaceholderClassName =
+  "aspect-[16/10] rounded-[clamp(0.5rem,0.45rem+0.2vw,0.625rem)] bg-[var(--archive-placeholder-gradient)]";
+const visibleArchiveProjects = archiveProjects.filter(
+  (project) => project.company !== "Dropbox",
+);
+
+function getInternalCaseStudyHref(href?: string) {
+  return href?.startsWith("/") ? href : null;
+}
+
+function ArchiveProjectPreview({ project }: { project: ArchiveProject }) {
+  const preview = project.image ? (
+    <div className={archivePreviewClassName}>
+      <Image
+        src={project.image}
+        alt={project.title}
+        fill
+        sizes="(max-width: 640px) 92vw, (max-width: 1280px) 50vw, 33vw"
+        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+      />
+    </div>
+  ) : (
+    <div aria-hidden="true" className={archivePlaceholderClassName} />
+  );
+  const internalCaseStudyHref = getInternalCaseStudyHref(project.href);
+
+  if (internalCaseStudyHref) {
+    return (
+      <Link
+        href={internalCaseStudyHref}
+        aria-label={`Open ${project.title} project detail`}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+      >
+        {preview}
+      </Link>
+    );
+  }
+
+  if (project.href) {
+    return (
+      <a
+        href={project.href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open ${project.title} project`}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+      >
+        {preview}
+      </a>
+    );
+  }
+
+  return preview;
+}
+
+function ArchiveProjectTitle({
+  title,
+  href,
+}: {
+  title: string;
+  href?: string;
+}) {
+  const internalCaseStudyHref = getInternalCaseStudyHref(href);
+
+  if (!internalCaseStudyHref) {
+    if (href) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+        >
+          <h2 className="project-type-card-title">
+            {title}
+          </h2>
+        </a>
+      );
+    }
+
+    return (
+      <h2 className="project-type-card-title">
+        {title}
+      </h2>
+    );
+  }
+
+  return (
+    <Link
+      href={internalCaseStudyHref}
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+    >
+      <h2 className="project-type-card-title">
+        {title}
+      </h2>
+    </Link>
+  );
+}
+
 export default function ArchivePage() {
   return (
     <div className="page-shell">
-      <div className="page-content space-y-[var(--section-gap)]">
-        <section className="surface-panel p-[var(--panel-padding-lg)]">
-          <div className="@container/archive-intro grid gap-8 @5xl/archive-intro:grid-cols-[minmax(0,1fr)_22rem]">
-            <div className="space-y-4">
-              <p className="editorial-eyebrow">Archive</p>
-              <h1 className="type-h1 font-display text-foreground">
-                Extra rooms, lighter treatment.
-              </h1>
-              <p className="max-w-3xl text-[1.08rem] leading-8 text-[var(--muted)]">
-                The homepage now behaves like a guided gallery walk, so this page
-                stays intentionally simpler. These projects still matter, but they
-                do not need the same amount of staging to be useful.
-              </p>
-            </div>
-
-            <div className="rounded-[calc(var(--panel-radius)-0.125rem)] border border-[var(--archive-note-border)] bg-[var(--archive-note-surface)] p-[var(--panel-padding)] text-[var(--archive-note-foreground)] shadow-[var(--shadow-soft)]">
-              <p className="editorial-eyebrow text-[var(--archive-note-muted)]">
-                Side room note
-              </p>
-              <p className="mt-4 text-[0.98rem] leading-7 text-[var(--archive-note-foreground)]">
-                This page now stays self-contained. The main gallery favors the
-                most staged pieces, while this archive keeps the rest of the work
-                close at hand without routing back through the old site.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="auto-fit-grid">
-          {archiveProjects.map((project) => (
-            <article
+      <div className="page-content">
+        <h1 className="sr-only">Archive</h1>
+        <section className="grid gap-x-[clamp(0.75rem,1.25vw,1.25rem)] gap-y-[clamp(2rem,4vw,4rem)] sm:grid-cols-2 xl:grid-cols-3">
+          {visibleArchiveProjects.map((project, index) => (
+            <Reveal
               key={project.title}
-              className="surface-card group @container/archive-card p-[var(--panel-padding)]"
+              as="article"
+              className="group @container/archive-card"
+              index={index}
             >
-              <div
-                className={`grid gap-5 ${
-                  project.image
-                    ? "@4xl/archive-card:grid-cols-[15rem_minmax(0,1fr)] @4xl/archive-card:items-start"
-                    : ""
-                }`}
-              >
-                {project.image ? (
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-[calc(var(--frame-radius)-0.125rem)] border border-[var(--border)] bg-[var(--archive-preview-gradient)]">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      sizes="(max-width: 640px) 92vw, 20rem"
-                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex aspect-[16/10] items-end rounded-[calc(var(--frame-radius)-0.125rem)] border border-[var(--border)] bg-[var(--archive-placeholder-gradient)] p-5">
-                    <p className="type-h3 font-display text-foreground">
-                      {project.title}
-                    </p>
-                  </div>
-                )}
-
-                <div className="space-y-4 p-1">
-                  <div className="space-y-2">
-                    <p className="editorial-eyebrow">
-                      {project.company} / {project.category} / {project.year}
-                    </p>
-                    <h2 className="type-h3 font-display text-foreground">
-                      {project.title}
-                    </h2>
-                  </div>
-                  <p className="text-[1rem] leading-7 text-[var(--muted)]">
-                    {project.summary}
-                  </p>
-                  <span className="inline-flex items-center rounded-full border border-[var(--border)] px-4 py-2 text-[0.9rem] text-foreground">
-                    Archive reference
-                  </span>
-                </div>
+              <div className="space-y-4">
+                <ArchiveProjectPreview project={project} />
+                <ArchiveProjectTitle
+                  title={project.title}
+                  href={project.href}
+                />
+                <ProjectDisciplineTags tags={project.discipline_tags} />
               </div>
-            </article>
+            </Reveal>
           ))}
         </section>
       </div>

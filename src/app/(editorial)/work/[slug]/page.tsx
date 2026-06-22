@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CaseStudyPage } from "@/components/case-study-page";
+import { portfolio_sections } from "@/lib/portfolio-content";
 import { featuredProjects, getProjectBySlug } from "@/lib/site-content";
 
 export function generateStaticParams() {
@@ -41,5 +42,9 @@ export default async function WorkPage({
     notFound();
   }
 
-  return <CaseStudyPage project={project} />;
+  const companyProjects = portfolio_sections.filter(
+    (section) => section.company === project.company,
+  );
+
+  return <CaseStudyPage project={project} companyProjects={companyProjects} />;
 }

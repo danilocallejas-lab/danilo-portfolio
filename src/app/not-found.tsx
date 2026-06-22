@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { GalleryHeader } from "@/components/site-header";
 
@@ -8,7 +9,7 @@ export default function NotFound() {
       <GalleryHeader />
       <main className="page-shell min-h-screen">
         <div className="page-content-narrow">
-          <div className="surface-panel space-y-6 p-[var(--panel-padding-lg)]">
+          <Reveal className="surface-panel space-y-6 p-[var(--panel-padding-lg)]">
             <p className="editorial-eyebrow">Not found</p>
             <h1 className="type-h1 font-display text-foreground">
               That wall is empty.
@@ -31,7 +32,7 @@ export default function NotFound() {
                 Open archive
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </main>
       <SiteFooter />

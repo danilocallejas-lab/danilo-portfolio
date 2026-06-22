@@ -29,12 +29,44 @@ function getArchiveAnchorId(project: Pick<ArchiveProject, "title">) {
     .replace(/^-|-$/g, "")}`;
 }
 
+function ProjectIndexNavRow({
+  href,
+  project,
+  titleClassName,
+}: {
+  href: string;
+  project: Pick<
+    FeaturedProject | ArchiveProject,
+    "title" | "company" | "category" | "year"
+  >;
+  titleClassName: string;
+}) {
+  return (
+    <a
+      href={href}
+      className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
+    >
+      <div className="space-y-1">
+        <p className={titleClassName}>{project.title}</p>
+        <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+          {project.company} / {project.category}
+        </p>
+      </div>
+      <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+        {project.year}
+      </p>
+    </a>
+  );
+}
+
 function ProjectPreview({
   project,
 }: {
   project: FeaturedProject;
 }) {
-  const supportingImage = project.sections[0]?.image;
+  const supportingImage = project.sections.find(
+    (section) => "image" in section,
+  )?.image;
 
   return (
     <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_12rem]">
@@ -71,6 +103,70 @@ function ProjectPreview({
   );
 }
 
+function isInternalArchiveHref(href?: string): href is string {
+  return Boolean(href?.startsWith("/"));
+}
+
+function ArchiveFeedTitle({ project }: { project: ArchiveProject }) {
+  const className =
+    "font-display text-[1.9rem] leading-[0.95] tracking-[-0.04em] text-foreground";
+
+  if (!isInternalArchiveHref(project.href)) {
+    return <h3 className={className}>{project.title}</h3>;
+  }
+
+  return (
+    <GalleryLink
+      href={project.href}
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+    >
+      <h3 className={className}>{project.title}</h3>
+    </GalleryLink>
+  );
+}
+
+function ArchiveFeedSummary({ project }: { project: ArchiveProject }) {
+  const className = "max-w-2xl text-[0.96rem] leading-7 text-[var(--muted)]";
+
+  if (!isInternalArchiveHref(project.href)) {
+    return <p className={className}>{project.summary}</p>;
+  }
+
+  return (
+    <GalleryLink
+      href={project.href}
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+    >
+      <p className={className}>{project.summary}</p>
+    </GalleryLink>
+  );
+}
+
+function ArchiveFeedAction({ href }: { href?: string }) {
+  if (isInternalArchiveHref(href)) {
+    return null;
+  }
+
+  if (!href) {
+    return (
+      <span className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] px-4 py-2.5 text-[0.86rem] text-foreground">
+        Archive reference
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] px-4 py-2.5 text-[0.86rem] text-foreground transition-colors hover:border-[var(--border-strong)] hover:text-[var(--link-hover)]"
+    >
+      Open project
+    </a>
+  );
+}
+
 export function GalleryHome({ intro, projects }: GalleryHomeProps) {
   return (
     <div id="top" className="px-4 pb-24 pt-28 sm:px-6 lg:px-8">
@@ -101,23 +197,12 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
               <p className="editorial-eyebrow">Selected Work</p>
               <nav className="divide-y divide-[rgba(17,17,15,0.08)] border-y border-[rgba(17,17,15,0.08)]">
                 {projects.map((project) => (
-                  <a
+                  <ProjectIndexNavRow
                     key={project.slug}
                     href={`#${project.slug}`}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-display text-[1.34rem] leading-[0.95] tracking-[-0.04em] text-foreground transition-colors group-hover:text-[var(--link-hover)]">
-                        {project.title}
-                      </p>
-                      <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                        {project.company} / {project.category}
-                      </p>
-                    </div>
-                    <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      {project.year}
-                    </p>
-                  </a>
+                    project={project}
+                    titleClassName="font-display text-[1.34rem] leading-[0.95] tracking-[-0.04em] text-foreground transition-colors group-hover:text-[var(--link-hover)]"
+                  />
                 ))}
               </nav>
             </div>
@@ -126,23 +211,12 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
               <p className="editorial-eyebrow">Archive</p>
               <nav className="divide-y divide-[rgba(17,17,15,0.08)] border-y border-[rgba(17,17,15,0.08)]">
                 {archiveProjects.map((project) => (
-                  <a
+                  <ProjectIndexNavRow
                     key={project.title}
                     href={`#${getArchiveAnchorId(project)}`}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-display text-[1.2rem] leading-[0.95] tracking-[-0.035em] text-foreground transition-colors group-hover:text-[var(--link-hover)]">
-                        {project.title}
-                      </p>
-                      <p className="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                        {project.company} / {project.category}
-                      </p>
-                    </div>
-                    <p className="pt-0.5 text-[0.72rem] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      {project.year}
-                    </p>
-                  </a>
+                    project={project}
+                    titleClassName="font-display text-[1.2rem] leading-[0.95] tracking-[-0.035em] text-foreground transition-colors group-hover:text-[var(--link-hover)]"
+                  />
                 ))}
               </nav>
             </div>
@@ -175,30 +249,32 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
                     <div className="grid gap-6 lg:grid-cols-[minmax(0,0.64fr)_minmax(0,1fr)] lg:items-start">
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <h2 className="font-display text-[clamp(2.3rem,5vw,4.2rem)] leading-[0.92] tracking-[-0.05em] text-foreground">
-                            {project.title}
-                          </h2>
+                          <GalleryLink
+                            href={`/work/${project.slug}`}
+                            className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+                          >
+                            <h2 className="font-display text-[clamp(2.3rem,5vw,4.2rem)] leading-[0.92] tracking-[-0.05em] text-foreground">
+                              {project.title}
+                            </h2>
+                          </GalleryLink>
                           <p className="text-[0.78rem] uppercase tracking-[0.18em] text-[var(--muted)]">
                             {project.company} / {project.category} / {project.year}
                           </p>
                         </div>
 
-                        <div className="space-y-3">
+                        <GalleryLink
+                          href={`/work/${project.slug}`}
+                          className="block space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/35"
+                        >
                           <p className="text-[1rem] leading-7 text-foreground">
                             {project.teaser}
                           </p>
                           <p className="max-w-2xl text-[0.94rem] leading-7 text-[var(--muted)]">
                             {project.thesis}
                           </p>
-                        </div>
+                        </GalleryLink>
 
                         <div className="flex flex-wrap gap-3 pt-1">
-                          <GalleryLink
-                            href={`/work/${project.slug}`}
-                            className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] bg-foreground px-4 py-2.5 text-[0.86rem] text-white"
-                          >
-                            Open case study
-                          </GalleryLink>
                           <a
                             href="#top"
                             className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] px-4 py-2.5 text-[0.86rem] text-foreground transition-colors hover:border-[var(--border-strong)] hover:text-[var(--link-hover)]"
@@ -248,31 +324,14 @@ export function GalleryHome({ intro, projects }: GalleryHomeProps) {
                       >
                         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
                           <div className="space-y-2">
-                            <h3 className="font-display text-[1.9rem] leading-[0.95] tracking-[-0.04em] text-foreground">
-                              {project.title}
-                            </h3>
+                            <ArchiveFeedTitle project={project} />
                             <p className="text-[0.76rem] uppercase tracking-[0.18em] text-[var(--muted)]">
                               {project.company} / {project.category} / {project.year}
                             </p>
-                            <p className="max-w-2xl text-[0.96rem] leading-7 text-[var(--muted)]">
-                              {project.summary}
-                            </p>
+                            <ArchiveFeedSummary project={project} />
                           </div>
 
-                          {project.href ? (
-                            <a
-                              href={project.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] px-4 py-2.5 text-[0.86rem] text-foreground transition-colors hover:border-[var(--border-strong)] hover:text-[var(--link-hover)]"
-                            >
-                              Open project
-                            </a>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full border border-[rgba(17,17,15,0.12)] px-4 py-2.5 text-[0.86rem] text-foreground">
-                              Archive reference
-                            </span>
-                          )}
+                          <ArchiveFeedAction href={project.href} />
                         </div>
                       </article>
                     ))}

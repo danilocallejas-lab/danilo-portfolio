@@ -7,10 +7,7 @@ import type {
   ReactNode,
 } from "react";
 import { useRef, useState } from "react";
-
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { cx } from "@/lib/classnames";
 
 type DragState = {
   pointerId: number | null;

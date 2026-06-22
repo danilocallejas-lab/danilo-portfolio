@@ -210,11 +210,11 @@ export default function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className="min-h-full bg-background text-foreground"
+        className="min-h-full text-foreground"
       >
         <ThemeSync />
-        <div className="app-background fixed inset-0 -z-20" />
-        <div className="site-noise fixed inset-0 -z-10" />
+        <div className="app-background" />
+        <div className="site-noise" />
         {children}
         <Script id="theme-init" strategy="beforeInteractive">
           {getThemeInitScript()}

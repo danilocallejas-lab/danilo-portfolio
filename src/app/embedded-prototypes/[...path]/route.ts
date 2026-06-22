@@ -1,5 +1,9 @@
 import { extname } from "node:path";
-import { NextResponse, type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
+
+const embeddedSpaFallbackSlugs = new Set([
+  "opendoor-agent-led-offers-tooling-platform",
+]);
 
 function isSafeSegment(segment: string) {
   return (
@@ -16,7 +20,16 @@ function getIndexPath(pathSegments: string[]) {
     return null;
   }
 
+  const [slug, ...routeSegments] = pathSegments;
   const lastSegment = pathSegments.at(-1);
+
+  if (slug && embeddedSpaFallbackSlugs.has(slug) && routeSegments.length > 0) {
+    if (lastSegment && extname(lastSegment) && lastSegment !== "index.html") {
+      return null;
+    }
+
+    return `/embedded-prototypes/${slug}/index.html`;
+  }
 
   if (lastSegment && extname(lastSegment)) {
     return null;
@@ -25,9 +38,10 @@ function getIndexPath(pathSegments: string[]) {
   return `/embedded-prototypes/${pathSegments.join("/")}/index.html`;
 }
 
-async function redirectToEmbeddedIndex(
+async function serveEmbeddedIndex(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
+  method: "GET" | "HEAD",
 ) {
   const { path } = await params;
   const indexPath = getIndexPath(path);
@@ -36,22 +50,27 @@ async function redirectToEmbeddedIndex(
     return new Response("Not found", { status: 404 });
   }
 
-  const destination = request.nextUrl.clone();
-  destination.pathname = indexPath;
+  const indexResponse = await fetch(new URL(indexPath, request.url), {
+    method,
+  });
 
-  return NextResponse.redirect(destination, 308);
+  return new Response(method === "HEAD" ? null : indexResponse.body, {
+    headers: indexResponse.headers,
+    status: indexResponse.status,
+    statusText: indexResponse.statusText,
+  });
 }
 
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> },
 ) {
-  return redirectToEmbeddedIndex(request, context);
+  return serveEmbeddedIndex(request, context, "GET");
 }
 
 export async function HEAD(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> },
 ) {
-  return redirectToEmbeddedIndex(request, context);
+  return serveEmbeddedIndex(request, context, "HEAD");
 }
