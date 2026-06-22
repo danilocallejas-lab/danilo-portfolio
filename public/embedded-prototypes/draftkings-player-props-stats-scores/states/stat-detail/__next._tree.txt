@@ -3,5 +3,5 @@
 :HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/media/9f56976a2af2c907-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/media/c66c3989b8a414b0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/media/fcca8430c54b1ee3-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/0bf9477c4205366f.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"states","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"stat-detail","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"NsAo4TrsTRKcvdlBF6xeI"}
+:HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/7390aefcfb18576b.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"states","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"stat-detail","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"jHd5lJTVSU-hL8TVH2QUP"}

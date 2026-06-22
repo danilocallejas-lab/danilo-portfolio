@@ -2,5 +2,5 @@
 2:I[1754,["177","static/chunks/app/layout-6e1ec24cfaf8b3d7.js"],"PrototypeFlowProvider"]
 3:I[7121,[],""]
 4:I[4581,[],""]
-:HL["/embedded-prototypes/opendoor-seller-experience/_next/static/css/a37aa6f0ba2f49ee.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/opendoor-seller-experience/_next/static/css/a37aa6f0ba2f49ee.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_11b0f7 __variable_ac3f1e h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"PScfvoMr6WawqbWZZaa3n"}
+:HL["/embedded-prototypes/opendoor-seller-experience/_next/static/css/4047675a04245b97.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/opendoor-seller-experience/_next/static/css/4047675a04245b97.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_11b0f7 __variable_ac3f1e h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"BUhWOeng3-Z95i-8fB9aA"}

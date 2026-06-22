@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-2:I[5078,["600","static/chunks/600-7fdc910758a9b4d4.js","541","static/chunks/541-5abc85e6470bc95d.js","194","static/chunks/app/hub/page-765f39edc091d8e3.js"],"HubPage"]
+2:I[5078,["600","static/chunks/600-7fdc910758a9b4d4.js","541","static/chunks/541-0fb401e5bfd5de18.js","194","static/chunks/app/hub/page-765f39edc091d8e3.js"],"HubPage"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"PScfvoMr6WawqbWZZaa3n"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"BUhWOeng3-Z95i-8fB9aA"}
 5:null

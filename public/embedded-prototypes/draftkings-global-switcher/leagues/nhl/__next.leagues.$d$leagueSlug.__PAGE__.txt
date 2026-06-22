@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-2:I[6491,["870","static/chunks/870-300c3c4b92882596.js","203","static/chunks/203-6abacd9934a96e94.js","126","static/chunks/app/leagues/%5BleagueSlug%5D/page-585fdaffb15cf2fc.js"],"SwitchersExperience"]
+2:I[6491,["870","static/chunks/870-300c3c4b92882596.js","203","static/chunks/203-9a14b21e6acdd457.js","126","static/chunks/app/leagues/%5BleagueSlug%5D/page-585fdaffb15cf2fc.js"],"SwitchersExperience"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"League","initialSheetOpen":false,"initialSport":"nhl","kind":"league","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"nhl"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"5EV8SX7lN9NUR20z_mi8b"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"League","initialSheetOpen":false,"initialSport":"nhl","kind":"league","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"nhl"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"276nPb5LjrL8pm23PGhmS"}
 5:null

@@ -1,5 +1,5 @@
 :HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/media/22a5144ee8d83bca-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/media/f5271587012faf78-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/css/2d76e5bccb12ab71.css","style"]
-:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/css/22c7b19d9deab429.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"Gpf_mYm5x6CclFVOgy94_"}
+:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/media/7d4881bb7e1bf84d-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/css/d464f5a672d16d25.css","style"]
+:HL["/embedded-prototypes/dropbox-spaces-tasks/_next/static/css/3d9c365662ce560b.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"s8zw9h0AANf2-VsAigH0q"}
