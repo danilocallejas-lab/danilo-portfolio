@@ -723,7 +723,7 @@ const legacyPortfolioSections = [
     section_type: "project",
     company: "DraftKings",
     role: "Product Designer",
-    title: "Betslip Redesign",
+    title: "The Betslip",
     time_period: "2023-2024",
     discipline_tags: ["product"],
     summary:
@@ -1225,7 +1225,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: "/embedded-prototypes/dropbox-spaces-tasks/",
     prototype_open_url: "/embedded-prototypes/dropbox-spaces-tasks/",
-    prototype_frame_scale: 1.08,
     accent: "pale slate, workspace calm, airy",
     case_study_gallery: [
       {
@@ -1407,7 +1406,6 @@ const legacyPortfolioSections = [
     prototype_type: "iframe",
     prototype_embed_url: "/embedded-prototypes/dropbox-paper-desktop/",
     prototype_open_url: "/embedded-prototypes/dropbox-paper-desktop/",
-    prototype_frame_scale: 1.08,
     accent: "pale paper, editorial, structured",
     case_study_gallery: [
       {

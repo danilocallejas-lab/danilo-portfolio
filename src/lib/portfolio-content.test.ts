@@ -219,6 +219,20 @@ test("Dropbox Paper Templates is a same-origin published iframe", () => {
   assert.equal(project.prototype.localDev?.path, "/");
 });
 
+test("Dropbox prototypes use the unscaled embed frame baseline", () => {
+  for (const slug of [
+    "dropbox-spaces-tasks",
+    "dropbox-paper-desktop",
+    "dropbox-paper-marketing-page",
+    "dropbox-paper-templates",
+  ]) {
+    const project = getProjectByPrototypeSlug(slug);
+
+    assert.ok(project);
+    assert.equal(project.prototype.frameScale, null, slug);
+  }
+});
+
 test("retired standalone deployments are metadata only", () => {
   const project = getProjectByPrototypeSlug("draftkings-quick-betslip");
 

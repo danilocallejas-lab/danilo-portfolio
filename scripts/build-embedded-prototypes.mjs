@@ -120,7 +120,7 @@ function ensureIndexFallback(targetRoot) {
 
 function removeDuplicateExportEntries(targetRoot) {
   for (const entry of readdirSync(targetRoot)) {
-    if (/ 2(?:\.[^.]+)?$/.test(entry)) {
+    if (/ \d+(?:\.[^.]+)?$/.test(entry)) {
       rmSync(join(targetRoot, entry), { recursive: true, force: true });
     }
   }

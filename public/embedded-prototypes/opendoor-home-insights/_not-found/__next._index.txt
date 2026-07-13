@@ -1,5 +1,5 @@
 1:"$Sreact.fragment"
 2:I[7121,[],""]
 3:I[4581,[],""]
-:HL["/embedded-prototypes/opendoor-home-insights/_next/static/css/53470d82f6095055.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/opendoor-home-insights/_next/static/css/53470d82f6095055.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_30af1f __variable_4a285d h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"XaufTvLfxAArN-nO-N0rT"}
+:HL["/embedded-prototypes/opendoor-home-insights/_next/static/css/c6a96c8721499968.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/opendoor-home-insights/_next/static/css/c6a96c8721499968.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_30af1f __variable_4a285d h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"XvBlSfB0m-5WqrpQzO7LE"}

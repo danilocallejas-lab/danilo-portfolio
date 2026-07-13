@@ -2,5 +2,5 @@
 2:I[6491,["870","static/chunks/870-300c3c4b92882596.js","203","static/chunks/203-9a14b21e6acdd457.js","318","static/chunks/app/events/%5BeventSlug%5D/page-e59692eb867a0db8.js"],"SwitchersExperience"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"Event","initialSheetOpen":false,"initialSport":"nhl","kind":"event","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"edmonton-oilers-at-florida-panthers"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"276nPb5LjrL8pm23PGhmS"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"Event","initialSheetOpen":false,"initialSport":"nhl","kind":"event","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"edmonton-oilers-at-florida-panthers"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"1IjrA2AQ_--C0FRN2iYtz"}
 5:null

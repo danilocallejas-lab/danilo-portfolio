@@ -87,7 +87,6 @@ export type ExperienceItem = {
 
 const recordLabelDesignImageBase = "/images/cargo/record-label-designs";
 const dropboxSpacesImageBase = "/images/cargo/dropbox-spaces";
-const visionPlatformTrimmedImageBase = "/images/cargo/vision-platform/trimmed";
 
 function getRecordLabelDesignImagePath(index: number) {
   return `${recordLabelDesignImageBase}/record-label-designs-${String(index).padStart(2, "0")}.jpg`;
@@ -314,7 +313,7 @@ export const featuredProjects: FeaturedProject[] = [
     },
     sections: [
       {
-        title: "Betslip Redesign",
+        title: "The Betslip",
         summary:
           "The migration window became the right moment to clean up decision-making, information hierarchy, and placement confidence inside the betslip.",
         caption:
@@ -1268,10 +1267,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy-5.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/group-copy-5.jpg`,
+          src: "/images/cargo/vision-platform/group-copy-5.jpg",
           alt: "Vision Platform analytics dashboard interface.",
-          frameClassName: "aspect-[2136/1680]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1282,10 +1282,11 @@ export const featuredProjects: FeaturedProject[] = [
           "Cargo source image: Group-Copy-6.jpg.",
         copyPresentation: "none",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/group-copy-6.jpg`,
+          src: "/images/cargo/vision-platform/group-copy-6.jpg",
           alt: "Vision Platform analytics detail interface.",
-          frameClassName: "aspect-[2136/1680]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#f2f5fd_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1295,10 +1296,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy-7.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/inventory.jpg`,
+          src: "/images/cargo/vision-platform/inventory.jpg",
           alt: "Vision Platform inventory management interface.",
-          frameClassName: "aspect-[2136/1680]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1308,10 +1310,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy-3.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/user-management-console.jpg`,
+          src: "/images/cargo/vision-platform/user-management-console.jpg",
           alt: "Vision Platform user management console interface.",
-          frameClassName: "aspect-[2136/1670]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#f2f5fd_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1321,10 +1324,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy-8.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/rfid-zones-tag-reader.jpg`,
+          src: "/images/cargo/vision-platform/rfid-zones-tag-reader.jpg",
           alt: "Vision Platform RFID zones tag reader interface.",
-          frameClassName: "aspect-[2136/1670]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1334,10 +1338,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/account-personalization.jpg`,
+          src: "/images/cargo/vision-platform/account-personalization.jpg",
           alt: "Vision Platform account personalization interface.",
-          frameClassName: "aspect-[2136/1605]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#f2f5fd_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1347,10 +1352,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: Group-Copy-2.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/sales-associate-app.jpg`,
+          src: "/images/cargo/vision-platform/sales-associate-app.jpg",
           alt: "Vision Platform sales associate app interface.",
-          frameClassName: "aspect-[2196/1308]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[456/347] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1360,10 +1366,11 @@ export const featuredProjects: FeaturedProject[] = [
         caption:
           "Cargo source image: icons.jpg.",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/design-system-icons.jpg`,
+          src: "/images/cargo/vision-platform/design-system-icons.jpg",
           alt: "Vision and Aware design system icon board.",
-          frameClassName: "aspect-[3000/1968]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[1500/1007] bg-[linear-gradient(180deg,#eef3ff_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {
@@ -1374,10 +1381,11 @@ export const featuredProjects: FeaturedProject[] = [
           "Cargo source image: icons-copy-1.jpg.",
         copyPresentation: "none",
         image: {
-          src: `${visionPlatformTrimmedImageBase}/design-system-icons-alt.jpg`,
+          src: "/images/cargo/vision-platform/design-system-icons-alt.jpg",
           alt: "Vision and Aware design system alternate icon board.",
-          frameClassName: "aspect-[3000/2122]",
-          imageClassName: "object-cover",
+          frameClassName:
+            "aspect-[1500/1081] bg-[linear-gradient(180deg,#f2f5fd_0%,#ffffff_100%)]",
+          imageClassName: "object-contain",
         },
       },
       {

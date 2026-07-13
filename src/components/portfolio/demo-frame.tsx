@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { CSSProperties, ReactNode, SyntheticEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type {
   CaseStudyImage,
@@ -64,6 +64,343 @@ function getFrameSurfaceValue(surface?: PrototypeFrameSurface | null) {
     default:
       return "var(--prototype-frame-surface-default)";
   }
+}
+
+function getFrameTone(
+  frame_surface?: PrototypeFrameSurface | null,
+  tone?: PrototypeFrameSurface,
+) {
+  return frame_surface ?? tone;
+}
+
+function getFrameShadowClassName(
+  isDetail: boolean,
+  frameTone?: PrototypeFrameSurface,
+) {
+  if (frameTone === "dropbox") {
+    return "shadow-none";
+  }
+
+  return isDetail ? "shadow-[var(--shadow)]" : "shadow-[var(--shadow-soft)]";
+}
+
+function shouldRenderFrameBorder(
+  frame_variant: NonNullable<DemoFrameProps["frame_variant"]>,
+  frameTone?: PrototypeFrameSurface,
+) {
+  return (
+    frame_variant === "default" &&
+    frameTone !== "draftkings" &&
+    frameTone !== "coinbase"
+  );
+}
+
+function getEmbeddedPrototypePresentationCss(frameTone?: PrototypeFrameSurface) {
+  switch (frameTone) {
+    case "coinbase":
+      return `
+        html,
+        body {
+          background: transparent !important;
+        }
+
+        [class*="device"]:not([class*="shell"]),
+        [class*="phone"]:not([class*="shell"]),
+        [class*="handset"]:not([class*="shell"]) {
+          background: transparent !important;
+          border-color: transparent !important;
+          border-width: 0 !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+
+        [class*="device"]::before,
+        [class*="phone"]::before,
+        [class*="handset"]::before {
+          border-color: transparent !important;
+          border-width: 0 !important;
+          display: none !important;
+        }
+      `;
+    case "draftkings":
+      return `
+        [data-prototype-stage],
+        .switchers-device,
+        .quick-betslip-device,
+        .player-pages-device,
+        [class*="device"]:not([class*="shell"]),
+        [class*="phone"]:not([class*="shell"]),
+        [class*="handset"]:not([class*="shell"]) {
+          border-color: transparent !important;
+        }
+
+        [data-prototype-stage]::before,
+        .switchers-device::before,
+        .quick-betslip-device::before,
+        .player-pages-device::before,
+        [class*="device"]::before,
+        [class*="phone"]::before,
+        [class*="handset"]::before {
+          border-color: transparent !important;
+        }
+      `;
+    case "dropbox":
+      return `
+        html,
+        body {
+          overflow: hidden !important;
+        }
+
+        .spaces-route,
+        .paper-route,
+        .paper-prototype-stage,
+        .templates-prototype-stage {
+          box-sizing: border-box !important;
+          height: 100dvh !important;
+          min-height: 100dvh !important;
+          overflow: hidden !important;
+          padding: 10px !important;
+          width: 100vw !important;
+        }
+
+        .paper-browser-stage,
+        .templates-browser-stage {
+          display: grid !important;
+          height: 100% !important;
+          place-items: center !important;
+          width: 100% !important;
+        }
+
+        .spaces-browser-shell,
+        .paper-browser-frame,
+        .templates-browser-frame,
+        .paper-window,
+        [class*="browser-shell"],
+        [class*="browser-frame"],
+        [class*="browser-window"],
+        [class*="desktop-shell"],
+        [class*="desktop-frame"],
+        [class*="desktop-window"],
+        [class*="paper-window"],
+        [class*="window-shell"],
+        [class*="window-frame"] {
+          box-shadow: 0 2px 8px rgba(28, 37, 52, 0.06) !important;
+        }
+      `;
+    default:
+      return "";
+  }
+}
+
+type DropboxPrototypeWindow = Window & {
+  __portfolioDropboxResizeCleanup?: () => void;
+};
+
+type DropboxPrototypeFrameConfig = {
+  stageSelector: string;
+  viewportSelector?: string;
+  sizerSelector: string;
+  frameSelector: string;
+  nativeWidth: number;
+  nativeHeight: number;
+  previewFitRatio?: number;
+};
+
+const DROPBOX_EMBED_STAGE_PADDING = 10;
+const DROPBOX_PREVIEW_WINDOW_FIT_RATIO = 0.82;
+const DROPBOX_PAPER_DESKTOP_PREVIEW_WINDOW_FIT_RATIO = 0.94;
+const dropboxPrototypeFrameConfigs: readonly DropboxPrototypeFrameConfig[] = [
+  {
+    stageSelector: ".spaces-route",
+    sizerSelector: ".spaces-shell-viewport",
+    frameSelector: ".spaces-browser-shell",
+    nativeWidth: 1600,
+    nativeHeight: 1171.43,
+  },
+  {
+    stageSelector: ".paper-route",
+    sizerSelector: ".paper-shell-viewport",
+    frameSelector: ".paper-desktop",
+    nativeWidth: 1490,
+    nativeHeight: 1000,
+    previewFitRatio: DROPBOX_PAPER_DESKTOP_PREVIEW_WINDOW_FIT_RATIO,
+  },
+  {
+    stageSelector: ".paper-prototype-stage",
+    viewportSelector: ".paper-browser-stage",
+    sizerSelector: ".paper-browser-sizer",
+    frameSelector: ".paper-browser-frame",
+    nativeWidth: 1440,
+    nativeHeight: 900,
+  },
+  {
+    stageSelector: ".templates-prototype-stage",
+    viewportSelector: ".templates-browser-stage",
+    sizerSelector: ".templates-browser-sizer",
+    frameSelector: ".templates-browser-frame",
+    nativeWidth: 1440,
+    nativeHeight: 900,
+  },
+] as const;
+
+function getFrameElement(document: Document, selector: string) {
+  return document.querySelector(selector) as HTMLElement | null;
+}
+
+function applyDropboxPrototypeFrameSizing(
+  iframeDocument: Document,
+  iframeWindow: Window,
+) {
+  const activeConfig = dropboxPrototypeFrameConfigs.find((config) =>
+    iframeDocument.querySelector(config.stageSelector),
+  );
+
+  if (!activeConfig || !iframeDocument.body) {
+    return;
+  }
+
+  const portfolioWindow = iframeWindow as DropboxPrototypeWindow;
+  const updateSizing = () => {
+    const stage = getFrameElement(iframeDocument, activeConfig.stageSelector);
+    const sizer = getFrameElement(iframeDocument, activeConfig.sizerSelector);
+    const frame = getFrameElement(iframeDocument, activeConfig.frameSelector);
+    const viewport = activeConfig.viewportSelector
+      ? getFrameElement(iframeDocument, activeConfig.viewportSelector)
+      : null;
+
+    if (!stage || !sizer || !frame) {
+      return;
+    }
+
+    const previewFitRatio =
+      activeConfig.previewFitRatio ?? DROPBOX_PREVIEW_WINDOW_FIT_RATIO;
+    const availableWidth = Math.max(
+      1,
+      iframeWindow.innerWidth * previewFitRatio,
+    );
+    const availableHeight = Math.max(
+      1,
+      iframeWindow.innerHeight * previewFitRatio,
+    );
+    const scale = Math.min(
+      availableWidth / activeConfig.nativeWidth,
+      availableHeight / activeConfig.nativeHeight,
+    );
+    const scaledWidth = activeConfig.nativeWidth * scale;
+    const scaledHeight = activeConfig.nativeHeight * scale;
+
+    iframeDocument.documentElement.style.overflow = "hidden";
+    iframeDocument.body.style.margin = "0";
+    iframeDocument.body.style.overflow = "hidden";
+
+    Object.assign(stage.style, {
+      boxSizing: "border-box",
+      display: "grid",
+      height: "100dvh",
+      minHeight: "100dvh",
+      overflow: "hidden",
+      padding: `${DROPBOX_EMBED_STAGE_PADDING}px`,
+      placeItems: "center",
+      width: "100vw",
+    });
+
+    if (viewport) {
+      Object.assign(viewport.style, {
+        display: "grid",
+        height: "100%",
+        placeItems: "center",
+        width: "100%",
+      });
+    }
+
+    Object.assign(sizer.style, {
+      height: `${scaledHeight}px`,
+      maxHeight: "100%",
+      maxWidth: "100%",
+      position: "relative",
+      width: `${scaledWidth}px`,
+    });
+
+    Object.assign(frame.style, {
+      height: `${activeConfig.nativeHeight}px`,
+      left: "0",
+      position: "absolute",
+      top: "0",
+      transform: `scale(${scale})`,
+      transformOrigin: "0 0",
+      width: `${activeConfig.nativeWidth}px`,
+    });
+  };
+
+  portfolioWindow.__portfolioDropboxResizeCleanup?.();
+  iframeWindow.addEventListener("resize", updateSizing);
+  portfolioWindow.__portfolioDropboxResizeCleanup = () => {
+    iframeWindow.removeEventListener("resize", updateSizing);
+  };
+
+  updateSizing();
+  iframeWindow.requestAnimationFrame(updateSizing);
+  iframeWindow.setTimeout(updateSizing, 250);
+}
+
+function resetDropboxPrototypeFrameSizing(
+  iframeDocument: Document,
+  iframeWindow: Window,
+) {
+  const portfolioWindow = iframeWindow as DropboxPrototypeWindow;
+  portfolioWindow.__portfolioDropboxResizeCleanup?.();
+  portfolioWindow.__portfolioDropboxResizeCleanup = undefined;
+
+  const activeConfig = dropboxPrototypeFrameConfigs.find((config) =>
+    iframeDocument.querySelector(config.stageSelector),
+  );
+
+  iframeDocument.documentElement.style.removeProperty("overflow");
+  iframeDocument.body?.style.removeProperty("margin");
+  iframeDocument.body?.style.removeProperty("overflow");
+
+  if (!activeConfig) {
+    return;
+  }
+
+  const stage = getFrameElement(iframeDocument, activeConfig.stageSelector);
+  const sizer = getFrameElement(iframeDocument, activeConfig.sizerSelector);
+  const frame = getFrameElement(iframeDocument, activeConfig.frameSelector);
+  const viewport = activeConfig.viewportSelector
+    ? getFrameElement(iframeDocument, activeConfig.viewportSelector)
+    : null;
+
+  stage?.style.removeProperty("box-sizing");
+  stage?.style.removeProperty("display");
+  stage?.style.removeProperty("height");
+  stage?.style.removeProperty("min-height");
+  stage?.style.removeProperty("overflow");
+  stage?.style.removeProperty("padding");
+  stage?.style.removeProperty("place-items");
+  stage?.style.removeProperty("width");
+
+  viewport?.style.removeProperty("display");
+  viewport?.style.removeProperty("height");
+  viewport?.style.removeProperty("place-items");
+  viewport?.style.removeProperty("width");
+
+  sizer?.style.removeProperty("height");
+  sizer?.style.removeProperty("max-height");
+  sizer?.style.removeProperty("max-width");
+  sizer?.style.removeProperty("position");
+  sizer?.style.removeProperty("width");
+
+  frame?.style.removeProperty("height");
+  frame?.style.removeProperty("left");
+  frame?.style.removeProperty("position");
+  frame?.style.removeProperty("top");
+  frame?.style.removeProperty("transform");
+  frame?.style.removeProperty("transform-origin");
+  frame?.style.removeProperty("width");
+}
+
+function isSameOriginEmbeddedPrototypeUrl(url: string) {
+  return url.startsWith("/embedded-prototypes/");
 }
 
 function FrameStatusBadge({
@@ -163,35 +500,40 @@ function IframeStage({
   loading,
   on_load,
   is_loaded,
+  frame_tone,
+  is_detail,
 }: {
   iframe_url: string;
   title: string;
   loading: "eager" | "lazy";
   on_load: () => void;
   is_loaded: boolean;
+  frame_tone?: PrototypeFrameSurface;
+  is_detail: boolean;
 }) {
-  const handleLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
-    on_load();
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const applyPortfolioIframeStyles = useCallback(
+    (iframeElement: HTMLIFrameElement) => {
+      try {
+        const iframeDocument = iframeElement.contentDocument;
+        const iframeWindow = iframeElement.contentWindow;
+        const framePath = iframeWindow?.location.pathname ?? "";
 
-    try {
-      const iframeDocument = event.currentTarget.contentDocument;
-      const iframeWindow = event.currentTarget.contentWindow;
-      const framePath = iframeWindow?.location.pathname ?? "";
+        if (
+          !iframeDocument ||
+          !iframeWindow ||
+          !framePath.startsWith("/embedded-prototypes/")
+        ) {
+          return;
+        }
 
-      if (!iframeDocument || !framePath.startsWith("/embedded-prototypes/")) {
-        return;
-      }
+        const cursorStyleId = "portfolio-glass-cursor";
+        const existingStyle = iframeDocument.getElementById(cursorStyleId);
+        const cursorStyle =
+          existingStyle ?? iframeDocument.createElement("style");
 
-      const existingStyle =
-        iframeDocument.getElementById("portfolio-glass-cursor");
-
-      if (existingStyle) {
-        return;
-      }
-
-      const style = iframeDocument.createElement("style");
-      style.id = "portfolio-glass-cursor";
-      style.textContent = `
+        cursorStyle.id = cursorStyleId;
+        cursorStyle.textContent = `
         *,
         *::before,
         *::after,
@@ -203,10 +545,58 @@ function IframeStage({
           cursor: url("/cursors/prototype-dot.svg") 16 16, crosshair !important;
         }
       `;
-      iframeDocument.head.appendChild(style);
-    } catch {
-      // Cross-origin local prototype iframes cannot be styled from the portfolio.
+
+        if (!existingStyle) {
+          iframeDocument.head.appendChild(cursorStyle);
+        }
+
+        const presentationCss =
+          frame_tone === "dropbox" && is_detail
+            ? ""
+            : getEmbeddedPrototypePresentationCss(frame_tone);
+        const presentationStyleId = "portfolio-prototype-presentation";
+        const existingPresentationStyle =
+          iframeDocument.getElementById(presentationStyleId);
+
+        if (presentationCss) {
+          const style =
+            existingPresentationStyle ?? iframeDocument.createElement("style");
+
+          style.id = presentationStyleId;
+          style.textContent = presentationCss;
+
+          if (!existingPresentationStyle) {
+            iframeDocument.head.appendChild(style);
+          }
+        } else {
+          existingPresentationStyle?.remove();
+        }
+
+        if (frame_tone === "dropbox") {
+          if (is_detail) {
+            resetDropboxPrototypeFrameSizing(iframeDocument, iframeWindow);
+          } else {
+            applyDropboxPrototypeFrameSizing(iframeDocument, iframeWindow);
+          }
+        }
+      } catch {
+        // Cross-origin local prototype iframes cannot be styled from the portfolio.
+      }
+    },
+    [frame_tone, is_detail],
+  );
+
+  useEffect(() => {
+    if (!iframeRef.current) {
+      return;
     }
+
+    applyPortfolioIframeStyles(iframeRef.current);
+  }, [applyPortfolioIframeStyles]);
+
+  const handleLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
+    on_load();
+    applyPortfolioIframeStyles(event.currentTarget);
   };
 
   return (
@@ -217,6 +607,7 @@ function IframeStage({
       className="absolute inset-0"
     >
       <iframe
+        ref={iframeRef}
         src={iframe_url}
         title={title}
         loading={loading}
@@ -238,6 +629,9 @@ function HostedIframePreview({
   should_mount_iframe,
   prioritize_image,
   show_loading_indicator,
+  reveal_on_mount,
+  frame_tone,
+  is_detail,
 }: {
   iframe_url: string;
   title: string;
@@ -249,10 +643,14 @@ function HostedIframePreview({
   should_mount_iframe: boolean;
   prioritize_image: boolean;
   show_loading_indicator: boolean;
+  reveal_on_mount: boolean;
+  frame_tone?: PrototypeFrameSurface;
+  is_detail: boolean;
 }) {
   const [hasStartedLoading, setHasStartedLoading] = useState(false);
   const [isIframeLoaded, setIsIframeLoaded] = useState(false);
   const [showSlowLoadCta, setShowSlowLoadCta] = useState(false);
+  const shouldRevealFrame = reveal_on_mount || isIframeLoaded;
 
   useEffect(() => {
     if (!should_mount_iframe || hasStartedLoading) {
@@ -287,7 +685,9 @@ function HostedIframePreview({
           title={title}
           loading={loading}
           on_load={() => setIsIframeLoaded(true)}
-          is_loaded={isIframeLoaded}
+          is_loaded={shouldRevealFrame}
+          frame_tone={frame_tone}
+          is_detail={is_detail}
         />
       ) : null}
 
@@ -295,11 +695,11 @@ function HostedIframePreview({
         poster_image={poster_image}
         title={title}
         loading_label={loading_label}
-        show_loading={show_loading_indicator && hasStartedLoading && !isIframeLoaded}
-        show_slow_load_cta={showSlowLoadCta}
+        show_loading={show_loading_indicator && hasStartedLoading && !shouldRevealFrame}
+        show_slow_load_cta={!shouldRevealFrame && showSlowLoadCta}
         open_prototype_url={open_prototype_url}
         open_prototype_label={open_prototype_label}
-        is_loaded={isIframeLoaded}
+        is_loaded={shouldRevealFrame}
         prioritize_image={prioritize_image}
       />
     </>
@@ -374,12 +774,18 @@ export function DemoFrame({
     frame_radius === "tight"
       ? "rounded-[clamp(0.5rem,0.45rem+0.2vw,0.625rem)]"
       : "rounded-[calc(var(--frame-radius)-0.125rem)]";
+  const frameTone = getFrameTone(frame_surface, tone);
+  const frameShadowClassName = getFrameShadowClassName(isDetail, frameTone);
   const frameClassName = cx(
     "prototype-frame-surface",
     isDetail
-      ? "min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-lg shadow-[var(--shadow)]"
-      : cx("aspect-[16/10] shadow-[var(--shadow-soft)]", previewRadiusClassName),
-    frame_variant === "default" && "border border-[var(--rule)]",
+      ? cx(
+          "min-h-[22rem] h-[var(--detail-frame-max-block)] rounded-lg",
+          frameShadowClassName,
+        )
+      : cx("aspect-[16/10]", frameShadowClassName, previewRadiusClassName),
+    shouldRenderFrameBorder(frame_variant, frameTone) &&
+      "border border-[var(--rule)]",
   );
   const frameStyle = {
     viewTransitionName: transition_key,
@@ -489,6 +895,9 @@ export function DemoFrame({
               should_mount_iframe={shouldMountIframe}
               prioritize_image={isDetail || shouldMountIframe}
               show_loading_indicator={isDetail}
+              reveal_on_mount={isSameOriginEmbeddedPrototypeUrl(iframe_url)}
+              frame_tone={frameTone}
+              is_detail={isDetail}
             />
           ) : null}
 

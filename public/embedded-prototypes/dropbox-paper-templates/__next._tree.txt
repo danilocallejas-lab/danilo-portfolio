@@ -1,2 +1,2 @@
-:HL["/embedded-prototypes/dropbox-paper-templates/_next/static/css/c5df35fc7cded87c.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"M_qF1Bh1HLsTC1GLJ-JeK"}
+:HL["/embedded-prototypes/dropbox-paper-templates/_next/static/css/ed0db506ff4733cd.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"JRIX834eiRTPwZH9LnZtz"}

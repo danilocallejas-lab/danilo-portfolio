@@ -53,9 +53,14 @@ async function serveEmbeddedIndex(
   const indexResponse = await fetch(new URL(indexPath, request.url), {
     method,
   });
+  const headers = new Headers(indexResponse.headers);
+
+  headers.delete("content-encoding");
+  headers.delete("content-length");
+  headers.delete("transfer-encoding");
 
   return new Response(method === "HEAD" ? null : indexResponse.body, {
-    headers: indexResponse.headers,
+    headers,
     status: indexResponse.status,
     statusText: indexResponse.statusText,
   });

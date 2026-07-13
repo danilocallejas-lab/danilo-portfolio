@@ -2,5 +2,5 @@
 2:I[6491,["870","static/chunks/870-300c3c4b92882596.js","203","static/chunks/203-9a14b21e6acdd457.js","10","static/chunks/app/teams/%5BteamSlug%5D/page-a5f550f17bba5c91.js"],"SwitchersExperience"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"Team","initialSheetOpen":false,"initialSport":"nba","kind":"team","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"brooklyn-nets"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"276nPb5LjrL8pm23PGhmS"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialSegment":"Team","initialSheetOpen":false,"initialSport":"nba","kind":"team","liveSnapshot":{"fetchedAt":null,"events":{},"players":{},"teams":{}},"slug":"brooklyn-nets"}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"1IjrA2AQ_--C0FRN2iYtz"}
 5:null

@@ -40,8 +40,8 @@
     rgba(248, 244, 238, 1)
   );
   --prototype-frame-canvas-opendoor: #e6ddd3;
-  --prototype-frame-canvas-dropbox: #f9f9f9;
-  --prototype-frame-canvas-draftkings: #dedcdc;
+  --prototype-frame-canvas-dropbox: #ffe5e9;
+  --prototype-frame-canvas-draftkings: #d7e5d1;
   --prototype-frame-canvas-coinbase: #ecf3ff;
   --prototype-frame-surface-default: var(--prototype-frame-canvas-dropbox);
   --prototype-frame-surface-opendoor: var(--prototype-frame-canvas-opendoor);

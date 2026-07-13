@@ -1,5 +1,5 @@
 1:"$Sreact.fragment"
 2:I[7121,[],""]
 3:I[4581,[],""]
-:HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/css/0d86440bca6eb5bd.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/draftkings-quick-betslip/_next/static/css/0d86440bca6eb5bd.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":["$","body",null,{"className":"__variable_bb09ee min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"jji8Vv8o8VDQBjR6uoZvk"}
+:HL["/embedded-prototypes/draftkings-quick-betslip/_next/static/css/4254ca4844c3680b.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/draftkings-quick-betslip/_next/static/css/4254ca4844c3680b.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":["$","body",null,{"className":"__variable_bb09ee min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"ql45_fh6c4sEH6ebutPtg"}

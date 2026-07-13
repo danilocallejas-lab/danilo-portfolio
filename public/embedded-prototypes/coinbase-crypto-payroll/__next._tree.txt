@@ -1,2 +1,2 @@
-:HL["/embedded-prototypes/coinbase-crypto-payroll/_next/static/css/bddabedf004060a6.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"zrDvJ1FHMl-k976wvppff"}
+:HL["/embedded-prototypes/coinbase-crypto-payroll/_next/static/css/6691672a19bbd1c1.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"UEC4K_UXPcvMuPWc12hwL"}

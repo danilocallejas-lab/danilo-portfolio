@@ -1,5 +1,5 @@
 :HL["/embedded-prototypes/opendoor-home-insights/_next/static/media/8bf7b2ceda89477b-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/opendoor-home-insights/_next/static/media/98e207f02528a563-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/embedded-prototypes/opendoor-home-insights/_next/static/media/d3ebbfd689654d3a-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/embedded-prototypes/opendoor-home-insights/_next/static/css/53470d82f6095055.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"hub","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"XaufTvLfxAArN-nO-N0rT"}
+:HL["/embedded-prototypes/opendoor-home-insights/_next/static/css/c6a96c8721499968.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"hub","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"XvBlSfB0m-5WqrpQzO7LE"}

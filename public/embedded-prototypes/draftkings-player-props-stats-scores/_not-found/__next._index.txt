@@ -1,5 +1,5 @@
 1:"$Sreact.fragment"
 2:I[7121,[],""]
 3:I[4581,[],""]
-:HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/7390aefcfb18576b.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/7390aefcfb18576b.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":["$","body",null,{"className":"__variable_e7f2ca min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"jHd5lJTVSU-hL8TVH2QUP"}
+:HL["/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/4e2a6870d2615bf7.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/embedded-prototypes/draftkings-player-props-stats-scores/_next/static/css/4e2a6870d2615bf7.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":["$","body",null,{"className":"__variable_e7f2ca min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"oBRpuaoWhFQis1PgWSenC"}
