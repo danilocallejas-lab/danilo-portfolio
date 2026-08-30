@@ -172,12 +172,21 @@ function IntroBand() {
             <h1 className="intro-headline type-h1 font-display text-[var(--intro-heading)]">
               Designer currently at{" "}
               <Link
+                href="https://joinhandshake.com/"
+                target="_blank"
+                rel="noreferrer"
+                className={introCompanyLinkClassName}
+              >
+                Handshake
+              </Link>
+              . Previously at{" "}
+              <Link
                 href="#opendoor"
                 className={`${introCompanyLinkClassName} intro-company-link--opendoor`}
               >
                 Opendoor
               </Link>
-              . Previously at{" "}
+              ,{" "}
               <Link
                 href="#draftkings"
                 className={`${introCompanyLinkClassName} intro-company-link--draftkings`}
